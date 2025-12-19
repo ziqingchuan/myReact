@@ -1,0 +1,77 @@
+import { db } from '../lib/supabase'
+
+export function useDirectoryOperations({
+  setFormLoading,
+  loadDirectories,
+  setDirFormData,
+  setEditingDirectory,
+  setShowCreateDirForm
+}) {
+  const handleCreateDirectory = () => {
+    setEditingDirectory(null)
+    setDirFormData({
+      name: '',
+      parent_id: ''
+    })
+    setShowCreateDirForm(true)
+  }
+
+  const handleEditDirectory = (directory) => {
+    setEditingDirectory(directory)
+    setDirFormData({
+      name: directory.name,
+      parent_id: directory.parent_id || ''
+    })
+    setShowCreateDirForm(true)
+  }
+
+  const handleSubmitDirectory = async (e, dirFormData, editingDirectory) => {
+    e.preventDefault()
+    
+    if (!dirFormData.name.trim()) {
+      alert('请输入目录名称')
+      return
+    }
+    
+    setFormLoading(true)
+    try {
+      const dirData = {
+        name: dirFormData.name.trim(),
+        parent_id: dirFormData.parent_id || null
+      }
+      
+      if (editingDirectory) {
+        console.log('更新目录:', editingDirectory.id, dirData)
+        await db.updateDirectory(editingDirectory.id, dirData)
+      } else {
+        console.log('创建目录:', dirData)
+        await db.createDirectory(dirData)
+      }
+      
+      resetDirForm()
+      await loadDirectories()
+      window.dispatchEvent(new CustomEvent('directoriesUpdated'))
+    } catch (error) {
+      console.error('保存目录失败:', error)
+      alert('保存目录失败: ' + error.message)
+    } finally {
+      setFormLoading(false)
+    }
+  }
+
+  const resetDirForm = () => {
+    setDirFormData({
+      name: '',
+      parent_id: ''
+    })
+    setEditingDirectory(null)
+    setShowCreateDirForm(false)
+  }
+
+  return {
+    handleCreateDirectory,
+    handleEditDirectory,
+    handleSubmitDirectory,
+    resetDirForm
+  }
+}

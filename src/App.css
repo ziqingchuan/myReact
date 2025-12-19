@@ -1,0 +1,39 @@
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 布局样式 */
+body, html, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+  }
+  
+  .sidebar-mobile {
+    @apply fixed left-0 top-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300;
+  }
+  
+  .sidebar-mobile.closed {
+    @apply -translate-x-full;
+  }
+}
