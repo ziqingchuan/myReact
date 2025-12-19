@@ -49,8 +49,8 @@ export function useDirectoryOperations({
       }
       
       resetDirForm()
-      await loadDirectories()
-      window.dispatchEvent(new CustomEvent('directoriesUpdated'))
+      // 立即刷新目录数据，显示加载状态
+      await loadDirectories(true)
     } catch (error) {
       console.error('保存目录失败:', error)
       alert('保存目录失败: ' + error.message)

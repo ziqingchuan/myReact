@@ -56,6 +56,9 @@ function App() {
               }}
               onEditDirectory={directoryOps.handleEditDirectory}
               onCreateDirectory={directoryOps.handleCreateDirectory}
+              directories={appState.directories}
+              directoriesLoading={appState.directoriesLoading}
+              onLoadDirectories={appState.loadDirectories}
             />
           </div>
         )}
@@ -65,6 +68,9 @@ function App() {
           isOpen={appState.sidebarOpen}
           onClose={() => appState.setSidebarOpen(false)}
           onArticleSelect={appState.handleArticleSelect}
+          directories={appState.directories}
+          directoriesLoading={appState.directoriesLoading}
+          onLoadDirectories={appState.loadDirectories}
         />
         
         {/* 主内容区域 */}

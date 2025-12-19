@@ -10,6 +10,7 @@ export function useAppState() {
   const [articleLoading, setArticleLoading] = useState(false)
   const [articleNotFound, setArticleNotFound] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
+  const [directoriesLoading, setDirectoriesLoading] = useState(false)
 
   // 数据状态
   const [selectedArticle, setSelectedArticle] = useState(null)
@@ -85,7 +86,10 @@ export function useAppState() {
   }, [])
 
   // 数据加载函数
-  const loadDirectories = async () => {
+  const loadDirectories = async (showLoading = false) => {
+    if (showLoading) {
+      setDirectoriesLoading(true)
+    }
     try {
       console.log('开始加载目录...')
       const data = await db.getDirectoryTree()
@@ -93,6 +97,10 @@ export function useAppState() {
       setDirectories(data)
     } catch (error) {
       console.error('加载目录失败:', error)
+    } finally {
+      if (showLoading) {
+        setDirectoriesLoading(false)
+      }
     }
   }
 
@@ -154,6 +162,7 @@ export function useAppState() {
     setArticleNotFound,
     formLoading,
     setFormLoading,
+    directoriesLoading,
     selectedArticle,
     directories,
     editingArticle,

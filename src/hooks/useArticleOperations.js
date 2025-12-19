@@ -31,9 +31,9 @@ export function useArticleOperations({
       }
       
       resetForm()
+      // 立即刷新目录数据，显示加载状态
+      await loadDirectories(true)
       await loadFirstArticle()
-      await loadDirectories()
-      window.dispatchEvent(new CustomEvent('directoriesUpdated'))
     } catch (error) {
       console.error('保存失败:', error)
       alert('保存失败: ' + error.message)

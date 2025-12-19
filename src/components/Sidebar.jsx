@@ -4,10 +4,20 @@ import { db } from '../lib/supabase'
 import ConfirmDialog from './customUI/ConfirmDialog'
 import LoadingSpinner from './customUI/LoadingSpinner'
 
-export default function Sidebar({ onItemClick, onArticleSelect, collapsed, onToggleCollapse, onEditArticle, onCreateArticle, onEditDirectory, onCreateDirectory }) {
-  const [directories, setDirectories] = useState([])
+export default function Sidebar({ 
+  onItemClick, 
+  onArticleSelect, 
+  collapsed, 
+  onToggleCollapse, 
+  onEditArticle, 
+  onCreateArticle, 
+  onEditDirectory, 
+  onCreateDirectory,
+  directories = [],
+  directoriesLoading = false,
+  onLoadDirectories
+}) {
   const [expandedDirs, setExpandedDirs] = useState(new Set())
-  const [loading, setLoading] = useState(true)
   const [operationLoading, setOperationLoading] = useState(false)
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
@@ -17,39 +27,22 @@ export default function Sidebar({ onItemClick, onArticleSelect, collapsed, onTog
     onConfirm: null
   })
 
-  useEffect(() => {
-    loadDirectories()
-    
-    // 监听目录更新事件
-    const handleDirectoriesUpdate = () => {
-      loadDirectories()
-    }
-    
-    window.addEventListener('directoriesUpdated', handleDirectoriesUpdate)
-    
-    return () => {
-      window.removeEventListener('directoriesUpdated', handleDirectoriesUpdate)
-    }
-  }, [])
-
   // 默认展开所有目录
   useEffect(() => {
     if (directories.length > 0) {
-      const allDirIds = new Set(directories.map(dir => dir.id))
+      const allDirIds = new Set()
+      const collectDirIds = (dirs) => {
+        dirs.forEach(dir => {
+          allDirIds.add(dir.id)
+          if (dir.children && dir.children.length > 0) {
+            collectDirIds(dir.children)
+          }
+        })
+      }
+      collectDirIds(directories)
       setExpandedDirs(allDirIds)
     }
   }, [directories])
-
-  const loadDirectories = async () => {
-    try {
-      const data = await db.getDirectoryTree()
-      setDirectories(data)
-    } catch (error) {
-      console.error('加载目录失败:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const toggleDirectory = (dirId) => {
     const newExpanded = new Set(expandedDirs)
@@ -71,10 +64,10 @@ export default function Sidebar({ onItemClick, onArticleSelect, collapsed, onTog
         setOperationLoading(true)
         try {
           await db.deleteArticle(articleId)
-          await loadDirectories()
+          // 立即刷新目录数据
+          await onLoadDirectories(true)
           // 通知主组件文章被删除
           window.dispatchEvent(new CustomEvent('articleDeleted', { detail: { articleId } }))
-          window.dispatchEvent(new CustomEvent('directoriesUpdated'))
         } catch (error) {
           console.error('删除文章失败:', error)
           alert('删除失败: ' + error.message)
@@ -95,10 +88,10 @@ export default function Sidebar({ onItemClick, onArticleSelect, collapsed, onTog
         setOperationLoading(true)
         try {
           await db.deleteDirectory(directory.id)
-          await loadDirectories()
+          // 立即刷新目录数据
+          await onLoadDirectories(true)
           // 通知主组件目录被删除
           window.dispatchEvent(new CustomEvent('directoryDeleted', { detail: { directoryId: directory.id } }))
-          window.dispatchEvent(new CustomEvent('directoriesUpdated'))
         } catch (error) {
           console.error('删除目录失败:', error)
           alert('删除失败: ' + error.message)
@@ -233,17 +226,16 @@ export default function Sidebar({ onItemClick, onArticleSelect, collapsed, onTog
     )
   }
 
-  if (loading) {
-    return (
-      <div className="p-4">
-        <div className="animate-pulse space-y-2">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-8 bg-gray-200 rounded"></div>
-          ))}
-        </div>
+  // 加载状态组件
+  const LoadingSkeleton = () => (
+    <div className="p-4">
+      <div className="animate-pulse space-y-2">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-8 bg-gray-200 rounded"></div>
+        ))}
       </div>
-    )
-  }
+    </div>
+  )
 
   if (collapsed) {
     return (
@@ -284,8 +276,25 @@ export default function Sidebar({ onItemClick, onArticleSelect, collapsed, onTog
               </button>
             </div>
           </div>
-          <div className="space-y-1">
-            {directories.map((dir) => renderDirectory(dir))}
+          <div className="space-y-1 relative">
+            {directoriesLoading && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <LoadingSpinner size="sm" />
+              </div>
+            )}
+            {directories.length === 0 && !directoriesLoading ? (
+              <div className="text-center py-8 text-gray-500">
+                <p>暂无目录</p>
+                <button
+                  onClick={() => onCreateDirectory && onCreateDirectory()}
+                  className="mt-2 text-blue-600 hover:text-blue-700 text-sm"
+                >
+                  创建第一个目录
+                </button>
+              </div>
+            ) : (
+              directories.map((dir) => renderDirectory(dir))
+            )}
           </div>
         </div>
       </nav>

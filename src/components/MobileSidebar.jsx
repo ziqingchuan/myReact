@@ -4,7 +4,10 @@ import Sidebar from './Sidebar'
 export default function MobileSidebar({ 
   isOpen, 
   onClose, 
-  onArticleSelect 
+  onArticleSelect,
+  directories,
+  directoriesLoading,
+  onLoadDirectories
 }) {
   if (!isOpen) return null
 
@@ -27,7 +30,13 @@ export default function MobileSidebar({
             <X size={20} />
           </button>
         </div>
-        <Sidebar onArticleSelect={onArticleSelect} />
+        <Sidebar 
+          onArticleSelect={onArticleSelect}
+          onItemClick={onClose}
+          directories={directories}
+          directoriesLoading={directoriesLoading}
+          onLoadDirectories={onLoadDirectories}
+        />
       </div>
     </>
   )
