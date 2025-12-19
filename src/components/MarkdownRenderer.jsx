@@ -17,6 +17,35 @@ export default function MarkdownRenderer({ content }) {
     }
   }
 
+  // 递归提取纯文本内容
+  const extractText = (children) => {
+    if (typeof children === 'string') {
+      return children
+    }
+    if (Array.isArray(children)) {
+      return children.map(extractText).join('')
+    }
+    if (children && typeof children === 'object') {
+      // 处理 React 元素
+      if (children.props && children.props.children) {
+        return extractText(children.props.children)
+      }
+    }
+    return ''
+  }
+
+  // 简单生成标题 ID：将标题文本转换为 ID
+  const generateId = (children) => {
+    const text = extractText(children)
+    
+    const id = text
+      .toLowerCase()
+      .replace(/[^\w\u4e00-\u9fff]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+    
+    return id || 'heading'
+  }
+
   // 递归提取文本内容的函数
   const extractTextContent = (node) => {
     if (typeof node === 'string') {
@@ -107,15 +136,39 @@ export default function MarkdownRenderer({ content }) {
     },
     
     h1({ children }) {
-      return <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 border-b border-gray-200 pb-2">{children}</h1>
+      const id = generateId(children)
+      return (
+        <h1 
+          id={id}
+          className="text-3xl font-bold text-gray-900 mb-6 mt-8 border-b border-gray-200 pb-2 scroll-mt-20"
+        >
+          {children}
+        </h1>
+      )
     },
     
     h2({ children }) {
-      return <h2 className="text-2xl font-semibold text-gray-900 mb-4 mt-6">{children}</h2>
+      const id = generateId(children)
+      return (
+        <h2 
+          id={id}
+          className="text-2xl font-semibold text-gray-900 mb-4 mt-6 scroll-mt-20"
+        >
+          {children}
+        </h2>
+      )
     },
     
     h3({ children }) {
-      return <h3 className="text-xl font-semibold text-gray-900 mb-3 mt-5">{children}</h3>
+      const id = generateId(children)
+      return (
+        <h3 
+          id={id}
+          className="text-xl font-semibold text-gray-900 mb-3 mt-5 scroll-mt-20"
+        >
+          {children}
+        </h3>
+      )
     },
     
     p({ children }) {

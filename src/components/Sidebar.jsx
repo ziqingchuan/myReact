@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose, PanelLeftOpen, Edit, Trash2, Plus, FolderPlus } from 'lucide-react'
 import { db } from '../lib/supabase'
 import ConfirmDialog from './customUI/ConfirmDialog'
-import LoadingSpinner from './customUI/LoadingSpinner'
+
 
 export default function Sidebar({ 
   onItemClick, 
@@ -226,14 +226,12 @@ export default function Sidebar({
     )
   }
 
-  // 加载状态组件
+  // 加载状态组件 - 灰色方块闪烁动画
   const LoadingSkeleton = () => (
-    <div className="p-4">
-      <div className="animate-pulse space-y-2">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-8 bg-gray-200 rounded"></div>
-        ))}
-      </div>
+    <div className="animate-pulse space-y-2">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="h-8 bg-gray-200 rounded"></div>
+      ))}
     </div>
   )
 
@@ -258,7 +256,7 @@ export default function Sidebar({
       <nav className="h-screen overflow-y-auto border-r border-gray-200 bg-white fixed left-0 top-16 z-20 w-80">
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 truncate">目录列表</h2>
+            <h2 className="text-lg font-semibold text-gray-900 truncate">文章目录</h2>
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => onCreateDirectory && onCreateDirectory()}
@@ -276,13 +274,10 @@ export default function Sidebar({
               </button>
             </div>
           </div>
-          <div className="space-y-1 relative">
-            {directoriesLoading && (
-              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                <LoadingSpinner size="sm" />
-              </div>
-            )}
-            {directories.length === 0 && !directoriesLoading ? (
+          <div className="space-y-1">
+            {directoriesLoading ? (
+              <LoadingSkeleton />
+            ) : directories.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <p>暂无目录</p>
                 <button
@@ -312,8 +307,10 @@ export default function Sidebar({
       {operationLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 shadow-xl">
-            <LoadingSpinner size="lg" className="mb-3" />
-            <p className="text-gray-700 text-sm">处理中...</p>
+            <div className="flex items-center space-x-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+              <p className="text-gray-700 text-sm">处理中...</p>
+            </div>
           </div>
         </div>
       )}

@@ -41,10 +41,10 @@ export function useDirectoryOperations({
       }
       
       if (editingDirectory) {
-        console.log('更新目录:', editingDirectory.id, dirData)
+        // console.log('更新目录:', editingDirectory.id, dirData)
         await db.updateDirectory(editingDirectory.id, dirData)
       } else {
-        console.log('创建目录:', dirData)
+        // console.log('创建目录:', dirData)
         await db.createDirectory(dirData)
       }
       

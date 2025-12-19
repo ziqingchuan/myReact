@@ -16,14 +16,14 @@ let supabase = null
 if (!useMockData) {
   try {
     supabase = createClient(supabaseUrl, supabaseAnonKey)
-    console.log('数据库连接成功')
+    // console.log('数据库连接成功')
   } catch (error) {
     console.warn('Supabase 初始化失败，使用模拟数据:', error)
   }
 }
 
 if (useMockData) {
-  console.log('使用模拟数据模式 - 请配置正确的 Supabase 环境变量以连接真实数据库')
+  // console.log('使用模拟数据模式 - 请配置正确的 Supabase 环境变量以连接真实数据库')
 }
 
 // 构建目录树的辅助函数
@@ -56,7 +56,7 @@ export const db = {
       return new Promise(resolve => {
         setTimeout(() => {
           const tree = buildDirectoryTree(mutableMockDirectories, mutableMockArticles)
-          console.log('构建的目录树:', tree)
+          // console.log('构建的目录树:', tree)
           resolve(tree)
         }, 100)
       })
@@ -134,7 +134,7 @@ export const db = {
               articles: []
             }
             mutableMockDirectories.push(newDir)
-            console.log('创建目录成功:', newDir)
+            // console.log('创建目录成功:', newDir)
             resolve(newDir)
           } catch (error) {
             reject(error)
@@ -205,7 +205,7 @@ export const db = {
                 updateArticlesInDirectory(id)
               }
               
-              console.log('更新目录成功:', mutableMockDirectories[dirIndex])
+              // console.log('更新目录成功:', mutableMockDirectories[dirIndex])
               resolve(mutableMockDirectories[dirIndex])
             } else {
               reject(new Error('目录不存在'))
@@ -276,12 +276,12 @@ export const db = {
           const deleteRecursive = (dirId) => {
             // 找到所有子目录
             const childDirs = mutableMockDirectories.filter(d => d.parent_id === dirId)
-            console.log(`删除目录 ${dirId} 的子目录:`, childDirs.map(d => d.name))
+            // console.log(`删除目录 ${dirId} 的子目录:`, childDirs.map(d => d.name))
             childDirs.forEach(child => deleteRecursive(child.id))
             
             // 删除该目录下的所有文章
             const articlesToDelete = mutableMockArticles.filter(a => a.directory_id === dirId)
-            console.log(`删除目录 ${dirId} 下的文章:`, articlesToDelete.map(a => a.title))
+            // console.log(`删除目录 ${dirId} 下的文章:`, articlesToDelete.map(a => a.title))
             articlesToDelete.forEach(article => {
               const articleIndex = mutableMockArticles.findIndex(a => a.id === article.id)
               if (articleIndex > -1) {
@@ -292,7 +292,7 @@ export const db = {
             // 删除目录本身
             const dirIndex = mutableMockDirectories.findIndex(d => d.id === dirId)
             if (dirIndex > -1) {
-              console.log(`删除目录:`, mutableMockDirectories[dirIndex].name)
+              // console.log(`删除目录:`, mutableMockDirectories[dirIndex].name)
               mutableMockDirectories.splice(dirIndex, 1)
             }
           }
@@ -316,11 +316,11 @@ export const db = {
       // 模拟数据的递归删除逻辑
       const deleteRecursive = (dirId) => {
         const childDirs = mutableMockDirectories.filter(d => d.parent_id === dirId)
-        console.log(`删除目录 ${dirId} 的子目录:`, childDirs.map(d => d.name))
+        // console.log(`删除目录 ${dirId} 的子目录:`, childDirs.map(d => d.name))
         childDirs.forEach(child => deleteRecursive(child.id))
         
         const articlesToDelete = mutableMockArticles.filter(a => a.directory_id === dirId)
-        console.log(`删除目录 ${dirId} 下的文章:`, articlesToDelete.map(a => a.title))
+        // console.log(`删除目录 ${dirId} 下的文章:`, articlesToDelete.map(a => a.title))
         articlesToDelete.forEach(article => {
           const articleIndex = mutableMockArticles.findIndex(a => a.id === article.id)
           if (articleIndex > -1) {
@@ -330,7 +330,7 @@ export const db = {
         
         const dirIndex = mutableMockDirectories.findIndex(d => d.id === dirId)
         if (dirIndex > -1) {
-          console.log(`删除目录:`, mutableMockDirectories[dirIndex].name)
+          // console.log(`删除目录:`, mutableMockDirectories[dirIndex].name)
           mutableMockDirectories.splice(dirIndex, 1)
         }
       }
@@ -352,7 +352,7 @@ export const db = {
             directories: mutableMockDirectories.find(d => d.id === article.directory_id) || null
           }
           mutableMockArticles.push(newArticle)
-          console.log('创建文章成功:', newArticle)
+          // console.log('创建文章成功:', newArticle)
           resolve(newArticle)
         }, 100)
       })
@@ -392,7 +392,7 @@ export const db = {
               ...updates,
               updated_at: new Date().toISOString()
             }
-            console.log('更新文章成功:', mutableMockArticles[articleIndex])
+            // console.log('更新文章成功:', mutableMockArticles[articleIndex])
             resolve(mutableMockArticles[articleIndex])
           }
         }, 100)

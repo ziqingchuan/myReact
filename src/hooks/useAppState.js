@@ -6,11 +6,12 @@ export function useAppState() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [tocCollapsed, setTocCollapsed] = useState(false)
   const [loading, setLoading] = useState(true)
   const [articleLoading, setArticleLoading] = useState(false)
   const [articleNotFound, setArticleNotFound] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
-  const [directoriesLoading, setDirectoriesLoading] = useState(false)
+  const [directoriesLoading, setDirectoriesLoading] = useState(true)
 
   // 数据状态
   const [selectedArticle, setSelectedArticle] = useState(null)
@@ -49,7 +50,7 @@ export function useAppState() {
   // 初始化数据
   useEffect(() => {
     loadFirstArticle()
-    loadDirectories()
+    loadDirectories(true) // 初始加载时显示加载状态
   }, [])
 
   // 监听删除事件
@@ -91,16 +92,15 @@ export function useAppState() {
       setDirectoriesLoading(true)
     }
     try {
-      console.log('开始加载目录...')
+      // console.log('开始加载目录...')
       const data = await db.getDirectoryTree()
-      console.log('加载到的目录数据:', data)
+      // console.log('加载到的目录数据:', data)
       setDirectories(data)
     } catch (error) {
       console.error('加载目录失败:', error)
     } finally {
-      if (showLoading) {
-        setDirectoriesLoading(false)
-      }
+      // 总是设置加载完成状态
+      setDirectoriesLoading(false)
     }
   }
 
@@ -156,6 +156,8 @@ export function useAppState() {
     isMobile,
     sidebarCollapsed,
     setSidebarCollapsed,
+    tocCollapsed,
+    setTocCollapsed,
     loading,
     articleLoading,
     articleNotFound,

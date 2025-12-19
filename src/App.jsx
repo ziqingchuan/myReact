@@ -2,6 +2,7 @@ import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import MainContent from './components/MainContent'
 import MobileSidebar from './components/MobileSidebar'
+import TableOfContents from './components/TableOfContents'
 import ArticleFormModal from './components/customUI/ArticleFormModal'
 import DirectoryFormModal from './components/customUI/DirectoryFormModal'
 import { useAppState } from './hooks/useAppState'
@@ -81,6 +82,17 @@ function App() {
           selectedArticle={appState.selectedArticle}
           onReturnHome={handleReturnHome}
         />
+
+        {/* 右侧文章目录 */}
+        {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
+          <div className={`${appState.tocCollapsed ? 'w-12' : 'w-64'} flex-shrink-0`}>
+            <TableOfContents
+              content={appState.selectedArticle.content}
+              collapsed={appState.tocCollapsed}
+              onToggleCollapse={() => appState.setTocCollapsed(!appState.tocCollapsed)}
+            />
+          </div>
+        )}
 
         {/* 文章编辑表单 */}
         <ArticleFormModal
