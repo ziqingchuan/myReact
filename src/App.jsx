@@ -7,6 +7,7 @@ import TableOfContents from './components/TableOfContents'
 import { useAppState } from './hooks/useAppState'
 import { useArticleOperations } from './hooks/useArticleOperations'
 import { useDirectoryOperations } from './hooks/useDirectoryOperations'
+import { useDarkMode } from './hooks/useDarkMode'
 import './App.css'
 
 // 懒加载表单组件（不常用）
@@ -15,6 +16,7 @@ const DirectoryFormModal = lazy(() => import('./components/customUI/DirectoryFor
 
 function App() {
   const appState = useAppState()
+  const { isDark, toggleDarkMode } = useDarkMode()
   
   const articleOps = useArticleOperations({
     setFormLoading: appState.setFormLoading,
@@ -39,10 +41,12 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
       <Header 
         isMobile={appState.isMobile} 
-        onMenuClick={() => appState.setSidebarOpen(true)} 
+        onMenuClick={() => appState.setSidebarOpen(true)}
+        isDark={isDark}
+        onToggleDarkMode={toggleDarkMode}
       />
       
       <div className="flex relative">

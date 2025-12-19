@@ -4,6 +4,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 暗黑模式下的代码高亮 */
+@media (prefers-color-scheme: dark) {
+  .dark {
+    @import 'highlight.js/styles/github-dark.css';
+  }
+}
+
+/* 代码块暗黑模式样式 */
+.dark pre {
+  background-color: #0d1117 !important;
+  border-color: #30363d !important;
+}
+
+.dark pre code {
+  color: #e6edf3 !important;
+}
+
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
@@ -40,11 +57,11 @@
   }
   
   .prose pre {
-    @apply bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto mb-4;
+    @apply bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4 overflow-x-auto mb-4;
   }
   
   .prose pre code {
-    @apply bg-transparent p-0 text-sm;
+    @apply bg-transparent p-0 text-sm dark:text-gray-200;
   }
   
   .prose ul {

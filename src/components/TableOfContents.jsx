@@ -179,10 +179,10 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
         onClick={() => scrollToHeading(heading.id)}
         className={`
           w-full text-left py-2 px-3 text-sm transition-colors duration-200
-          hover:bg-gray-50 hover:text-gray-900
+          hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100
           ${isActive 
-            ? 'text-blue-600 bg-blue-50 border-r-2 border-blue-600' 
-            : 'text-gray-600'
+            ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border-r-2 border-blue-600' 
+            : 'text-gray-600 dark:text-gray-400'
           }
         `}
         style={{ paddingLeft: `${paddingLeft}px` }}
@@ -195,7 +195,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
 
   if (collapsed) {
     return (
-      <div className="fixed right-0 top-16 z-20 w-12 h-screen border-l border-gray-200 bg-white">
+      <div className="fixed right-0 top-16 z-20 w-12 h-screen border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors">
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
@@ -210,10 +210,10 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
   }
 
   return (
-    <div className="fixed right-0 top-16 z-20 w-64 h-screen border-l border-gray-200 bg-white">
+    <div className="fixed right-0 top-16 z-20 w-64 h-screen border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors">
       <div className="p-4 h-full flex flex-col">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">标题目录</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">标题目录</h3>
           <button
             onClick={onToggleCollapse}
             className="p-1 hover:bg-gray-100 rounded text-gray-600"
@@ -225,7 +225,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
         
         <div className="flex-1 overflow-y-auto">
           {headings.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 text-sm">
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
               <p>当前文章无标题</p>
             </div>
           ) : (

@@ -123,7 +123,7 @@ export default function Sidebar({
     return (
       <div key={dir.id} className="select-none">
         <div
-          className="group flex items-center py-2 px-3 hover:bg-gray-50"
+          className="group flex items-center py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           style={{ paddingLeft: `${12 + level * 16}px` }}
         >
           <div 
@@ -150,7 +150,7 @@ export default function Sidebar({
               </>
             )}
             
-            <span className="text-sm font-medium text-gray-700 truncate flex-1" title={dir.name}>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate flex-1" title={dir.name}>
               {dir.name}
             </span>
           </div>
@@ -188,8 +188,8 @@ export default function Sidebar({
               return (
                 <div
                   key={article.id}
-                  className={`group flex items-center py-2 px-3 hover:bg-gray-50 ${
-                    isActive ? 'bg-blue-50 border-l-2 border-blue-600' : ''
+                  className={`group flex items-center py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                    isActive ? 'bg-blue-50 dark:bg-blue-900/30 border-l-2 border-blue-600' : ''
                   }`}
                   style={{ paddingLeft: `${28 + level * 16}px` }}
                 >
@@ -200,11 +200,11 @@ export default function Sidebar({
                     }}
                     className={`flex-1 flex items-center text-left ${
                       isActive 
-                        ? 'text-blue-600 font-medium' 
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'text-blue-600 dark:text-blue-400 font-medium' 
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                     }`}
                   >
-                    <FileText size={14} className={`mr-2 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <FileText size={14} className={`mr-2 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'}`} />
                     <span className="text-sm">{article.title}</span>
                   </button>
                   
@@ -247,7 +247,7 @@ export default function Sidebar({
 
   if (collapsed) {
     return (
-      <nav className="h-screen border-r border-gray-200 bg-white fixed left-0 top-16 z-20 w-12">
+      <nav className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 fixed left-0 top-16 z-20 w-12 transition-colors" style={{ height: 'calc(100vh - 4rem)' }}>
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
@@ -263,10 +263,10 @@ export default function Sidebar({
 
   return (
     <>
-      <nav className="h-screen overflow-y-auto border-r border-gray-200 bg-white fixed left-0 top-16 z-20 w-80">
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 truncate">文章目录</h2>
+      <nav className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 fixed left-0 top-16 z-20 w-80 flex flex-col transition-colors" style={{ height: 'calc(100vh - 4rem)' }}>
+        <div className="p-4 flex-shrink-0">
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">文章目录</h2>
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => onCreateDirectory && onCreateDirectory()}
@@ -284,6 +284,8 @@ export default function Sidebar({
               </button>
             </div>
           </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 pb-4">
           <div className="space-y-1">
             {directoriesLoading ? (
               <LoadingSkeleton />
@@ -316,10 +318,10 @@ export default function Sidebar({
       {/* 操作加载遮罩 */}
       {operationLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-xl">
             <div className="flex items-center space-x-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
-              <p className="text-gray-700 text-sm">处理中...</p>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 dark:border-gray-100"></div>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">处理中...</p>
             </div>
           </div>
         </div>

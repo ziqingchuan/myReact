@@ -88,11 +88,11 @@ export default function MarkdownRenderer({ content }) {
         
         return (
           <div className="relative group">
-            <div className="flex items-center justify-between bg-gray-800 text-gray-200 px-4 py-2 text-sm rounded-t-lg">
+            <div className="flex items-center justify-between bg-gray-800 dark:bg-gray-950 text-gray-200 dark:text-gray-300 px-4 py-2 text-sm rounded-t-lg border-b border-gray-700 dark:border-gray-800">
               <span className="font-mono">{match[1]}</span>
               <button
                 onClick={() => copyToClipboard(codeContent, codeIndex)}
-                className="flex items-center space-x-1 hover:bg-gray-700 px-2 py-1 rounded"
+                className="flex items-center space-x-1 hover:bg-gray-700 dark:hover:bg-gray-800 px-2 py-1 rounded transition-colors"
               >
                 {copiedCode === codeIndex ? (
                   <>
@@ -121,7 +121,7 @@ export default function MarkdownRenderer({ content }) {
       // 只处理内联代码
       if (inline) {
         return (
-          <code className="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-sm font-mono" {...props}>
+          <code className="bg-gray-100 dark:bg-gray-800 text-pink-600 dark:text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
             {children}
           </code>
         )
@@ -140,7 +140,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <h1 
           id={id}
-          className="text-3xl font-bold text-gray-900 mb-6 mt-8 border-b border-gray-200 pb-2 scroll-mt-20"
+          className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 mt-8 border-b border-gray-200 dark:border-gray-700 pb-2 scroll-mt-20"
         >
           {children}
         </h1>
@@ -152,7 +152,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <h2 
           id={id}
-          className="text-2xl font-semibold text-gray-900 mb-4 mt-6 scroll-mt-20"
+          className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 mt-6 scroll-mt-20"
         >
           {children}
         </h2>
@@ -164,7 +164,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <h3 
           id={id}
-          className="text-xl font-semibold text-gray-900 mb-3 mt-5 scroll-mt-20"
+          className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3 mt-5 scroll-mt-20"
         >
           {children}
         </h3>
@@ -172,20 +172,20 @@ export default function MarkdownRenderer({ content }) {
     },
     
     p({ children }) {
-      return <p className="text-gray-700 leading-7 mb-4">{children}</p>
+      return <p className="text-gray-700 dark:text-gray-300 leading-7 mb-4">{children}</p>
     },
     
     ul({ children }) {
-      return <ul className="list-disc list-inside mb-4 space-y-2 text-gray-700">{children}</ul>
+      return <ul className="list-disc list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ul>
     },
     
     ol({ children }) {
-      return <ol className="list-decimal list-inside mb-4 space-y-2 text-gray-700">{children}</ol>
+      return <ol className="list-decimal list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ol>
     },
     
     blockquote({ children }) {
       return (
-        <blockquote className="border-l-4 border-primary-500 pl-4 italic text-gray-600 mb-4 bg-gray-50 py-2">
+        <blockquote className="border-l-4 border-primary-500 pl-4 italic text-gray-600 dark:text-gray-400 mb-4 bg-gray-50 dark:bg-gray-800 py-2">
           {children}
         </blockquote>
       )
@@ -202,11 +202,11 @@ export default function MarkdownRenderer({ content }) {
     },
     
     th({ children }) {
-      return <th className="border border-gray-300 px-4 py-2 text-left bg-gray-50 font-semibold">{children}</th>
+      return <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left bg-gray-50 dark:bg-gray-800 dark:text-gray-200 font-semibold">{children}</th>
     },
     
     td({ children }) {
-      return <td className="border border-gray-300 px-4 py-2">{children}</td>
+      return <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300">{children}</td>
     },
     
     a({ href, children }) {

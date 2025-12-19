@@ -19,8 +19,8 @@ export default function ArticleView({ article }) {
   if (!article) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">文章不存在</h2>
-        <p className="text-gray-600">请选择其他文章</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">文章不存在</h2>
+        <p className="text-gray-600 dark:text-gray-400">请选择其他文章</p>
       </div>
     )
   }
@@ -29,15 +29,15 @@ export default function ArticleView({ article }) {
     <div className="max-w-4xl mx-auto min-h-full">
       {/* 文章头部 */}
       <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           {article.title}
         </h1>
         
         {article.description && (
-          <p className="text-xl text-gray-600 mb-6">{article.description}</p>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">{article.description}</p>
         )}
         
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center">
             <Calendar size={16} className="mr-1" />
             <span>发布于 {formatDate(article.created_at)}</span>
