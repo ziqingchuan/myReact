@@ -121,7 +121,7 @@ export default function MarkdownRenderer({ content }) {
       // 只处理内联代码
       if (inline) {
         return (
-          <code className="bg-gray-100 dark:bg-gray-800 text-pink-600 dark:text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+          <code className="bg-gray-100 dark:bg-gray-800/50 text-pink-600 dark:text-emerald-400 px-1.5 py-0.5 rounded text-sm font-mono border border-transparent dark:border-gray-700/50" {...props}>
             {children}
           </code>
         )
