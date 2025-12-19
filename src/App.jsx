@@ -60,6 +60,7 @@ function App() {
               directories={appState.directories}
               directoriesLoading={appState.directoriesLoading}
               onLoadDirectories={appState.loadDirectories}
+              selectedArticle={appState.selectedArticle}
             />
           </div>
         )}
@@ -72,6 +73,7 @@ function App() {
           directories={appState.directories}
           directoriesLoading={appState.directoriesLoading}
           onLoadDirectories={appState.loadDirectories}
+          selectedArticle={appState.selectedArticle}
         />
         
         {/* 主内容区域 */}

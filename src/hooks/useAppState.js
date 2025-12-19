@@ -49,8 +49,32 @@ export function useAppState() {
 
   // 初始化数据
   useEffect(() => {
-    loadFirstArticle()
-    loadDirectories(true) // 初始加载时显示加载状态
+    const initializeApp = async () => {
+      // 加载目录
+      loadDirectories(true)
+      
+      // 尝试从 localStorage 恢复上次阅读的文章
+      const lastArticleId = localStorage.getItem('lastArticleId')
+      if (lastArticleId) {
+        setArticleLoading(true)
+        setArticleNotFound(false)
+        try {
+          const article = await db.getArticle(lastArticleId)
+          setSelectedArticle(article)
+        } catch (error) {
+          console.error('恢复上次文章失败:', error)
+          // 如果加载失败，清除 localStorage 中的记录
+          localStorage.removeItem('lastArticleId')
+        } finally {
+          setArticleLoading(false)
+          setLoading(false)
+        }
+      } else {
+        setLoading(false) // 没有上次阅读记录，显示欢迎页
+      }
+    }
+
+    initializeApp()
   }, [])
 
   // 监听删除事件
@@ -60,6 +84,8 @@ export function useAppState() {
       setSelectedArticle(current => {
         if (current && current.id === articleId) {
           setArticleNotFound(true)
+          // 清除 localStorage 中的记录
+          localStorage.removeItem('lastArticleId')
           return null
         }
         return current
@@ -71,6 +97,8 @@ export function useAppState() {
       setSelectedArticle(current => {
         if (current && current.directory_id === directoryId) {
           setArticleNotFound(true)
+          // 清除 localStorage 中的记录
+          localStorage.removeItem('lastArticleId')
           return null
         }
         return current
@@ -105,6 +133,7 @@ export function useAppState() {
   }
 
   const loadFirstArticle = async () => {
+    setArticleLoading(true)
     try {
       const articles = await db.searchArticles('')
       if (articles && articles.length > 0) {
@@ -114,6 +143,7 @@ export function useAppState() {
       console.error('加载文章失败:', error)
     } finally {
       setLoading(false)
+      setArticleLoading(false)
     }
   }
 
@@ -123,13 +153,22 @@ export function useAppState() {
     try {
       const article = await db.getArticle(articleId)
       setSelectedArticle(article)
+      
+      // 保存到 localStorage
+      localStorage.setItem('lastArticleId', articleId)
+      
       if (isMobile) {
         setSidebarOpen(false)
       }
     } catch (error) {
       console.error('加载文章失败:', error)
+      setArticleNotFound(true)
+      
+      // 如果加载失败，清除 localStorage 中的记录
+      localStorage.removeItem('lastArticleId')
     } finally {
       setArticleLoading(false)
+      setLoading(false)
     }
   }
 

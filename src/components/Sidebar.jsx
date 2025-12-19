@@ -15,7 +15,8 @@ export default function Sidebar({
   onCreateDirectory,
   directories = [],
   directoriesLoading = false,
-  onLoadDirectories
+  onLoadDirectories,
+  selectedArticle = null
 }) {
   const [expandedDirs, setExpandedDirs] = useState(new Set())
   const [operationLoading, setOperationLoading] = useState(false)
@@ -182,41 +183,50 @@ export default function Sidebar({
         {isExpanded && (
           <div>
             {/* 渲染文章 */}
-            {hasArticles && dir.articles.map((article) => (
-              <div
-                key={article.id}
-                className="group flex items-center py-2 px-3 hover:bg-gray-50"
-                style={{ paddingLeft: `${28 + level * 16}px` }}
-              >
-                <button
-                  onClick={() => {
-                    onArticleSelect && onArticleSelect(article.id)
-                    onItemClick && onItemClick()
-                  }}
-                  className="flex-1 flex items-center text-gray-600 hover:text-gray-900 text-left"
+            {hasArticles && dir.articles.map((article) => {
+              const isActive = selectedArticle && selectedArticle.id === article.id
+              return (
+                <div
+                  key={article.id}
+                  className={`group flex items-center py-2 px-3 hover:bg-gray-50 ${
+                    isActive ? 'bg-blue-50 border-l-2 border-blue-600' : ''
+                  }`}
+                  style={{ paddingLeft: `${28 + level * 16}px` }}
                 >
-                  <FileText size={14} className="mr-2 text-gray-400" />
-                  <span className="text-sm">{article.title}</span>
-                </button>
-                
-                <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
                   <button
-                    onClick={() => handleEditArticle(article)}
-                    className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-800"
-                    title="编辑文章"
+                    onClick={() => {
+                      onArticleSelect && onArticleSelect(article.id)
+                      onItemClick && onItemClick()
+                    }}
+                    className={`flex-1 flex items-center text-left ${
+                      isActive 
+                        ? 'text-blue-600 font-medium' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
                   >
-                    <Edit size={12} />
+                    <FileText size={14} className={`mr-2 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <span className="text-sm">{article.title}</span>
                   </button>
-                  <button
-                    onClick={() => handleDeleteArticle(article.id, article.title)}
-                    className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
-                    title="删除文章"
-                  >
-                    <Trash2 size={12} />
-                  </button>
+                  
+                  <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
+                    <button
+                      onClick={() => handleEditArticle(article)}
+                      className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-800"
+                      title="编辑文章"
+                    >
+                      <Edit size={12} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteArticle(article.id, article.title)}
+                      className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
+                      title="删除文章"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
             
             {/* 渲染子目录 */}
             {hasChildren && dir.children.map((child) => renderDirectory(child, level + 1))}

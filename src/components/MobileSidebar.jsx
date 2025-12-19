@@ -7,7 +7,8 @@ export default function MobileSidebar({
   onArticleSelect,
   directories,
   directoriesLoading,
-  onLoadDirectories
+  onLoadDirectories,
+  selectedArticle
 }) {
   if (!isOpen) return null
 
@@ -36,6 +37,7 @@ export default function MobileSidebar({
           directories={directories}
           directoriesLoading={directoriesLoading}
           onLoadDirectories={onLoadDirectories}
+          selectedArticle={selectedArticle}
         />
       </div>
     </>
