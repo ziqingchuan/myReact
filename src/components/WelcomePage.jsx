@@ -37,7 +37,7 @@ export default function WelcomePage() {
             <BookOpen className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-3">
-            React 知识整理
+            React 日记
           </h1>
           <p className="text-lg text-gray-600">
             从左侧目录选择文章开始学习
