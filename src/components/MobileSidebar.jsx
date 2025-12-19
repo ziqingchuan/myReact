@@ -22,11 +22,11 @@ export default function MobileSidebar({
       
       {/* 侧边栏 */}
       <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">目录</h2>
+        <div className="flex items-center justify-between p-4 border-b dark:bg-gray-900">
+          <h2 className="text-lg font-semibold dark:text-gray-100">目录</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-gray-100 rounded dark:text-gray-100"
           >
             <X size={20} />
           </button>

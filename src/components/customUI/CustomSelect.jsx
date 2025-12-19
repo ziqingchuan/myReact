@@ -37,14 +37,14 @@ export default function CustomSelect({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`
-          w-full px-3 py-2 text-left bg-white border border-gray-300 rounded-md 
-          focus:ring-2 focus:ring-gray-500 focus:border-transparent
-          flex items-center justify-between
-          ${disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : 'hover:border-gray-400 cursor-pointer'}
-          ${isOpen ? 'ring-2 ring-gray-500 border-transparent' : ''}
+          w-full px-3 py-2 text-left bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md 
+          focus:ring-2 focus:ring-gray-500 dark:focus:ring-blue-500 focus:border-transparent
+          flex items-center justify-between transition-colors
+          ${disabled ? 'bg-gray-50 dark:bg-gray-800 text-gray-400 cursor-not-allowed' : 'hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer'}
+          ${isOpen ? 'ring-2 ring-gray-500 dark:ring-blue-500 border-transparent' : ''}
         `}
       >
-        <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
+        <span className={selectedOption ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-400'}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown 
@@ -54,9 +54,9 @@ export default function CustomSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-auto">
           {options.length === 0 ? (
-            <div className="px-3 py-2 text-gray-500 text-sm">暂无选项</div>
+            <div className="px-3 py-2 text-gray-500 dark:text-gray-400 text-sm">暂无选项</div>
           ) : (
             options.map((option) => (
               <button
@@ -64,14 +64,14 @@ export default function CustomSelect({
                 type="button"
                 onClick={() => handleSelect(option.value)}
                 className={`
-                  w-full px-3 py-2 text-left text-sm hover:bg-gray-50 
-                  flex items-center justify-between
-                  ${value === option.value ? 'bg-gray-50 text-gray-900' : 'text-gray-700'}
+                  w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-600 
+                  flex items-center justify-between transition-colors
+                  ${value === option.value ? 'bg-gray-50 dark:bg-gray-600 text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}
                 `}
               >
                 <span>{option.label}</span>
                 {value === option.value && (
-                  <Check size={14} className="text-gray-600" />
+                  <Check size={14} className="text-gray-600 dark:text-gray-400" />
                 )}
               </button>
             ))
