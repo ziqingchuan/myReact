@@ -45,8 +45,17 @@ export default function MarkdownRenderer({ content }) {
       
       if (match) {
         const codeContent = extractTextContent(codeElement?.children)
-        // 使用代码内容的哈希作为稳定的标识符
-        const codeIndex = btoa(codeContent.substring(0, 50)).replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)
+        // 使用简单的哈希函数生成稳定的标识符，避免 btoa 的中文字符问题
+        const generateHash = (str) => {
+          let hash = 0
+          for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i)
+            hash = ((hash << 5) - hash) + char
+            hash = hash & hash // 转换为32位整数
+          }
+          return Math.abs(hash).toString(36).substring(0, 10)
+        }
+        const codeIndex = generateHash(codeContent.substring(0, 100))
         
         return (
           <div className="relative group">
