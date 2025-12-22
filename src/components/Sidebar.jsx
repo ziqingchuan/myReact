@@ -198,17 +198,18 @@ export default function Sidebar({
                       onArticleSelect && onArticleSelect(article.id)
                       onItemClick && onItemClick()
                     }}
-                    className={`flex-1 flex items-center text-left ${
+                    className={`flex-1 flex items-center text-left min-w-0 ${
                       isActive 
                         ? 'text-blue-600 dark:text-blue-400 font-medium' 
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                     }`}
+                    title={article.title}
                   >
-                    <FileText size={14} className={`mr-2 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'}`} />
-                    <span className="text-sm">{article.title}</span>
+                    <FileText size={14} className={`mr-2 flex-shrink-0 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'}`} />
+                    <span className="text-sm truncate">{article.title}</span>
                   </button>
                   
-                  <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
+                  <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2 flex-shrink-0">
                     <button
                       onClick={() => handleEditArticle(article)}
                       className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-800"
@@ -251,7 +252,7 @@ export default function Sidebar({
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded"
+            className="w-8 h-8 flex items-center text-gray-600 justify-center hover:bg-gray-100 rounded"
             title="展开目录"
           >
             <PanelLeftOpen size={16} />

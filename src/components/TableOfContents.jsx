@@ -195,11 +195,11 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
 
   if (collapsed) {
     return (
-      <div className="fixed right-0 top-16 z-20 w-12 h-screen border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors">
+      <div className="fixed right-0 top-16 z-20 w-12 border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors" style={{ height: 'calc(100vh - 4rem)' }}>
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded"
+            className="w-8 h-8 flex items-center text-gray-600 justify-center hover:bg-gray-100 rounded"
             title="展开目录"
           >
             <PanelRightOpen size={16} />
@@ -210,9 +210,9 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
   }
 
   return (
-    <div className="fixed right-0 top-16 z-20 w-64 h-screen border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors">
-      <div className="p-4 h-full flex flex-col">
-        <div className="flex items-center justify-between mb-4">
+    <div className="fixed right-0 top-16 z-20 w-64 border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
+      <div className="p-4 flex-shrink-0">
+        <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">标题目录</h3>
           <button
             onClick={onToggleCollapse}
@@ -222,18 +222,18 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
             <PanelRightClose size={16} />
           </button>
         </div>
-        
-        <div className="flex-1 overflow-y-auto">
-          {headings.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
-              <p>当前文章无标题</p>
-            </div>
-          ) : (
-            <div className="space-y-1">
-              {headings.map(renderHeading)}
-            </div>
-          )}
-        </div>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto px-4 pb-4">
+        {headings.length === 0 ? (
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
+            <p>当前文章无标题</p>
+          </div>
+        ) : (
+          <div className="space-y-1">
+            {headings.map(renderHeading)}
+          </div>
+        )}
       </div>
     </div>
   )

@@ -24,7 +24,8 @@ function App() {
     loadDirectories: appState.loadDirectories,
     setFormData: appState.setFormData,
     setEditingArticle: appState.setEditingArticle,
-    setShowCreateForm: appState.setShowCreateForm
+    setShowCreateForm: appState.setShowCreateForm,
+    invalidateCache: appState.invalidateCache
   })
 
   const directoryOps = useDirectoryOperations({
@@ -32,7 +33,8 @@ function App() {
     loadDirectories: appState.loadDirectories,
     setDirFormData: appState.setDirFormData,
     setEditingDirectory: appState.setEditingDirectory,
-    setShowCreateDirForm: appState.setShowCreateDirForm
+    setShowCreateDirForm: appState.setShowCreateDirForm,
+    invalidateCache: appState.invalidateCache
   })
 
   const handleReturnHome = () => {

@@ -5,7 +5,8 @@ export function useDirectoryOperations({
   loadDirectories,
   setDirFormData,
   setEditingDirectory,
-  setShowCreateDirForm
+  setShowCreateDirForm,
+  invalidateCache
 }) {
   const handleCreateDirectory = () => {
     setEditingDirectory(null)
@@ -41,16 +42,18 @@ export function useDirectoryOperations({
       }
       
       if (editingDirectory) {
-        // console.log('更新目录:', editingDirectory.id, dirData)
         await db.updateDirectory(editingDirectory.id, dirData)
       } else {
-        // console.log('创建目录:', dirData)
         await db.createDirectory(dirData)
       }
       
       resetDirForm()
-      // 立即刷新目录数据，显示加载状态
-      await loadDirectories(true)
+      
+      // 清除缓存
+      invalidateCache()
+      
+      // 强制刷新目录数据，显示加载状态
+      await loadDirectories(true, true)
     } catch (error) {
       console.error('保存目录失败:', error)
       alert('保存目录失败: ' + error.message)

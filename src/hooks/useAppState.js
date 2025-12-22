@@ -163,18 +163,20 @@ export function useAppState() {
   }, [])
 
   // 数据加载函数 - 带 localStorage 缓存
-  const loadDirectories = useCallback(async (showLoading = false) => {
-    // 防止重复加载
-    if (loadingRef.current) {
+  const loadDirectories = useCallback(async (showLoading = false, forceRefresh = false) => {
+    // 防止重复加载（除非强制刷新）
+    if (!forceRefresh && loadingRef.current) {
       return
     }
 
-    // 先尝试从 localStorage 读取缓存
-    const cached = getCachedDirectories()
-    if (cached) {
-      setDirectories(cached)
-      setDirectoriesLoading(false)
-      return
+    // 如果不是强制刷新，先尝试从 localStorage 读取缓存
+    if (!forceRefresh) {
+      const cached = getCachedDirectories()
+      if (cached) {
+        setDirectories(cached)
+        setDirectoriesLoading(false)
+        return
+      }
     }
 
     loadingRef.current = true

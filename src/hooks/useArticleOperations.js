@@ -6,7 +6,8 @@ export function useArticleOperations({
   loadDirectories,
   setFormData,
   setEditingArticle,
-  setShowCreateForm
+  setShowCreateForm,
+  invalidateCache
 }) {
   const handleEditArticle = (article) => {
     setEditingArticle(article)
@@ -31,8 +32,12 @@ export function useArticleOperations({
       }
       
       resetForm()
-      // 立即刷新目录数据，显示加载状态
-      await loadDirectories(true)
+      
+      // 清除缓存
+      invalidateCache()
+      
+      // 强制刷新目录数据，显示加载状态
+      await loadDirectories(true, true)
       await loadFirstArticle()
     } catch (error) {
       console.error('保存失败:', error)
