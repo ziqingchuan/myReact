@@ -188,7 +188,7 @@ export default function Sidebar({
               return (
                 <div
                   key={article.id}
-                  className={`group flex items-center py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                  className={`group flex items-center py-2 px-3 ml-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
                     isActive ? 'bg-blue-50 dark:bg-blue-900/30 border-l-2 border-blue-600' : ''
                   }`}
                   style={{ paddingLeft: `${28 + level * 16}px` }}
@@ -252,7 +252,7 @@ export default function Sidebar({
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center text-gray-600 justify-center hover:bg-gray-100 rounded"
+            className="w-8 h-8 flex items-center text-gray-300 justify-center hover:bg-gray-100 rounded"
             title="展开目录"
           >
             <PanelLeftOpen size={16} />
@@ -271,14 +271,14 @@ export default function Sidebar({
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => onCreateDirectory && onCreateDirectory()}
-                className="p-1 hover:bg-gray-100 rounded text-gray-600 hover:text-gray-800"
+                className="p-1 hover:bg-gray-100 rounded text-gray-300 hover:text-gray-800"
                 title="新建目录"
               >
                 <FolderPlus size={16} />
               </button>
               <button
                 onClick={onToggleCollapse}
-                className="p-1 hover:bg-gray-100 rounded text-gray-600"
+                className="p-1 hover:bg-gray-100 rounded text-gray-300"
                 title="收起目录"
               >
                 <PanelLeftClose size={16} />

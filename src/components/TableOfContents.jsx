@@ -199,7 +199,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center text-gray-600 justify-center hover:bg-gray-100 rounded"
+            className="w-8 h-8 flex items-center text-gray-300 justify-center hover:bg-gray-100 rounded"
             title="展开目录"
           >
             <PanelRightOpen size={16} />
@@ -216,7 +216,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">标题目录</h3>
           <button
             onClick={onToggleCollapse}
-            className="p-1 hover:bg-gray-100 rounded text-gray-600"
+            className="p-1 hover:bg-gray-100 rounded text-gray-300"
             title="收起目录"
           >
             <PanelRightClose size={16} />
