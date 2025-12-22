@@ -1,5 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { db } from '../lib/supabase'
+
+const CACHE_KEY = 'directories_cache'
+const CACHE_TIME_KEY = 'directories_cache_time'
+const CACHE_DURATION = 30000 // 30秒缓存
 
 export function useAppState() {
   // UI 状态
@@ -33,6 +37,9 @@ export function useAppState() {
     parent_id: ''
   })
 
+  // 防止重复加载
+  const loadingRef = useRef(false)
+
   // 检测移动端
   useEffect(() => {
     const checkMobile = () => {
@@ -63,14 +70,13 @@ export function useAppState() {
           setSelectedArticle(article)
         } catch (error) {
           console.error('恢复上次文章失败:', error)
-          // 如果加载失败，清除 localStorage 中的记录
           localStorage.removeItem('lastArticleId')
         } finally {
           setArticleLoading(false)
           setLoading(false)
         }
       } else {
-        setLoading(false) // 没有上次阅读记录，显示欢迎页
+        setLoading(false)
       }
     }
 
@@ -84,12 +90,13 @@ export function useAppState() {
       setSelectedArticle(current => {
         if (current && current.id === articleId) {
           setArticleNotFound(true)
-          // 清除 localStorage 中的记录
           localStorage.removeItem('lastArticleId')
           return null
         }
         return current
       })
+      // 清除缓存
+      invalidateCache()
     }
 
     const handleDirectoryDeleted = (event) => {
@@ -97,12 +104,13 @@ export function useAppState() {
       setSelectedArticle(current => {
         if (current && current.directory_id === directoryId) {
           setArticleNotFound(true)
-          // 清除 localStorage 中的记录
           localStorage.removeItem('lastArticleId')
           return null
         }
         return current
       })
+      // 清除缓存
+      invalidateCache()
     }
 
     window.addEventListener('articleDeleted', handleArticleDeleted)
@@ -114,23 +122,78 @@ export function useAppState() {
     }
   }, [])
 
-  // 数据加载函数
-  const loadDirectories = async (showLoading = false) => {
+  // 从 localStorage 读取缓存
+  const getCachedDirectories = () => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY)
+      const cacheTime = localStorage.getItem(CACHE_TIME_KEY)
+      
+      if (cached && cacheTime) {
+        const now = Date.now()
+        const age = now - parseInt(cacheTime, 10)
+        
+        if (age < CACHE_DURATION) {
+          return JSON.parse(cached)
+        }
+      }
+    } catch (error) {
+      console.error('读取缓存失败:', error)
+    }
+    return null
+  }
+
+  // 保存到 localStorage
+  const saveCachedDirectories = (data) => {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(data))
+      localStorage.setItem(CACHE_TIME_KEY, Date.now().toString())
+    } catch (error) {
+      console.error('保存缓存失败:', error)
+    }
+  }
+
+  // 清除缓存
+  const invalidateCache = useCallback(() => {
+    try {
+      localStorage.removeItem(CACHE_KEY)
+      localStorage.removeItem(CACHE_TIME_KEY)
+    } catch (error) {
+      console.error('清除缓存失败:', error)
+    }
+  }, [])
+
+  // 数据加载函数 - 带 localStorage 缓存
+  const loadDirectories = useCallback(async (showLoading = false) => {
+    // 防止重复加载
+    if (loadingRef.current) {
+      return
+    }
+
+    // 先尝试从 localStorage 读取缓存
+    const cached = getCachedDirectories()
+    if (cached) {
+      setDirectories(cached)
+      setDirectoriesLoading(false)
+      return
+    }
+
+    loadingRef.current = true
     if (showLoading) {
       setDirectoriesLoading(true)
     }
+
     try {
-      // console.log('开始加载目录...')
       const data = await db.getDirectoryTree()
-      // console.log('加载到的目录数据:', data)
       setDirectories(data)
+      // 保存到 localStorage
+      saveCachedDirectories(data)
     } catch (error) {
       console.error('加载目录失败:', error)
     } finally {
-      // 总是设置加载完成状态
       setDirectoriesLoading(false)
+      loadingRef.current = false
     }
-  }
+  }, [])
 
   const loadFirstArticle = async () => {
     setArticleLoading(true)
@@ -223,6 +286,7 @@ export function useAppState() {
     loadDirectories,
     loadFirstArticle,
     handleArticleSelect,
-    getDirectoryOptions
+    getDirectoryOptions,
+    invalidateCache
   }
 }
