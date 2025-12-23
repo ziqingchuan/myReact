@@ -251,7 +251,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
   }
 
   return (
-    <div className="fixed right-0 top-16 z-20 w-64 border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
+    <div className="fixed right-0 top-16 z-20 w-80 border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
       <div className="p-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">标题目录</h3>
