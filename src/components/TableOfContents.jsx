@@ -6,6 +6,8 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
   const [activeId, setActiveId] = useState('')
   const observerRef = useRef(null)
   const isScrollingRef = useRef(false)
+  const tocContainerRef = useRef(null)
+  const activeItemRef = useRef(null)
 
   // 生成标题 ID - 与 MarkdownRenderer 保持一致
   const generateId = (text) => {
@@ -128,6 +130,44 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
     }
   }, [headings, collapsed])
 
+  // 自动滚动到高亮的标题项
+  useEffect(() => {
+    if (!activeId || collapsed || !tocContainerRef.current || !activeItemRef.current) return
+
+    // 使用 requestAnimationFrame 确保 DOM 已更新
+    requestAnimationFrame(() => {
+      if (!activeItemRef.current || !tocContainerRef.current) return
+
+      const container = tocContainerRef.current
+      const activeItem = activeItemRef.current
+
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = activeItem.getBoundingClientRect()
+
+      // 计算相对于容器的位置
+      const itemTop = itemRect.top - containerRect.top + container.scrollTop
+      const itemBottom = itemTop + itemRect.height
+
+      const containerScrollTop = container.scrollTop
+      const containerHeight = container.clientHeight
+
+      // 如果标题项不在可视区域内，滚动到它
+      if (itemTop < containerScrollTop) {
+        // 标题项在可视区域上方
+        container.scrollTo({
+          top: itemTop - 20, // 留一点边距
+          behavior: 'smooth'
+        })
+      } else if (itemBottom > containerScrollTop + containerHeight) {
+        // 标题项在可视区域下方
+        container.scrollTo({
+          top: itemBottom - containerHeight + 20, // 留一点边距
+          behavior: 'smooth'
+        })
+      }
+    })
+  }, [activeId, collapsed])
+
   // 点击跳转到标题
   const scrollToHeading = (id) => {
     const element = document.getElementById(id)
@@ -176,6 +216,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
     return (
       <button
         key={heading.id}
+        ref={isActive ? activeItemRef : null}
         onClick={() => scrollToHeading(heading.id)}
         className={`
           w-full text-left py-2 px-3 text-sm transition-colors duration-200
@@ -199,7 +240,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center text-gray-300 justify-center hover:bg-gray-100 rounded"
+            className="w-8 h-8 flex items-center text-gray-900 dark:text-gray-100 justify-center hover:bg-gray-100 rounded"
             title="展开目录"
           >
             <PanelRightOpen size={16} />
@@ -216,7 +257,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">标题目录</h3>
           <button
             onClick={onToggleCollapse}
-            className="p-1 hover:bg-gray-100 rounded text-gray-300"
+            className="p-1 hover:bg-gray-100 rounded text-gray-600 dark:text-gray-100"
             title="收起目录"
           >
             <PanelRightClose size={16} />
@@ -224,7 +265,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+      <div ref={tocContainerRef} className="flex-1 overflow-y-auto px-4 pb-4">
         {headings.length === 0 ? (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
             <p>当前文章无标题</p>
