@@ -2,12 +2,12 @@ import { db } from '../lib/supabase'
 
 export function useArticleOperations({
   setFormLoading,
-  loadFirstArticle,
   loadDirectories,
   setFormData,
   setEditingArticle,
   setShowCreateForm,
-  invalidateCache
+  invalidateCache,
+  handleArticleSelect
 }) {
   const handleEditArticle = (article) => {
     setEditingArticle(article)
@@ -25,10 +25,16 @@ export function useArticleOperations({
     
     setFormLoading(true)
     try {
+      let articleId
+      
       if (editingArticle) {
+        // 更新文章
         await db.updateArticle(editingArticle.id, formData)
+        articleId = editingArticle.id
       } else {
-        await db.createArticle(formData)
+        // 创建新文章
+        const newArticle = await db.createArticle(formData)
+        articleId = newArticle.id
       }
       
       resetForm()
@@ -36,9 +42,13 @@ export function useArticleOperations({
       // 清除缓存
       invalidateCache()
       
-      // 强制刷新目录数据，显示加载状态
+      // 强制刷新目录数据
       await loadDirectories(true, true)
-      await loadFirstArticle()
+      
+      // 加载刚刚保存/创建的文章
+      if (articleId) {
+        await handleArticleSelect(articleId)
+      }
     } catch (error) {
       console.error('保存失败:', error)
       alert('保存失败: ' + error.message)

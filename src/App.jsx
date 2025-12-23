@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import MainContent from './components/MainContent'
@@ -8,24 +8,28 @@ import { useAppState } from './hooks/useAppState'
 import { useArticleOperations } from './hooks/useArticleOperations'
 import { useDirectoryOperations } from './hooks/useDirectoryOperations'
 import { useDarkMode } from './hooks/useDarkMode'
+import { useAuth } from './hooks/useAuth'
 import './App.css'
 
 // 懒加载表单组件（不常用）
 const ArticleFormModal = lazy(() => import('./components/customUI/ArticleFormModal'))
 const DirectoryFormModal = lazy(() => import('./components/customUI/DirectoryFormModal'))
+const AuthModal = lazy(() => import('./components/customUI/AuthModal'))
 
 function App() {
   const appState = useAppState()
   const { isDark, toggleDarkMode } = useDarkMode()
+  const { isAuthenticated, login, logout } = useAuth()
+  const [showAuthModal, setShowAuthModal] = useState(false)
   
   const articleOps = useArticleOperations({
     setFormLoading: appState.setFormLoading,
-    loadFirstArticle: appState.loadFirstArticle,
     loadDirectories: appState.loadDirectories,
     setFormData: appState.setFormData,
     setEditingArticle: appState.setEditingArticle,
     setShowCreateForm: appState.setShowCreateForm,
-    invalidateCache: appState.invalidateCache
+    invalidateCache: appState.invalidateCache,
+    handleArticleSelect: appState.handleArticleSelect
   })
 
   const directoryOps = useDirectoryOperations({
@@ -49,6 +53,9 @@ function App() {
         onMenuClick={() => appState.setSidebarOpen(true)}
         isDark={isDark}
         onToggleDarkMode={toggleDarkMode}
+        isAuthenticated={isAuthenticated}
+        onAuthClick={() => setShowAuthModal(true)}
+        onLogout={logout}
       />
       
       <div className="flex relative">
@@ -70,6 +77,7 @@ function App() {
               directoriesLoading={appState.directoriesLoading}
               onLoadDirectories={appState.loadDirectories}
               selectedArticle={appState.selectedArticle}
+              isAuthenticated={isAuthenticated}
             />
           </div>
         )}
@@ -132,6 +140,15 @@ function App() {
             onSubmit={(e) => directoryOps.handleSubmitDirectory(e, appState.dirFormData, appState.editingDirectory)}
             onFormDataChange={appState.setDirFormData}
             getDirectoryOptions={appState.getDirectoryOptions}
+          />
+        </Suspense>
+
+        {/* 权限验证弹窗 */}
+        <Suspense fallback={null}>
+          <AuthModal
+            isOpen={showAuthModal}
+            onClose={() => setShowAuthModal(false)}
+            onSubmit={login}
           />
         </Suspense>
       </div>

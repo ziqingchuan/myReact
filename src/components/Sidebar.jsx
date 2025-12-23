@@ -16,7 +16,8 @@ export default function Sidebar({
   directories = [],
   directoriesLoading = false,
   onLoadDirectories,
-  selectedArticle = null
+  selectedArticle = null,
+  isAuthenticated = false
 }) {
   const [expandedDirs, setExpandedDirs] = useState(new Set())
   const [operationLoading, setOperationLoading] = useState(false)
@@ -155,29 +156,31 @@ export default function Sidebar({
             </span>
           </div>
           
-          <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
-            <button
-              onClick={() => onEditDirectory && onEditDirectory(dir)}
-              className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-700"
-              title="编辑目录"
-            >
-              <Edit size={12} />
-            </button>
-            <button
-              onClick={() => onCreateArticle && onCreateArticle(dir.id)}
-              className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-700"
-              title="在此目录下新建文章"
-            >
-              <Plus size={14} />
-            </button>
-            <button
-              onClick={() => handleDeleteDirectory(dir)}
-              className="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-red-600"
-              title="删除目录"
-            >
-              <Trash2 size={12} />
-            </button>
-          </div>
+          {isAuthenticated && (
+            <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
+              <button
+                onClick={() => onEditDirectory && onEditDirectory(dir)}
+                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-700"
+                title="编辑目录"
+              >
+                <Edit size={12} />
+              </button>
+              <button
+                onClick={() => onCreateArticle && onCreateArticle(dir.id)}
+                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-700"
+                title="在此目录下新建文章"
+              >
+                <Plus size={14} />
+              </button>
+              <button
+                onClick={() => handleDeleteDirectory(dir)}
+                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
+                title="删除目录"
+              >
+                <Trash2 size={12} />
+              </button>
+            </div>
+          )}
         </div>
         
         {isExpanded && (
@@ -209,22 +212,24 @@ export default function Sidebar({
                     <span className="text-sm truncate">{article.title}</span>
                   </button>
                   
-                  <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2 flex-shrink-0">
-                    <button
-                      onClick={() => handleEditArticle(article)}
-                      className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-800"
-                      title="编辑文章"
-                    >
-                      <Edit size={12} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteArticle(article.id, article.title)}
-                      className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
-                      title="删除文章"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
+                  {isAuthenticated && (
+                    <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2 flex-shrink-0">
+                      <button
+                        onClick={() => handleEditArticle(article)}
+                        className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-700"
+                        title="编辑文章"
+                      >
+                        <Edit size={12} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteArticle(article.id, article.title)}
+                        className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
+                        title="删除文章"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               )
             })}
@@ -252,7 +257,7 @@ export default function Sidebar({
         <div className="p-2">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center text-gray-900 dark:text-gray-100 justify-center hover:bg-gray-100 rounded"
+            className="w-8 h-8 flex items-center text-gray-900 dark:text-gray-100 justify-center hover:bg-gray-400 rounded"
             title="展开目录"
           >
             <PanelLeftOpen size={16} />
@@ -269,16 +274,18 @@ export default function Sidebar({
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">文章目录</h2>
             <div className="flex items-center space-x-1">
-              <button
-                onClick={() => onCreateDirectory && onCreateDirectory()}
-                className="p-1 hover:bg-gray-100 rounded text-gray-900 dark:text-gray-100 hover:text-gray-800"
-                title="新建目录"
-              >
-                <FolderPlus size={16} />
-              </button>
+              {isAuthenticated && (
+                <button
+                  onClick={() => onCreateDirectory && onCreateDirectory()}
+                  className="p-1 hover:bg-gray-400 rounded text-gray-900 dark:text-gray-100 hover:text-gray-800"
+                  title="新建目录"
+                >
+                  <FolderPlus size={16} />
+                </button>
+              )}
               <button
                 onClick={onToggleCollapse}
-                className="p-1 hover:bg-gray-100 rounded text-gray-900 dark:text-gray-100"
+                className="p-1 hover:bg-gray-400 rounded text-gray-900 dark:text-gray-100"
                 title="收起目录"
               >
                 <PanelLeftClose size={16} />
