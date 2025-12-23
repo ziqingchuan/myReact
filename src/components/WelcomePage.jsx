@@ -1,4 +1,5 @@
 import { BookOpen, ExternalLink } from 'lucide-react'
+import reactSvg from '../assets/react.svg'
 
 export default function WelcomePage() {
   const links = [
@@ -29,17 +30,21 @@ export default function WelcomePage() {
   ]
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="flex items-center justify-center px-4 py-12">
       <div className="max-w-4xl w-full">
         {/* 主标题区域 */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mb-6 shadow-lg">
-            <BookOpen className="w-8 h-8 text-white" />
+            <img 
+              src={reactSvg} 
+              alt="logo" 
+              className="w-10 h-10 text-white"
+            />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-3 dark: text-gray-100">
+          <h1 className="text-4xl font-bold text-gray-900 mb-6 dark:text-gray-100">
             React 日记
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-600 dark:text-gray-500">
             从左侧目录选择文章开始学习
           </p>
         </div>
