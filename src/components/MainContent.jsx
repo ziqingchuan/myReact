@@ -1,7 +1,7 @@
 import ArticleView from './ArticleView'
 import ArticleNotFound from './ArticleNotFound'
 import WelcomePage from './WelcomePage'
-import { LoadingOverlay } from './customUI/LoadingSpinner'
+import ArticleSkeleton from './ArticleSkeleton'
 
 export default function MainContent({ 
   loading, 
@@ -14,9 +14,9 @@ export default function MainContent({
     <main className="flex-1 min-w-0 overflow-auto h-screen bg-white dark:bg-gray-900 transition-colors custom-scrollbar">
       <div className="max-w-4xl mx-auto px-4 py-8 pb-16">
         {loading ? (
-          <LoadingOverlay message="正在加载..." />
+          <ArticleSkeleton />
         ) : articleLoading ? (
-          <LoadingOverlay message="正在加载文章..." />
+          <ArticleSkeleton />
         ) : articleNotFound ? (
           <ArticleNotFound onReturnHome={onReturnHome} />
         ) : selectedArticle ? (
