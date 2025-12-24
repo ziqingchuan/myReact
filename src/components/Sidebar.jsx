@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose, PanelLeftOpen, Edit, Trash2, Plus, FolderPlus } from 'lucide-react'
 import { db } from '../lib/supabase'
 import ConfirmDialog from './customUI/ConfirmDialog'
+import DirectorySkeleton from './customUI/DirectorySkeleton'
 
 
 export default function Sidebar({ 
@@ -242,74 +243,6 @@ export default function Sidebar({
     )
   }
 
-  // 加载状态组件 - 模拟目录树结构
-  const LoadingSkeleton = () => (
-    <div className="animate-pulse space-y-2">
-      {/* 第一个目录 */}
-      <div className="space-y-2">
-        <div className="flex items-center space-x-2 py-2">
-          <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
-          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
-        </div>
-        {/* 子项 */}
-        <div className="ml-6 space-y-2">
-          <div className="flex items-center space-x-2 py-1">
-            <div className="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-40"></div>
-          </div>
-          <div className="flex items-center space-x-2 py-1">
-            <div className="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-36"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* 第二个目录 */}
-      <div className="space-y-2">
-        <div className="flex items-center space-x-2 py-2">
-          <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
-          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-28"></div>
-        </div>
-        {/* 子项 */}
-        <div className="ml-6 space-y-2">
-          <div className="flex items-center space-x-2 py-1">
-            <div className="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-44"></div>
-          </div>
-          <div className="flex items-center space-x-2 py-1">
-            <div className="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
-          </div>
-          <div className="flex items-center space-x-2 py-1">
-            <div className="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-38"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* 第三个目录 */}
-      <div className="space-y-2">
-        <div className="flex items-center space-x-2 py-2">
-          <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
-          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-36"></div>
-        </div>
-        {/* 子项 */}
-        <div className="ml-6 space-y-2">
-          <div className="flex items-center space-x-2 py-1">
-            <div className="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-40"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* 第四个目录 */}
-      <div className="flex items-center space-x-2 py-2">
-        <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
-        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-30"></div>
-      </div>
-    </div>
-  )
-
   if (collapsed) {
     return (
       <nav className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 fixed left-0 top-16 z-20 w-12 transition-colors" style={{ height: 'calc(100vh - 4rem)' }}>
@@ -355,7 +288,7 @@ export default function Sidebar({
         <div className="flex-1 overflow-y-auto px-4 pb-4 custom-scrollbar">
           <div className="space-y-1">
             {directoriesLoading ? (
-              <LoadingSkeleton />
+              <DirectorySkeleton />
             ) : directories.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <p>暂无目录</p>

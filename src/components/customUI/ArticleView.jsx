@@ -1,5 +1,5 @@
-import { Calendar, Clock } from 'lucide-react'
-import MarkdownRenderer from './MarkdownRenderer'
+import { Calendar, Clock, User } from 'lucide-react'
+import MarkdownRenderer from '../MarkdownRenderer'
 
 export default function ArticleView({ article }) {
   const formatDate = (dateString) => {
@@ -54,6 +54,18 @@ export default function ArticleView({ article }) {
       <article className="prose max-w-none pb-8">
         <MarkdownRenderer content={article.content} />
       </article>
+
+      {/* 文章底部信息 */}
+      <footer className="mt-8 pt-8 pb-10 border-t border-gray-200 dark:border-gray-700 flex flex-col items-end gap-4">
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+          <Calendar size={14} className="mr-2" />
+          <span>最后更新于: {formatDate(article.updated_at)}</span>
+        </div>
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+          <User size={14} className="mr-2" />
+          <span>作者: Qingchuan Zi</span>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import notFoundSvg from '../assets/notfound.svg'
+import notFoundSvg from '../../assets/notfound.svg'
 
 export default function ArticleNotFound({ onReturnHome }) {
   return (

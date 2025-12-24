@@ -1,7 +1,7 @@
-import ArticleView from './ArticleView'
-import ArticleNotFound from './ArticleNotFound'
-import WelcomePage from './WelcomePage'
-import ArticleSkeleton from './ArticleSkeleton'
+import ArticleView from './customUI/ArticleView'
+import ArticleNotFound from './customUI/ArticleNotFound'
+import WelcomePage from './customUI/WelcomePage'
+import ArticleSkeleton from './customUI/ArticleSkeleton'
 
 export default function MainContent({ 
   loading, 
