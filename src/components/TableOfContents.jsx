@@ -265,7 +265,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
         </div>
       </div>
       
-      <div ref={tocContainerRef} className="flex-1 overflow-y-auto px-4 pb-4">
+      <div ref={tocContainerRef} className="flex-1 overflow-y-auto px-4 pb-4 custom-scrollbar">
         {headings.length === 0 ? (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
             <p>当前文章无标题</p>

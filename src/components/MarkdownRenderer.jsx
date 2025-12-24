@@ -88,11 +88,11 @@ export default function MarkdownRenderer({ content }) {
         
         return (
           <div className="relative group">
-            <div className="flex items-center justify-between bg-gray-800 dark:bg-gray-950 text-gray-200 dark:text-gray-300 px-4 py-2 text-sm rounded-t-lg border-b border-gray-700 dark:border-gray-800">
+            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm rounded-t-lg border-b border-gray-300 dark:border-gray-700">
               <span className="font-mono">{match[1]}</span>
               <button
                 onClick={() => copyToClipboard(codeContent, codeIndex)}
-                className="flex items-center space-x-1 hover:bg-gray-700 dark:hover:bg-gray-800 px-2 py-1 rounded transition-colors"
+                className="flex items-center space-x-1 hover:bg-gray-200 dark:hover:bg-gray-700 px-2 py-1 rounded transition-colors"
               >
                 {copiedCode === codeIndex ? (
                   <>
@@ -107,7 +107,7 @@ export default function MarkdownRenderer({ content }) {
                 )}
               </button>
             </div>
-            <pre className="!mt-0 !rounded-t-none overflow-x-auto">
+            <pre className="!mt-0 !rounded-t-none overflow-x-auto bg-gray-50 dark:bg-gray-900">
               {children}
             </pre>
           </div>
@@ -194,7 +194,7 @@ export default function MarkdownRenderer({ content }) {
     table({ children }) {
       return (
         <div className="overflow-x-auto mb-4">
-          <table className="w-full border-collapse border border-gray-300">
+          <table className="w-full border-collapse border border-gray-300 dark:border-gray-600">
             {children}
           </table>
         </div>
@@ -213,7 +213,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <a 
           href={href} 
-          className="text-primary-600 hover:text-primary-700 underline"
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
           target={href?.startsWith('http') ? '_blank' : undefined}
           rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
         >

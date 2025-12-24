@@ -160,21 +160,21 @@ export default function Sidebar({
             <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
               <button
                 onClick={() => onEditDirectory && onEditDirectory(dir)}
-                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-700"
+                className="p-1 hover:bg-gray-300 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500"
                 title="编辑目录"
               >
                 <Edit size={12} />
               </button>
               <button
                 onClick={() => onCreateArticle && onCreateArticle(dir.id)}
-                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-700"
+                className="p-1 hover:bg-gray-300 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500"
                 title="在此目录下新建文章"
               >
                 <Plus size={14} />
               </button>
               <button
                 onClick={() => handleDeleteDirectory(dir)}
-                className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
+                className="p-1 hover:bg-gray-300 hover:text-red-500 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500 dark:hover:text-red-500"
                 title="删除目录"
               >
                 <Trash2 size={12} />
@@ -216,14 +216,14 @@ export default function Sidebar({
                     <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2 flex-shrink-0">
                       <button
                         onClick={() => handleEditArticle(article)}
-                        className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-gray-700"
+                        className="p-1 hover:bg-gray-300 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500"
                         title="编辑文章"
                       >
                         <Edit size={12} />
                       </button>
                       <button
                         onClick={() => handleDeleteArticle(article.id, article.title)}
-                        className="p-1 hover:bg-gray-200 rounded text-gray-600 hover:text-red-600"
+                        className="p-1 hover:bg-gray-300 hover:text-red-500 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500 dark:hover:text-red-500"
                         title="删除文章"
                       >
                         <Trash2 size={12} />
@@ -293,7 +293,7 @@ export default function Sidebar({
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pb-4">
+        <div className="flex-1 overflow-y-auto px-4 pb-4 custom-scrollbar">
           <div className="space-y-1">
             {directoriesLoading ? (
               <LoadingSkeleton />

@@ -54,7 +54,7 @@ export default function CustomSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-auto custom-scrollbar">
           {options.length === 0 ? (
             <div className="px-3 py-2 text-gray-500 dark:text-gray-400 text-sm">暂无选项</div>
           ) : (

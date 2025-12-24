@@ -1,4 +1,4 @@
-import { Menu, Sun, Moon, Key, LogOut } from 'lucide-react'
+import { Menu, Sun, Moon, Key, LogOut, Github } from 'lucide-react'
 import reactSvg from '../assets/react.svg'
 
 export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout }) {
@@ -29,6 +29,17 @@ export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode
           </div>
 
           <div className="flex items-center space-x-2">
+            {/* GitHub 链接 */}
+            <a
+              href="https://github.com/ziqingchuan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 hover:bg-gray-700 dark:hover:bg-gray-800 rounded-md text-white transition-colors"
+              title="访问 GitHub"
+            >
+              <Github size={20} />
+            </a>
+
             {/* 权限按钮 */}
             {isAuthenticated ? (
               <button

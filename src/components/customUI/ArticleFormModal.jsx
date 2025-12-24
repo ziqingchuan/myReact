@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import CustomSelect from './CustomSelect'
 import LoadingSpinner from './LoadingSpinner'
+import ToggleSwitch from './ToggleSwitch'
 
 export default function ArticleFormModal({
   isOpen,
@@ -17,7 +18,7 @@ export default function ArticleFormModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto transition-colors">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto transition-colors custom-scrollbar">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
             {editingArticle ? '编辑文章' : '新建文章'}
@@ -63,27 +64,23 @@ export default function ArticleFormModal({
             <textarea
               value={formData.content}
               onChange={(e) => onFormDataChange({ ...formData, content: e.target.value })}
-              rows={20}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-gray-500 dark:focus:ring-blue-500 focus:border-transparent font-mono text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              rows={12}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-gray-500 dark:focus:ring-blue-500 focus:border-transparent font-mono text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 custom-scrollbar"
               placeholder="使用 Markdown 格式编写文章内容..."
               required
             />
           </div>
           
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="is_published"
+          <div className="py-4 border-t border-gray-200 dark:border-gray-700">
+            <ToggleSwitch
               checked={formData.is_published}
-              onChange={(e) => onFormDataChange({ ...formData, is_published: e.target.checked })}
-              className="mr-2"
+              onChange={(value) => onFormDataChange({ ...formData, is_published: value })}
+              label="立即发布"
+              description="开启后文章将在网站上可见，关闭则仅保存到数据库"
             />
-            <label htmlFor="is_published" className="text-sm text-gray-700 dark:text-gray-300">
-              立即发布
-            </label>
           </div>
           
-          <div className="flex justify-end space-x-3 pt-4 border-t">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={onClose}
