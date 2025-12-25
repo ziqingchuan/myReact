@@ -120,7 +120,7 @@ export default function TableOfContents({ content, collapsed, onToggleCollapse }
           observer.observe(element)
         }
       })
-    }, 50) // 增加延迟
+    }, 500) // 增加延迟
 
     return () => {
       clearTimeout(timer)

@@ -112,7 +112,7 @@ function App() {
 
         {/* 右侧文章目录 */}
         {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
-          <div className={`${appState.tocCollapsed ? 'w-12' : 'w-64'} flex-shrink-0`}>
+          <div className={`${appState.tocCollapsed ? 'w-12' : 'w-80'} flex-shrink-0`}>
             <TableOfContents
               content={appState.selectedArticle.content}
               collapsed={appState.tocCollapsed}
