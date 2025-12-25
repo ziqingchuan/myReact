@@ -3,7 +3,7 @@ import { db } from '../lib/supabase'
 
 const CACHE_KEY = 'directories_cache'
 const CACHE_TIME_KEY = 'directories_cache_time'
-const CACHE_DURATION = 30000 // 30秒缓存
+const CACHE_DURATION = 120000 // 120秒缓存
 
 export function useAppState() {
   // UI 状态
@@ -270,6 +270,7 @@ export function useAppState() {
     setFormLoading,
     directoriesLoading,
     selectedArticle,
+    setSelectedArticle,
     directories,
     editingArticle,
     setEditingArticle,

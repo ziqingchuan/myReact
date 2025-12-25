@@ -8,7 +8,8 @@ export default function MainContent({
   articleLoading, 
   articleNotFound, 
   selectedArticle, 
-  onReturnHome 
+  onReturnHome,
+  onArticleSelect
 }) {
   return (
     <main className="flex-1 min-w-0 overflow-auto h-screen bg-white dark:bg-gray-900 transition-colors custom-scrollbar">
@@ -22,7 +23,7 @@ export default function MainContent({
         ) : selectedArticle ? (
           <ArticleView article={selectedArticle} />
         ) : (
-          <WelcomePage />
+          <WelcomePage onArticleSelect={onArticleSelect} />
         )}
       </div>
     </main>

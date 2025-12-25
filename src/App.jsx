@@ -46,6 +46,12 @@ function App() {
     appState.loadFirstArticle()
   }
 
+  const handleLogoClick = () => {
+    appState.setSelectedArticle(null)
+    appState.setArticleNotFound(false)
+    localStorage.removeItem('lastArticleId')
+  }
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
       <Header 
@@ -56,6 +62,7 @@ function App() {
         isAuthenticated={isAuthenticated}
         onAuthClick={() => setShowAuthModal(true)}
         onLogout={logout}
+        onLogoClick={handleLogoClick}
       />
       
       <div className="flex relative">
@@ -100,6 +107,7 @@ function App() {
           articleNotFound={appState.articleNotFound}
           selectedArticle={appState.selectedArticle}
           onReturnHome={handleReturnHome}
+          onArticleSelect={appState.handleArticleSelect}
         />
 
         {/* 右侧文章目录 */}

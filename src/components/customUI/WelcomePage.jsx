@@ -1,90 +1,133 @@
+import { useState, useEffect } from 'react'
 import { BookOpen, ExternalLink } from 'lucide-react'
-import reactSvg from '../../assets/react.svg'
+import reactSvg from '../../assets/welcome-logo.svg'
 
-export default function WelcomePage() {
-  const links = [
+export default function WelcomePage({ onArticleSelect }) {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  const handleStartLearning = () => {
+    if (onArticleSelect) {
+      onArticleSelect('16754dea-2ebd-45c8-a8ec-a7516796f5ab')
+    }
+  }
+
+  const features = [
     {
-      name: 'QCloud 文件云盘',
-      url: 'https://try-catch.life/QCloud',
-      description: '个人文件云存储服务',
-      color: 'from-blue-500 to-blue-600'
+      title: '声明式编程',
+      description: '按状态设计视图，数据变动时高效更新渲染组件',
+      color: 'bg-blue-500'
     },
     {
-      name: '个人博客',
-      url: 'https://try-catch.life',
-      description: '技术分享与生活记录',
-      color: 'from-purple-500 to-purple-600'
+      title: '组件化开发',
+      description: '封装组件并组合，通过JavaScript传递管理数据',
+      color: 'bg-purple-500'
     },
     {
-      name: 'DailyUp 日报系统',
-      url: 'https://try-catch.life/DailyUp',
-      description: '每日工作记录与总结',
-      color: 'from-green-500 to-green-600'
+      title: '一次学习，随处编写',
+      description: '兼容现有技术栈，支持服务端渲染和原生开发',
+      color: 'bg-green-500'
     },
     {
-      name: '素笔 Markdown',
-      url: 'https://marklite.cn',
-      description: '简洁优雅的 Markdown 编辑器',
-      color: 'from-orange-500 to-orange-600'
+      title: 'Hooks 特性',
+      description: '无需类组件即可使用state，支持自定义Hook',
+      color: 'bg-orange-500'
+    },
+    {
+      title: '虚拟 DOM',
+      description: '最小化真实DOM交互，计算最小变更提升性能',
+      color: 'bg-cyan-500'
+    },
+    {
+      title: '丰富的生态系统',
+      description: '社区庞大，拥有各类成熟的第三方解决方案',
+      color: 'bg-pink-500'
     }
   ]
 
   return (
-    <div className="flex items-center justify-center px-4 py-12">
-      <div className="max-w-4xl w-full">
-        {/* 主标题区域 */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mb-6 shadow-lg">
-            <img 
-              src={reactSvg} 
-              alt="logo" 
-              className="w-10 h-10 text-white"
-            />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-6 dark:text-gray-100">
-            React 日记
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-500">
-            从左侧目录选择文章开始学习
-          </p>
-        </div>
+    <div className="min-h-[calc(100vh-8rem)] px-4 py-4 overflow-hidden flex items-center justify-center">
+      <div className="max-w-6xl mx-auto">
+        {/* Hero 区域 */}
+        <div 
+          className={`flex flex-col lg:flex-row items-center justify-between gap-12 mb-24 transition-all duration-1000 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          {/* 左侧内容 */}
+          <div className="flex-1 text-center lg:text-left">
+            <h1 className="text-gray-900 dark:text-white text-4xl md:text-5xl font-bold mb-6">
+              React
+            </h1>
+            <h2 className="text-gray-800 dark:text-gray-200 text-2xl md:text-2xl font-semibold mb-6">
+              用于构建用户界面的 JavaScript 库
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-xl">
+              从左侧目录选择文章开始学习 React 的核心概念、最佳实践和高级特性
+            </p>
 
-        {/* 友情链接 */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">友情链接</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {links.map((link) => (
-              <a
-                key={link.url}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all"
+            {/* 按钮组 */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button 
+                onClick={handleStartLearning}
+                className="px-8 py-3 bg-[#001529] dark:bg-gray-800 border-2 dark:border-gray-600 border-gray-300 hover:border-blue-800 dark:hover:border-blue-500 text-white dark:text-gray-300 dark:hover:text-blue-400 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center mb-2">
-                      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${link.color} mr-2`}></div>
-                      <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                        {link.name}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {link.description}
-                    </p>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-shrink-0 ml-2" />
-                </div>
+                <BookOpen className="w-5 h-5" />
+                开始学习
+              </button>
+              <a 
+                href="https://react.dev" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="px-8 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-500 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                官方文档
+                <ExternalLink className="w-4 h-4" />
               </a>
-            ))}
+            </div>
+          </div>
+
+          {/* 右侧 Logo */}
+          <div className="flex-shrink-0">
+            <div className="w-64 h-64 md:w-60 md:h-60 flex items-center justify-center">
+              <img 
+                src={reactSvg} 
+                alt="React Logo" 
+                className="w-full h-full animate-spin-slow opacity-90"
+              />
+            </div>
           </div>
         </div>
 
-        {/* 底部提示 */}
-        <div className="text-center">
-          <p className="text-sm text-gray-400 dark:text-gray-500">
-            💡 提示：点击左上角图标可以展开/收起侧边栏
-          </p>
+        {/* 特性网格 */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className={`bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-300 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              style={{
+                transitionDelay: `${(index + 1) * 60}ms`
+              }}
+            >
+              {/* 圆点图标 */}
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`w-3 h-3 rounded-full ${feature.color}`}></div>
+                <h3 className="text-gray-900 dark:text-white text-lg font-semibold">
+                  {feature.title}
+                </h3>
+              </div>
+
+              {/* 描述 */}
+              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

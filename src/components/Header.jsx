@@ -1,7 +1,7 @@
 import { Menu, Sun, Moon, Key, LogOut, Github } from 'lucide-react'
 import reactSvg from '../assets/react.svg'
 
-export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout }) {
+export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout, onLogoClick }) {
   return (
     <header className="bg-[#001529] dark:bg-gray-900 border-b border-gray-700 dark:border-gray-800 sticky top-0 z-30 transition-colors">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -16,7 +16,10 @@ export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode
               </button>
             )}
             
-            <div className="flex items-center space-x-2">
+            <button 
+              onClick={onLogoClick}
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                 <img 
                   src={reactSvg} 
@@ -25,7 +28,7 @@ export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode
                 />
               </div>
               <span className="text-xl font-bold text-white">React 日记</span>
-            </div>
+            </button>
           </div>
 
           <div className="flex items-center space-x-2">
