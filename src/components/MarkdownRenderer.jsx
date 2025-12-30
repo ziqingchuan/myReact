@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeRaw from 'rehype-raw'
 import { Copy, Check } from 'lucide-react'
 import { useState } from 'react'
 
@@ -176,17 +177,23 @@ export default function MarkdownRenderer({ content }) {
     },
     
     ul({ children }) {
-      return <ul className="list-disc list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ul>
+      return <ul className="list-disc list-outside ml-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ul>
     },
     
     ol({ children }) {
-      return <ol className="list-decimal list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ol>
+      return <ol className="list-decimal list-outside ml-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ol>
+    },
+    
+    li({ children }) {
+      return <li className="text-gray-700 dark:text-gray-300 leading-7">{children}</li>
     },
     
     blockquote({ children }) {
       return (
-        <blockquote className="border-l-4 border-primary-500 pl-4 italic text-gray-600 dark:text-gray-400 mb-4 bg-gray-50 dark:bg-gray-800 py-2">
-          {children}
+        <blockquote className="relative border-l-4 border-blue-500 dark:border-blue-400 pl-6 pr-4 py-4 mb-4 rounded-r-lg bg-blue-50/50 dark:bg-blue-900/20 backdrop-blur-sm">
+          <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
+            {children}
+          </div>
         </blockquote>
       )
     },
@@ -227,7 +234,7 @@ export default function MarkdownRenderer({ content }) {
     <div className="prose max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
+        rehypePlugins={[rehypeRaw, rehypeHighlight]}
         components={components}
       >
         {content}

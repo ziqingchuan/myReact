@@ -58,7 +58,6 @@ export default function AuthModal({ isOpen, onClose, onSubmit }) {
             <input
               type="password"
               value={secret}
-              autocomplete="new-password"
               onChange={(e) => {
                 setSecret(e.target.value)
                 setError('')
