@@ -1,0 +1,350 @@
+.article-nav {
+  border-right: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  position: fixed;
+  left: 0;
+  top: 4rem;
+  z-index: 20;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 4rem);
+}
+
+.article-nav.dark {
+  border-right-color: #374151;
+  background-color: #1f2937;
+}
+
+.article-nav.collapsed {
+  width: 3rem;
+}
+
+.article-nav-header {
+  padding: 0 1rem;
+  padding-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.article-nav-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.article-nav-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-nav.dark .article-nav-title {
+  color: #f9fafb;
+}
+
+.article-nav-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.article-nav-action-btn {
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.article-nav.dark .article-nav-action-btn {
+  color: #f9fafb;
+}
+
+.article-nav-action-btn:hover {
+  background-color: #9ca3af;
+}
+
+.article-nav-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  padding-bottom: 1rem;
+}
+
+.article-nav-directory-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  transition: background-color 0.3s;
+}
+
+.article-nav-directory-item:hover {
+  background-color: #f9fafb;
+}
+
+.article-nav.dark .article-nav-directory-item:hover {
+  background-color: #374151;
+}
+
+.article-nav-directory-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  cursor: pointer;
+}
+
+.article-nav-directory-icon {
+  color: #9ca3af;
+  margin-right: 0.25rem;
+}
+
+.article-nav-directory-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-nav.dark .article-nav-directory-name {
+  color: #d1d5db;
+}
+
+.article-nav-article-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  margin-left: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.article-nav-article-item:hover {
+  background-color: #f9fafb;
+}
+
+.article-nav.dark .article-nav-article-item:hover {
+  background-color: #374151;
+}
+
+.article-nav-article-item.active {
+  background-color: #eff6ff;
+  border-left: 2px solid #2563eb;
+}
+
+.article-nav.dark .article-nav-article-item.active {
+  background-color: rgba(30, 58, 138, 0.3);
+  border-left-color: #2563eb;
+}
+
+.article-nav-article-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  color: #374151;
+}
+
+.article-nav.dark .article-nav-article-btn {
+  color: #d1d5db;
+}
+
+.article-nav-article-btn.active {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.article-nav.dark .article-nav-article-btn.active {
+  color: #60a5fa;
+}
+
+.article-nav-article-btn:not(.active):hover {
+  color: #111827;
+}
+
+.article-nav.dark .article-nav-article-btn:not(.active):hover {
+  color: #e5e7eb;
+}
+
+.article-nav-article-icon {
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.article-nav.dark .article-nav-article-icon {
+  color: #6b7280;
+}
+
+.article-nav-article-btn.active .article-nav-article-icon {
+  color: #2563eb;
+}
+
+.article-nav.dark .article-nav-article-btn.active .article-nav-article-icon {
+  color: #60a5fa;
+}
+
+.article-nav-article-title {
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-nav-article-actions {
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.article-nav-article-item:hover .article-nav-article-actions,
+.article-nav-directory-item:hover .article-nav-article-actions {
+  opacity: 1;
+}
+
+.article-nav-action-icon-btn {
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.article-nav.dark .article-nav-action-icon-btn {
+  color: #f9fafb;
+}
+
+.article-nav-action-icon-btn:hover {
+  background-color: #d1d5db;
+}
+
+.article-nav.dark .article-nav-action-icon-btn:hover {
+  background-color: #6b7280;
+}
+
+.article-nav-action-icon-btn.delete:hover {
+  color: #ef4444;
+}
+
+.article-nav.dark .article-nav-action-icon-btn.delete:hover {
+  color: #ef4444;
+}
+
+.article-nav-empty {
+  text-align: center;
+  padding: 2rem 0;
+  color: #6b7280;
+}
+
+.article-nav-empty-btn {
+  margin-top: 0.5rem;
+  color: #2563eb;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.article-nav-empty-btn:hover {
+  color: #1d4ed8;
+}
+
+.article-nav-collapsed-btn {
+  padding: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111827;
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.article-nav.dark .article-nav-collapsed-btn {
+  color: #f9fafb;
+}
+
+.article-nav-collapsed-btn:hover {
+  background-color: #9ca3af;
+}
+
+.article-nav-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.article-nav-loading-content {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 25px -5px, 0 10px 10px -5px;
+}
+
+.article-nav.dark .article-nav-loading-content {
+  background-color: #1f2937;
+}
+
+.article-nav-loading-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.article-nav-loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  border-top-color: #111827;
+  animation: spin 1s linear infinite;
+}
+
+.article-nav.dark .article-nav-loading-spinner {
+  border-top-color: #f9fafb;
+}
+
+.article-nav-loading-text {
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.article-nav.dark .article-nav-loading-text {
+  color: #d1d5db;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,9 +1,5 @@
 @import 'highlight.js/styles/github.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* 统一的滚动条样式 */
 .custom-scrollbar {
   scrollbar-width: thin;
@@ -42,6 +38,11 @@
   background-color: rgba(75, 85, 99, 0.7);
 }
 
+blockquote {
+  padding: 0;
+  margin: 0;
+}
+
 /* 代码块暗黑模式样式 */
 .dark pre {
   background-color: #0d1117 !important;
@@ -52,63 +53,95 @@
   color: #e6edf3 !important;
 }
 
-/* Blockquote 样式增强 */
-.prose blockquote {
-  position: relative;
-  transition: all 0.2s ease;
+/* 亮色模式代码高亮样式 */
+.hljs {
+  background: #f6f8fa;
+  color: #24292f;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+
 }
 
-.prose blockquote:hover {
-  border-left-color: #3b82f6;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-doctag,
+.hljs-name,
+.hljs-strong {
+  font-weight: 600;
+  color: #cf222e;
 }
 
-.dark .prose blockquote:hover {
-  border-left-color: #60a5fa;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+.hljs-string,
+.hljs-title,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-type,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-link {
+  color: #0a3069;
 }
 
-/* 列表嵌套样式 */
-.prose ul,
-.prose ol {
-  padding-left: 0;
-  margin-left: 1.5rem;
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: #6e7781;
+  font-style: italic;
 }
 
-.prose li {
-  margin-bottom: 0.5rem;
+.hljs-number,
+.hljs-regexp,
+.hljs-literal,
+.hljs-built_in {
+  color: #0550ae;
 }
 
-/* 嵌套列表样式 */
-.prose li > ul,
-.prose li > ol {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  margin-left: 1.5rem;
+.hljs-function,
+.hljs-title.function_,
+.hljs-class .hljs-title,
+.hljs-params {
+  color: #8250df;
 }
 
-/* 有序列表中的无序列表 */
-.prose ol > li > ul {
-  list-style-type: disc;
+.hljs-attribute,
+.hljs-property {
+  color: #0550ae;
 }
 
-/* 无序列表中的有序列表 */
-.prose ul > li > ol {
-  list-style-type: decimal;
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #953800;
 }
 
-/* 第二层嵌套 */
-.prose ul ul,
-.prose ol ul {
-  list-style-type: circle;
+.hljs-tag {
+  color: #22863a;
 }
 
-/* 第三层嵌套 */
-.prose ul ul ul,
-.prose ol ul ul,
-.prose ul ol ul,
-.prose ol ol ul {
-  list-style-type: square;
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #116329;
+}
+
+.hljs-subst {
+  color: #24292f;
+}
+
+.hljs-formula {
+  background-color: #f6f8fa;
+}
+
+.hljs-emphasis {
+  font-style: italic;
 }
 
 /* 暗黑模式下的代码高亮颜色覆盖 */
@@ -121,22 +154,27 @@
 .dark .hljs-selector-tag,
 .dark .hljs-literal,
 .dark .hljs-section,
-.dark .hljs-link {
+.dark .hljs-doctag,
+.dark .hljs-name,
+.dark .hljs-strong {
   color: #ff7b72 !important;
+  font-weight: 600;
 }
 
 .dark .hljs-string,
 .dark .hljs-subst,
 .dark .hljs-title,
-.dark .hljs-name,
+.dark .hljs-built_in,
+.dark .hljs-builtin-name,
 .dark .hljs-type,
-.dark .hljs-attribute,
+.dark .hljs-attr,
 .dark .hljs-symbol,
 .dark .hljs-bullet,
 .dark .hljs-addition,
 .dark .hljs-variable,
 .dark .hljs-template-tag,
-.dark .hljs-template-variable {
+.dark .hljs-template-variable,
+.dark .hljs-link {
   color: #a5d6ff !important;
 }
 
@@ -145,92 +183,69 @@
 .dark .hljs-deletion,
 .dark .hljs-meta {
   color: #8b949e !important;
+  font-style: italic;
 }
 
 .dark .hljs-number,
 .dark .hljs-regexp,
-.dark .hljs-selector-id,
-.dark .hljs-selector-class,
-.dark .hljs-selector-attr,
-.dark .hljs-selector-pseudo {
+.dark .hljs-literal,
+.dark .hljs-built_in {
   color: #79c0ff !important;
 }
 
 .dark .hljs-function,
 .dark .hljs-built_in,
-.dark .hljs-title.function_ {
+.dark .hljs-title.function_,
+.dark .hljs-class .hljs-title,
+.dark .hljs-params {
   color: #d2a8ff !important;
 }
 
-@layer base {
-  html {
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-  
-  body {
-    @apply bg-white text-gray-900;
-  }
+.dark .hljs-attribute,
+.dark .hljs-property {
+  color: #79c0ff !important;
 }
 
-@layer components {
-  .prose {
-    @apply max-w-none;
-  }
-  
-  .prose h1 {
-    @apply text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 mt-8;
-  }
-  
-  .prose h2 {
-    @apply text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 mt-6;
-  }
-  
-  .prose h3 {
-    @apply text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3 mt-5;
-  }
-  
-  .prose p {
-    @apply text-gray-700 dark:text-gray-300 leading-7 mb-4;
-  }
-  
-  .prose code {
-    @apply bg-gray-100 dark:bg-gray-800/50 text-pink-600 dark:text-emerald-400 px-1.5 py-0.5 rounded text-sm font-mono;
-  }
-  
-  .prose pre {
-    @apply bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4 overflow-x-auto mb-4;
-  }
-  
-  .prose pre code {
-    @apply bg-transparent p-0 text-sm dark:text-gray-200;
-  }
-  
-  .prose ul {
-    @apply list-disc list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300;
-  }
-  
-  .prose ol {
-    @apply list-decimal list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300;
-  }
-  
-  .prose blockquote {
-    @apply relative border-l-4 border-blue-500 dark:border-blue-400 pl-6 pr-4 py-4 mb-4 rounded-r-lg bg-blue-50/50 dark:bg-blue-900/20 backdrop-blur-sm;
-  }
-  
-  .prose blockquote p {
-    @apply text-gray-700 dark:text-gray-300 leading-relaxed mb-0;
-  }
-  
-  .prose table {
-    @apply w-full border-collapse border border-gray-300 dark:border-gray-600 mb-4;
-  }
-  
-  .prose th,
-  .prose td {
-    @apply border border-gray-300 dark:border-gray-600 px-4 py-2 text-left dark:text-gray-300;
-  }
-  
-  .prose th {
-    @apply bg-gray-50 dark:bg-gray-800 font-semibold dark:text-gray-200;
-  }
+.dark .hljs-selector-attr,
+.dark .hljs-selector-pseudo,
+.dark .hljs-selector-id,
+.dark .hljs-selector-class {
+  color: #ffa657 !important;
+}
+
+.dark .hljs-tag {
+  color: #7ee787 !important;
+}
+
+.dark .hljs-title.class_,
+.dark .hljs-class .hljs-title {
+  color: #ffa657 !important;
+}
+
+.dark .hljs-subst {
+  color: #e6edf3 !important;
+}
+
+.dark .hljs-formula {
+  background-color: #0d1117 !important;
+}
+
+.dark .hljs-emphasis {
+  font-style: italic;
+}
+
+/* Base styles */
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #111827;
+  margin: 0;
+}
+
+.dark body {
+  background-color: #111827;
+  color: #f9fafb;
 }

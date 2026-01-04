@@ -1,0 +1,18 @@
+.main-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  height: 100%;
+  background-color: #ffffff;
+}
+
+.main-content.dark {
+  background-color: #111827;
+}
+
+.main-content-inner {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  padding-bottom: 4rem;
+}

@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import CustomSelect from './CustomSelect'
 import LoadingSpinner from './LoadingSpinner'
+import '../../styles/Modal.css'
 
 export default function DirectoryFormModal({
   isOpen,
@@ -11,38 +12,39 @@ export default function DirectoryFormModal({
   onClose,
   onSubmit,
   onFormDataChange,
-  getDirectoryOptions
+  getDirectoryOptions,
+  isDark = false
 }) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md transition-colors">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+    <div className="modal-overlay">
+      <div className={`modal ${isDark ? 'dark' : ''}`}>
+        <div className="modal-header">
+          <h2 className="modal-title">
             {editingDirectory ? '编辑目录' : '新建目录'}
           </h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-600 dark:text-gray-400 transition-colors">
+          <button onClick={onClose} className="modal-close-btn">
             <X size={20} />
           </button>
         </div>
         
-        <form onSubmit={onSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <form onSubmit={onSubmit} className="modal-form">
+          <div className="modal-form-group">
+            <label className="modal-form-label">
               目录名称 *
             </label>
             <input
               type="text"
               value={dirFormData.name}
               onChange={(e) => onFormDataChange({ ...dirFormData, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-gray-500 dark:focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className={`modal-form-input ${isDark ? 'dark' : ''}`}
               required
             />
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="modal-form-group">
+            <label className="modal-form-label">
               父目录
             </label>
             <CustomSelect
@@ -55,25 +57,28 @@ export default function DirectoryFormModal({
                 )
               ]}
               placeholder="选择父目录"
+              isDark={isDark}
             />
           </div>
           
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="modal-footer">
             <button
               type="button"
               onClick={onClose}
               disabled={formLoading}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className={`modal-btn modal-btn-secondary ${isDark ? 'dark' : ''}`}
             >
               取消
             </button>
             <button
               type="submit"
               disabled={formLoading}
-              className="px-4 py-2 bg-gray-900 dark:bg-blue-600 text-white rounded-md hover:bg-gray-800 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 transition-colors"
+              className={`modal-btn modal-btn-primary ${isDark ? 'dark' : ''}`}
             >
-              {formLoading && <LoadingSpinner size="sm" />}
-              <span>{editingDirectory ? '更新' : '创建'}</span>
+              <span className="modal-btn-content">
+                {formLoading && <LoadingSpinner size="sm" />}
+                <span>{editingDirectory ? '更新' : '创建'}</span>
+              </span>
             </button>
           </div>
         </form>

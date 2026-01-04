@@ -1,0 +1,15 @@
+.app {
+  min-height: 100vh;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.app.dark {
+  background-color: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app {
+    background-color: #111827;
+  }
+}

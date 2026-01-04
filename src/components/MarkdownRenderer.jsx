@@ -4,8 +4,9 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeRaw from 'rehype-raw'
 import { Copy, Check } from 'lucide-react'
 import { useState } from 'react'
+import '../styles/MarkdownRenderer.css'
 
-export default function MarkdownRenderer({ content }) {
+export default function MarkdownRenderer({ content, isDark = false }) {
   const [copiedCode, setCopiedCode] = useState(null)
 
   const copyToClipboard = async (text, index) => {
@@ -88,12 +89,12 @@ export default function MarkdownRenderer({ content }) {
         const codeIndex = generateHash(codeContent.substring(0, 100))
         
         return (
-          <div className="relative group">
-            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 text-sm rounded-t-lg border-b border-gray-300 dark:border-gray-700">
-              <span className="font-mono">{match[1]}</span>
+          <div className={`markdown-code-block ${isDark ? 'dark' : ''}`}>
+            <div className="markdown-code-header">
+              <span className="markdown-code-language">{match[1]}</span>
               <button
                 onClick={() => copyToClipboard(codeContent, codeIndex)}
-                className="flex items-center space-x-1 hover:bg-gray-200 dark:hover:bg-gray-700 px-2 py-1 rounded transition-colors"
+                className="markdown-code-copy-btn"
               >
                 {copiedCode === codeIndex ? (
                   <>
@@ -108,7 +109,7 @@ export default function MarkdownRenderer({ content }) {
                 )}
               </button>
             </div>
-            <pre className="!mt-0 !rounded-t-none overflow-x-auto bg-gray-50 dark:bg-gray-900">
+            <pre className="markdown-code-pre">
               {children}
             </pre>
           </div>
@@ -118,17 +119,17 @@ export default function MarkdownRenderer({ content }) {
       return <pre>{children}</pre>
     },
     
-    code({ node, inline, className, children, ...props }) {
-      // 只处理内联代码
-      if (inline) {
+    code({ node, className, children, ...props }) {
+      const isInline = node?.children.length === 1 ? true : false
+      
+      if (isInline) {
         return (
-          <code className="bg-gray-100 dark:bg-gray-800/50 text-pink-600 dark:text-emerald-400 px-1.5 py-0.5 rounded text-sm font-mono border border-transparent dark:border-gray-700/50" {...props}>
+          <code className="markdown-inline-code" {...props}>
             {children}
           </code>
         )
       }
       
-      // 块级代码由 pre 组件处理
       return (
         <code className={className} {...props}>
           {children}
@@ -141,7 +142,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <h1 
           id={id}
-          className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 mt-8 border-b border-gray-200 dark:border-gray-700 pb-2 scroll-mt-20"
+          className="markdown-h1"
         >
           {children}
         </h1>
@@ -153,7 +154,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <h2 
           id={id}
-          className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 mt-6 scroll-mt-20"
+          className="markdown-h2"
         >
           {children}
         </h2>
@@ -165,7 +166,7 @@ export default function MarkdownRenderer({ content }) {
       return (
         <h3 
           id={id}
-          className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3 mt-5 scroll-mt-20"
+          className="markdown-h3"
         >
           {children}
         </h3>
@@ -173,25 +174,25 @@ export default function MarkdownRenderer({ content }) {
     },
     
     p({ children }) {
-      return <p className="text-gray-700 dark:text-gray-300 leading-7 mb-4">{children}</p>
+      return <p className="markdown-p">{children}</p>
     },
     
     ul({ children }) {
-      return <ul className="list-disc list-outside ml-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ul>
+      return <ul className="markdown-ul">{children}</ul>
     },
     
     ol({ children }) {
-      return <ol className="list-decimal list-outside ml-6 mb-4 space-y-2 text-gray-700 dark:text-gray-300">{children}</ol>
+      return <ol className="markdown-ol">{children}</ol>
     },
     
     li({ children }) {
-      return <li className="text-gray-700 dark:text-gray-300 leading-7">{children}</li>
+      return <li className="markdown-li">{children}</li>
     },
     
     blockquote({ children }) {
       return (
-        <blockquote className="relative border-l-4 border-blue-500 dark:border-blue-400 pl-6 pr-4 py-4 mb-4 rounded-r-lg bg-blue-50/50 dark:bg-blue-900/20 backdrop-blur-sm">
-          <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
+        <blockquote className="markdown-blockquote">
+          <div className="markdown-blockquote-content">
             {children}
           </div>
         </blockquote>
@@ -200,8 +201,8 @@ export default function MarkdownRenderer({ content }) {
     
     table({ children }) {
       return (
-        <div className="overflow-x-auto mb-4">
-          <table className="w-full border-collapse border border-gray-300 dark:border-gray-600">
+        <div className="markdown-table-container">
+          <table className="markdown-table">
             {children}
           </table>
         </div>
@@ -209,18 +210,18 @@ export default function MarkdownRenderer({ content }) {
     },
     
     th({ children }) {
-      return <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left bg-gray-50 dark:bg-gray-800 dark:text-gray-200 font-semibold">{children}</th>
+      return <th className="markdown-th">{children}</th>
     },
     
     td({ children }) {
-      return <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300">{children}</td>
+      return <td className="markdown-td">{children}</td>
     },
     
     a({ href, children }) {
       return (
         <a 
           href={href} 
-          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline"
+          className="markdown-a"
           target={href?.startsWith('http') ? '_blank' : undefined}
           rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
         >
@@ -231,7 +232,7 @@ export default function MarkdownRenderer({ content }) {
   }
 
   return (
-    <div className="prose max-w-none">
+    <div className={`markdown-renderer ${isDark ? 'dark' : ''}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeHighlight]}

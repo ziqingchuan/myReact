@@ -2,6 +2,7 @@ import ArticleView from './customUI/ArticleView'
 import ArticleNotFound from './customUI/ArticleNotFound'
 import WelcomePage from './customUI/WelcomePage'
 import ArticleSkeleton from './customUI/ArticleSkeleton'
+import '../styles/MainContent.css'
 
 export default function MainContent({ 
   loading, 
@@ -9,21 +10,22 @@ export default function MainContent({
   articleNotFound, 
   selectedArticle, 
   onReturnHome,
-  onArticleSelect
+  onArticleSelect,
+  isDark
 }) {
   return (
-    <main className="flex-1 min-w-0 overflow-auto h-screen bg-white dark:bg-gray-900 transition-colors custom-scrollbar">
-      <div className="max-w-4xl mx-auto px-4 py-8 pb-16">
+    <main className={`main-content custom-scrollbar ${isDark ? 'dark' : ''}`}>
+      <div className="main-content-inner">
         {loading ? (
-          <ArticleSkeleton />
+          <ArticleSkeleton isDark={isDark} />
         ) : articleLoading ? (
-          <ArticleSkeleton />
+          <ArticleSkeleton isDark={isDark} />
         ) : articleNotFound ? (
-          <ArticleNotFound onReturnHome={onReturnHome} />
+          <ArticleNotFound onReturnHome={onReturnHome} isDark={isDark} />
         ) : selectedArticle ? (
-          <ArticleView article={selectedArticle} />
+          <ArticleView article={selectedArticle} isDark={isDark} />
         ) : (
-          <WelcomePage onArticleSelect={onArticleSelect} />
+          <WelcomePage onArticleSelect={onArticleSelect} isDark={isDark} />
         )}
       </div>
     </main>

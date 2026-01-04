@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
-import Sidebar from './Sidebar'
+import ArticleNav from './ArticleNav'
+import '../styles/MobileSidebar.css'
 
 export default function MobileSidebar({ 
   isOpen, 
@@ -8,36 +9,36 @@ export default function MobileSidebar({
   directories,
   directoriesLoading,
   onLoadDirectories,
-  selectedArticle
+  selectedArticle,
+  isDark
 }) {
   if (!isOpen) return null
 
   return (
     <>
-      {/* 遮罩层 */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+        className="mobile-sidebar-overlay"
         onClick={onClose}
       />
       
-      {/* 侧边栏 */}
-      <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300">
-        <div className="flex items-center justify-between p-4 border-b dark:bg-gray-900">
-          <h2 className="text-lg font-semibold dark:text-gray-100">目录</h2>
+      <div className={`mobile-sidebar ${isDark ? 'dark' : ''}`}>
+        <div className="mobile-sidebar-header">
+          <h2 className="mobile-sidebar-title">目录</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded dark:text-gray-100"
+            className="mobile-sidebar-close-btn"
           >
             <X size={20} />
           </button>
         </div>
-        <Sidebar 
+        <ArticleNav 
           onArticleSelect={onArticleSelect}
           onItemClick={onClose}
           directories={directories}
           directoriesLoading={directoriesLoading}
           onLoadDirectories={onLoadDirectories}
           selectedArticle={selectedArticle}
+          isDark={isDark}
         />
       </div>
     </>

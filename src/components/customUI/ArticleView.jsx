@@ -1,7 +1,8 @@
 import { Calendar, Clock, User } from 'lucide-react'
 import MarkdownRenderer from '../MarkdownRenderer'
+import '../../styles/ArticleView.css'
 
-export default function ArticleView({ article }) {
+export default function ArticleView({ article, isDark = false }) {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('zh-CN', {
       year: 'numeric',
@@ -18,51 +19,48 @@ export default function ArticleView({ article }) {
 
   if (!article) {
     return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">文章不存在</h2>
-        <p className="text-gray-600 dark:text-gray-400">请选择其他文章</p>
+      <div className={`article-view-empty ${isDark ? 'dark' : ''}`}>
+        <h2 className="article-view-empty-title">文章不存在</h2>
+        <p className="article-view-empty-text">请选择其他文章</p>
       </div>
     )
   }
 
   return (
-    <div className="max-w-4xl mx-auto min-h-full">
-      {/* 文章头部 */}
-      <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    <div className={`article-view ${isDark ? 'dark' : ''}`}>
+      <header className="article-view-header">
+        <h1 className="article-view-title">
           {article.title}
         </h1>
         
         {article.description && (
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">{article.description}</p>
+          <p className="article-view-description">{article.description}</p>
         )}
         
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center">
-            <Calendar size={16} className="mr-1" />
+        <div className="article-view-meta">
+          <div className="article-view-meta-item">
+            <Calendar size={16} className="article-view-meta-icon" />
             <span>发布于 {formatDate(article.created_at)}</span>
           </div>
           
-          <div className="flex items-center">
-            <Clock size={16} className="mr-1" />
+          <div className="article-view-meta-item">
+            <Clock size={16} className="article-view-meta-icon" />
             <span>阅读时间 {calculateReadTime(article.content)} 分钟</span>
           </div>
         </div>
       </header>
 
-      {/* 文章内容 */}
-      <article className="prose max-w-none pb-8">
-        <MarkdownRenderer content={article.content} />
+      <article className="article-view-content">
+        <MarkdownRenderer content={article.content} isDark={isDark} />
       </article>
 
-      {/* 文章底部信息 */}
-      <footer className="mt-8 pt-8 pb-10 border-t border-gray-200 dark:border-gray-700 flex flex-col items-end gap-4">
-        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-          <Calendar size={14} className="mr-2" />
+      <footer className="article-view-footer">
+        <div className="article-view-footer-item">
+          <Calendar size={14} className="article-view-footer-icon" />
           <span>最后更新于: {formatDate(article.updated_at)}</span>
         </div>
-        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-          <User size={14} className="mr-2" />
+        <div className="article-view-footer-item">
+          <User size={14} className="article-view-footer-icon" />
           <span>作者: Qingchuan Zi</span>
         </div>
       </footer>

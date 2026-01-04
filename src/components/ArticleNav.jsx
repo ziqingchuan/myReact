@@ -3,9 +3,10 @@ import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose
 import { db } from '../lib/supabase'
 import ConfirmDialog from './customUI/ConfirmDialog'
 import DirectorySkeleton from './customUI/DirectorySkeleton'
+import '../styles/ArticleNav.css'
 
 
-export default function Sidebar({ 
+export default function ArticleNav({ 
   onItemClick, 
   onArticleSelect, 
   collapsed, 
@@ -18,7 +19,8 @@ export default function Sidebar({
   directoriesLoading = false,
   onLoadDirectories,
   selectedArticle = null,
-  isAuthenticated = false
+  isAuthenticated = false,
+  isDark = false
 }) {
   const [expandedDirs, setExpandedDirs] = useState(new Set())
   const [operationLoading, setOperationLoading] = useState(false)
@@ -30,7 +32,6 @@ export default function Sidebar({
     onConfirm: null
   })
 
-  // 默认展开所有目录
   useEffect(() => {
     if (directories.length > 0) {
       const allDirIds = new Set()
@@ -67,9 +68,7 @@ export default function Sidebar({
         setOperationLoading(true)
         try {
           await db.deleteArticle(articleId)
-          // 立即刷新目录数据
           await onLoadDirectories(true)
-          // 通知主组件文章被删除
           window.dispatchEvent(new CustomEvent('articleDeleted', { detail: { articleId } }))
         } catch (error) {
           console.error('删除文章失败:', error)
@@ -91,9 +90,7 @@ export default function Sidebar({
         setOperationLoading(true)
         try {
           await db.deleteDirectory(directory.id)
-          // 立即刷新目录数据
           await onLoadDirectories(true)
-          // 通知主组件目录被删除
           window.dispatchEvent(new CustomEvent('directoryDeleted', { detail: { directoryId: directory.id } }))
         } catch (error) {
           console.error('删除目录失败:', error)
@@ -107,7 +104,6 @@ export default function Sidebar({
 
   const handleEditArticle = async (article) => {
     try {
-      // 加载完整的文章数据
       const fullArticle = await db.getArticle(article.id)
       onEditArticle && onEditArticle(fullArticle)
     } catch (error) {
@@ -120,62 +116,62 @@ export default function Sidebar({
     const isExpanded = expandedDirs.has(dir.id)
     const hasArticles = dir.articles && dir.articles.length > 0
     const hasChildren = dir.children && dir.children.length > 0
-    const hasContent = hasArticles || hasChildren // 有文章或有子目录
+    const hasContent = hasArticles || hasChildren
     
     return (
       <div key={dir.id} className="select-none">
         <div
-          className="group flex items-center py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="article-nav-directory-item"
           style={{ paddingLeft: `${12 + level * 16}px` }}
         >
           <div 
-            className="flex items-center flex-1 cursor-pointer"
+            className="article-nav-directory-content"
             onClick={() => hasContent && toggleDirectory(dir.id)}
           >
             {hasContent ? (
               <>
                 {isExpanded ? (
-                  <ChevronDown size={16} className="text-gray-400 mr-1" />
+                  <ChevronDown size={16} className="article-nav-directory-icon" />
                 ) : (
-                  <ChevronRight size={16} className="text-gray-400 mr-1" />
+                  <ChevronRight size={16} className="article-nav-directory-icon" />
                 )}
                 {isExpanded ? (
-                  <FolderOpen size={16} className="text-gray-600 mr-2" />
+                  <FolderOpen size={16} className="article-nav-directory-icon" />
                 ) : (
-                  <Folder size={16} className="text-gray-600 mr-2" />
+                  <Folder size={16} className="article-nav-directory-icon" />
                 )}
               </>
             ) : (
               <>
                 <div className="w-4 mr-1" />
-                <Folder size={16} className="text-gray-600 mr-2" />
+                <Folder size={16} className="article-nav-directory-icon" />
               </>
             )}
             
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate flex-1" title={dir.name}>
+            <span className="article-nav-directory-name" title={dir.name}>
               {dir.name}
             </span>
           </div>
           
           {isAuthenticated && (
-            <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2">
+            <div className="article-nav-article-actions">
               <button
                 onClick={() => onEditDirectory && onEditDirectory(dir)}
-                className="p-1 hover:bg-gray-300 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500"
+                className="article-nav-action-icon-btn"
                 title="编辑目录"
               >
                 <Edit size={12} />
               </button>
               <button
                 onClick={() => onCreateArticle && onCreateArticle(dir.id)}
-                className="p-1 hover:bg-gray-300 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500"
+                className="article-nav-action-icon-btn"
                 title="在此目录下新建文章"
               >
                 <Plus size={14} />
               </button>
               <button
                 onClick={() => handleDeleteDirectory(dir)}
-                className="p-1 hover:bg-gray-300 hover:text-red-500 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500 dark:hover:text-red-500"
+                className="article-nav-action-icon-btn delete"
                 title="删除目录"
               >
                 <Trash2 size={12} />
@@ -186,15 +182,12 @@ export default function Sidebar({
         
         {isExpanded && (
           <div>
-            {/* 渲染文章 */}
             {hasArticles && dir.articles.map((article) => {
               const isActive = selectedArticle && selectedArticle.id === article.id
               return (
                 <div
                   key={article.id}
-                  className={`group flex items-center py-2 px-3 ml-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                    isActive ? 'bg-blue-50 dark:bg-blue-900/30 border-l-2 border-blue-600' : ''
-                  }`}
+                  className={`article-nav-article-item ${isActive ? 'active' : ''}`}
                   style={{ paddingLeft: `${28 + level * 16}px` }}
                 >
                   <button
@@ -202,29 +195,25 @@ export default function Sidebar({
                       onArticleSelect && onArticleSelect(article.id)
                       onItemClick && onItemClick()
                     }}
-                    className={`flex-1 flex items-center text-left min-w-0 ${
-                      isActive 
-                        ? 'text-blue-600 dark:text-blue-400 font-medium' 
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                    }`}
+                    className={`article-nav-article-btn ${isActive ? 'active' : ''}`}
                     title={article.title}
                   >
-                    <FileText size={14} className={`mr-2 flex-shrink-0 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'}`} />
-                    <span className="text-sm truncate">{article.title}</span>
+                    <FileText size={14} className="article-nav-article-icon" />
+                    <span className="article-nav-article-title">{article.title}</span>
                   </button>
                   
                   {isAuthenticated && (
-                    <div className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 ml-2 flex-shrink-0">
+                    <div className="article-nav-article-actions">
                       <button
                         onClick={() => handleEditArticle(article)}
-                        className="p-1 hover:bg-gray-300 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500"
+                        className="article-nav-action-icon-btn"
                         title="编辑文章"
                       >
                         <Edit size={12} />
                       </button>
                       <button
                         onClick={() => handleDeleteArticle(article.id, article.title)}
-                        className="p-1 hover:bg-gray-300 hover:text-red-500 rounded text-gray-700 dark:text-gray-100 dark:hover:bg-gray-500 dark:hover:text-red-500"
+                        className="article-nav-action-icon-btn delete"
                         title="删除文章"
                       >
                         <Trash2 size={12} />
@@ -235,7 +224,6 @@ export default function Sidebar({
               )
             })}
             
-            {/* 渲染子目录 */}
             {hasChildren && dir.children.map((child) => renderDirectory(child, level + 1))}
           </div>
         )}
@@ -245,11 +233,11 @@ export default function Sidebar({
 
   if (collapsed) {
     return (
-      <nav className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 fixed left-0 top-16 z-20 w-12 transition-colors" style={{ height: 'calc(100vh - 4rem)' }}>
-        <div className="p-2">
+      <nav className={`article-nav collapsed ${isDark ? 'dark' : ''}`}>
+        <div className="article-nav-header">
           <button
             onClick={onToggleCollapse}
-            className="w-8 h-8 flex items-center text-gray-900 dark:text-gray-100 justify-center hover:bg-gray-400 rounded"
+            className="article-nav-collapsed-btn"
             title="展开目录"
           >
             <PanelLeftOpen size={16} />
@@ -261,15 +249,15 @@ export default function Sidebar({
 
   return (
     <>
-      <nav className="border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 fixed left-0 top-16 z-20 w-80 flex flex-col transition-colors" style={{ height: 'calc(100vh - 4rem)' }}>
-        <div className="p-4 flex-shrink-0">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">文章目录</h2>
-            <div className="flex items-center space-x-1">
+      <nav className={`article-nav ${isDark ? 'dark' : ''}`}>
+        <div className="article-nav-header">
+          <div className="article-nav-header-content">
+            <h2 className="article-nav-title">文章目录</h2>
+            <div className="article-nav-header-actions">
               {isAuthenticated && (
                 <button
                   onClick={() => onCreateDirectory && onCreateDirectory()}
-                  className="p-1 hover:bg-gray-400 rounded text-gray-900 dark:text-gray-100 hover:text-gray-800"
+                  className="article-nav-action-btn"
                   title="新建目录"
                 >
                   <FolderPlus size={16} />
@@ -277,7 +265,7 @@ export default function Sidebar({
               )}
               <button
                 onClick={onToggleCollapse}
-                className="p-1 hover:bg-gray-400 rounded text-gray-900 dark:text-gray-100"
+                className="article-nav-action-btn"
                 title="收起目录"
               >
                 <PanelLeftClose size={16} />
@@ -285,16 +273,16 @@ export default function Sidebar({
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pb-4 custom-scrollbar">
-          <div className="space-y-1">
+        <div className="article-nav-content custom-scrollbar">
+          <div>
             {directoriesLoading ? (
-              <DirectorySkeleton />
+              <DirectorySkeleton isDark={isDark} />
             ) : directories.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="article-nav-empty">
                 <p>暂无目录</p>
                 <button
                   onClick={() => onCreateDirectory && onCreateDirectory()}
-                  className="mt-2 text-blue-600 hover:text-blue-700 text-sm"
+                  className="article-nav-empty-btn"
                 >
                   创建第一个目录
                 </button>
@@ -313,15 +301,15 @@ export default function Sidebar({
         title={confirmDialog.title}
         message={confirmDialog.message}
         type={confirmDialog.type}
+        isDark={isDark}
       />
 
-      {/* 操作加载遮罩 */}
       {operationLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-xl">
-            <div className="flex items-center space-x-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 dark:border-gray-100"></div>
-              <p className="text-gray-700 dark:text-gray-300 text-sm">处理中...</p>
+        <div className="article-nav-loading-overlay">
+          <div className={`article-nav-loading-content ${isDark ? 'dark' : ''}`}>
+            <div className="article-nav-loading-inner">
+              <div className="article-nav-loading-spinner"></div>
+              <p className="article-nav-loading-text">处理中...</p>
             </div>
           </div>
         </div>

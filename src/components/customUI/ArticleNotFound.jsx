@@ -1,23 +1,23 @@
 import notFoundSvg from '../../assets/notfound.svg'
+import '../../styles/ArticleNotFound.css'
 
-export default function ArticleNotFound({ onReturnHome }) {
+export default function ArticleNotFound({ onReturnHome, isDark = false }) {
   return (
-<div className="text-center py-12">
-  <div className="flex justify-center mb-6 w-full h-[400px]"> 
-    <img 
-      src={notFoundSvg} 
-      alt="文章未找到" 
-      className="w-full h-full object-contain"
-    />
-  </div>
-  <h2 className="text-2xl font-bold text-gray-900 mb-4 dark:text-gray-100">糟糕，该文章不见了</h2>
-  <p className="text-gray-600 mb-6">您正在查看的文章已被删除或移动</p>
-  <button
-    onClick={onReturnHome}
-    className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700"
-  >
-    返回首页
-  </button>
-</div>
+    <div className={`article-not-found ${isDark ? 'dark' : ''}`}>
+      <div className="article-not-found-image">
+        <img 
+          src={notFoundSvg} 
+          alt="文章未找到" 
+        />
+      </div>
+      <h2 className="article-not-found-title">糟糕，该文章不见了</h2>
+      <p className="article-not-found-text">您正在查看的文章已被删除或移动</p>
+      <button
+        onClick={onReturnHome}
+        className="article-not-found-btn"
+      >
+        返回首页
+      </button>
+    </div>
   )
 }

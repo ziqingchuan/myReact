@@ -1,9 +1,9 @@
 import { lazy, Suspense, useState } from 'react'
-import Sidebar from './components/Sidebar'
+import ArticleNav from './components/ArticleNav'
 import Header from './components/Header'
 import MainContent from './components/MainContent'
 import MobileSidebar from './components/MobileSidebar'
-import TableOfContents from './components/TableOfContents'
+import HeadingNav from './components/HeadingNav'
 import { useAppState } from './hooks/useAppState'
 import { useArticleOperations } from './hooks/useArticleOperations'
 import { useDirectoryOperations } from './hooks/useDirectoryOperations'
@@ -53,7 +53,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+    <div className={`app ${isDark ? 'dark' : ''}`}>
       <Header 
         isMobile={appState.isMobile} 
         onMenuClick={() => appState.setSidebarOpen(true)}
@@ -68,8 +68,8 @@ function App() {
       <div className="flex relative">
         {/* 桌面端侧边栏 */}
         {!appState.isMobile && (
-          <div className={`${appState.sidebarCollapsed ? 'w-12' : 'w-80'} flex-shrink-0`}>
-            <Sidebar 
+          <div style={{ width: appState.sidebarCollapsed ? '3rem' : '20rem', flexShrink: 0 }}>
+            <ArticleNav 
               onArticleSelect={appState.handleArticleSelect}
               collapsed={appState.sidebarCollapsed}
               onToggleCollapse={() => appState.setSidebarCollapsed(!appState.sidebarCollapsed)}
@@ -85,6 +85,7 @@ function App() {
               onLoadDirectories={appState.loadDirectories}
               selectedArticle={appState.selectedArticle}
               isAuthenticated={isAuthenticated}
+              isDark={isDark}
             />
           </div>
         )}
@@ -98,6 +99,7 @@ function App() {
           directoriesLoading={appState.directoriesLoading}
           onLoadDirectories={appState.loadDirectories}
           selectedArticle={appState.selectedArticle}
+          isDark={isDark}
         />
         
         {/* 主内容区域 */}
@@ -108,15 +110,17 @@ function App() {
           selectedArticle={appState.selectedArticle}
           onReturnHome={handleReturnHome}
           onArticleSelect={appState.handleArticleSelect}
+          isDark={isDark}
         />
 
         {/* 右侧文章目录 */}
         {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
-          <div className={`${appState.tocCollapsed ? 'w-12' : 'w-80'} flex-shrink-0`}>
-            <TableOfContents
+          <div style={{ width: appState.tocCollapsed ? '3rem' : '20rem', flexShrink: 0 }}>
+            <HeadingNav
               content={appState.selectedArticle.content}
               collapsed={appState.tocCollapsed}
               onToggleCollapse={() => appState.setTocCollapsed(!appState.tocCollapsed)}
+              isDark={isDark}
             />
           </div>
         )}
@@ -133,6 +137,7 @@ function App() {
             onSubmit={(e) => articleOps.handleSubmitArticle(e, appState.formData, appState.editingArticle)}
             onFormDataChange={appState.setFormData}
             getDirectoryOptions={appState.getDirectoryOptions}
+            isDark={isDark}
           />
         </Suspense>
 
@@ -148,6 +153,7 @@ function App() {
             onSubmit={(e) => directoryOps.handleSubmitDirectory(e, appState.dirFormData, appState.editingDirectory)}
             onFormDataChange={appState.setDirFormData}
             getDirectoryOptions={appState.getDirectoryOptions}
+            isDark={isDark}
           />
         </Suspense>
 
@@ -157,6 +163,7 @@ function App() {
             isOpen={showAuthModal}
             onClose={() => setShowAuthModal(false)}
             onSubmit={login}
+            isDark={isDark}
           />
         </Suspense>
       </div>

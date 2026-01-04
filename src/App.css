@@ -37,6 +37,14 @@ body, html, #root {
   overflow: hidden;
 }
 
+/* Flex布局容器 */
+.flex {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 4rem);
+  position: relative;
+}
+
 /* 移动端适配 */
 @media (max-width: 768px) {
   .sidebar-overlay {

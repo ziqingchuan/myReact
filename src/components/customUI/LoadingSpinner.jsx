@@ -1,29 +1,18 @@
-export default function LoadingSpinner({ size = 'md', className = '' }) {
-  const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12'
-  }
+import '../../styles/LoadingSpinner.css'
 
+export default function LoadingSpinner({ size = 'md', className = '', isDark = false }) {
   return (
-    <div className={`inline-flex items-center justify-center ${className}`}>
-      <div 
-        className={`
-          ${sizeClasses[size]} 
-          border-2 border-gray-200 border-t-gray-600 
-          rounded-full animate-spin
-        `}
-      />
+    <div className={`loading-spinner size-${size} ${isDark ? 'dark' : ''} ${className}`}>
+      <div className="loading-spinner-spinner" />
     </div>
   )
 }
 
-export function LoadingOverlay({ message = '加载中...', className = '' }) {
+export function LoadingOverlay({ message = '加载中...', className = '', isDark = false }) {
   return (
-    <div className={`flex flex-col items-center justify-center py-8 ${className}`}>
-      <LoadingSpinner size="lg" className="mb-3" />
-      <p className="text-gray-600 text-sm">{message}</p>
+    <div className={`loading-overlay ${isDark ? 'dark' : ''} ${className}`}>
+      <LoadingSpinner size="lg" isDark={isDark} />
+      <p className="loading-overlay-text">{message}</p>
     </div>
   )
 }
