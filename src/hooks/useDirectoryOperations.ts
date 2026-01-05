@@ -44,7 +44,7 @@ export function useDirectoryOperations({
     e.preventDefault()
     
     if (!dirFormData.name.trim()) {
-      alert('请输入目录名称')
+      window.toast?.warning('请输入目录名称')
       return
     }
     
@@ -70,7 +70,7 @@ export function useDirectoryOperations({
       await loadDirectories(true, true)
     } catch (error) {
       console.error('保存目录失败:', error)
-      alert('保存目录失败: ' + (error as Error).message)
+      window.toast?.error('保存目录失败: ' + (error as Error).message)
     } finally {
       setFormLoading(false)
     }

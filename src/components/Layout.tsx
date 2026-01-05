@@ -77,7 +77,7 @@ export default function Layout() {
       
       <div className="flex relative">
         {!appState.isMobile && (
-          <div style={{ width: appState.sidebarCollapsed ? '3rem' : '20rem', flexShrink: 0 }}>
+          <div style={{ width: appState.sidebarCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
             <DirectoryNav 
               collapsed={appState.sidebarCollapsed}
               onToggleCollapse={() => appState.setSidebarCollapsed(!appState.sidebarCollapsed)}
@@ -113,7 +113,7 @@ export default function Layout() {
         </main>
 
         {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
-          <div style={{ width: appState.tocCollapsed ? '3rem' : '20rem', flexShrink: 0 }}>
+          <div style={{ width: appState.tocCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
             <ArticleNav
               content={appState.selectedArticle.content}
               collapsed={appState.tocCollapsed}

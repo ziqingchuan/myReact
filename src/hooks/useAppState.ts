@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { db, DirectoryTree, Article } from '../lib/supabase'
 
 const CACHE_KEY = 'directories_cache'
@@ -23,7 +24,8 @@ interface DirectoryOption {
 }
 
 export function useAppState() {
-  // UI 状态
+  const navigate = useNavigate()
+  
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
   const [isMobile, setIsMobile] = useState<boolean>(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false)
@@ -112,11 +114,11 @@ export function useAppState() {
         if (current && current.id === articleId) {
           setArticleNotFound(true)
           localStorage.removeItem('lastArticleId')
+          navigate('/home')
           return null
         }
         return current
       })
-      // 清除缓存
       invalidateCache()
     }
 
@@ -127,11 +129,11 @@ export function useAppState() {
         if (current && current.directory_id === directoryId) {
           setArticleNotFound(true)
           localStorage.removeItem('lastArticleId')
+          navigate('/home')
           return null
         }
         return current
       })
-      // 清除缓存
       invalidateCache()
     }
 
@@ -142,8 +144,7 @@ export function useAppState() {
       window.removeEventListener('articleDeleted', handleArticleDeleted)
       window.removeEventListener('directoryDeleted', handleDirectoryDeleted)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [navigate])
 
   // 从 localStorage 读取缓存
   const getCachedDirectories = (): DirectoryTree[] | null => {

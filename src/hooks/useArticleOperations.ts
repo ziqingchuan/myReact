@@ -1,5 +1,7 @@
 import { Article } from '../lib/supabase'
 import { db } from '../lib/supabase'
+import { useNavigate } from 'react-router-dom'
+
 interface UseArticleOperationsProps {
   setFormLoading: (loading: boolean) => void
   loadDirectories: (showLoading?: boolean, forceRefresh?: boolean) => Promise<void>
@@ -26,6 +28,8 @@ export function useArticleOperations({
   invalidateCache,
   handleArticleSelect
 }: UseArticleOperationsProps) {
+  const navigate = useNavigate()
+
   const handleEditArticle = (article: Article): void => {
     setEditingArticle(article)
     setFormData({
@@ -45,30 +49,26 @@ export function useArticleOperations({
       let articleId: string | undefined
       
       if (editingArticle) {
-        // 更新文章
         await db.updateArticle(editingArticle.id, formData)
         articleId = editingArticle.id
       } else {
-        // 创建新文章
         const newArticle = await db.createArticle(formData)
         articleId = newArticle.id
       }
       
       resetForm()
       
-      // 清除缓存
       invalidateCache()
       
-      // 强制刷新目录数据
       await loadDirectories(true, true)
       
-      // 加载刚刚保存/创建的文章
       if (articleId) {
         await handleArticleSelect(articleId)
+        navigate(`/article/${articleId}`)
       }
     } catch (error) {
       console.error('保存失败:', error)
-      alert('保存失败: ' + (error as Error).message)
+      window.toast?.error('保存失败: ' + (error as Error).message)
     } finally {
       setFormLoading(false)
     }

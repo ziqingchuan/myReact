@@ -24,7 +24,7 @@ interface DirectoryNavProps {
   onCreateDirectory?: () => void
   directories?: DirectoryTree[]
   directoriesLoading?: boolean
-  onLoadDirectories: (force?: boolean) => Promise<void>
+  onLoadDirectories: (showLoading?: boolean, force?: boolean) => Promise<void>
   selectedArticle?: Article | null
   isAuthenticated?: boolean
   isDark?: boolean
@@ -68,6 +68,7 @@ export default function DirectoryNav({
         })
       }
       collectDirIds(directories)
+      // 控制初始是否全部展开目录
       setExpandedDirs(allDirIds)
       console.log('ArticleNav: 目录数据已加载', directories)
     }
@@ -93,11 +94,12 @@ export default function DirectoryNav({
         setOperationLoading(true)
         try {
           await db.deleteArticle(articleId)
-          await onLoadDirectories(true)
+          await onLoadDirectories(true, true)
           window.dispatchEvent(new CustomEvent('articleDeleted', { detail: { articleId } }))
+          window.toast?.success('删除文章成功')
         } catch (error) {
           console.error('删除文章失败:', error)
-          alert('删除失败: ' + (error as Error).message)
+          window.toast?.error('删除失败: ' + (error as Error).message)
         } finally {
           setOperationLoading(false)
         }
@@ -115,11 +117,12 @@ export default function DirectoryNav({
         setOperationLoading(true)
         try {
           await db.deleteDirectory(directory.id)
-          await onLoadDirectories(true)
+          await onLoadDirectories(true, true)
           window.dispatchEvent(new CustomEvent('directoryDeleted', { detail: { directoryId: directory.id } }))
+          window.toast?.success('删除目录成功')
         } catch (error) {
           console.error('删除目录失败:', error)
-          alert('删除失败: ' + (error as Error).message)
+          window.toast?.error('删除失败: ' + (error as Error).message)
         } finally {
           setOperationLoading(false)
         }
@@ -133,7 +136,7 @@ export default function DirectoryNav({
       onEditArticle && onEditArticle(fullArticle as Article)
     } catch (error) {
       console.error('加载文章失败:', error)
-      alert('加载文章失败: ' + (error as Error).message)
+      window.toast?.error('加载文章失败: ' + (error as Error).message)
     }
   }
 
