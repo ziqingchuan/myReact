@@ -83,6 +83,7 @@ export function useAppState() {
     }
 
     initializeApp()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 监听删除事件
@@ -122,6 +123,7 @@ export function useAppState() {
       window.removeEventListener('articleDeleted', handleArticleDeleted)
       window.removeEventListener('directoryDeleted', handleDirectoryDeleted)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 从 localStorage 读取缓存
@@ -205,21 +207,6 @@ export function useAppState() {
     }
   }, [])
 
-  const loadFirstArticle = async () => {
-    setArticleLoading(true)
-    try {
-      const articles = await db.searchArticles('')
-      if (articles && articles.length > 0) {
-        setSelectedArticle(articles[0])
-      }
-    } catch (error) {
-      console.error('加载文章失败:', error)
-    } finally {
-      setLoading(false)
-      setArticleLoading(false)
-    }
-  }
-
   const handleArticleSelect = async (articleId) => {
     setArticleLoading(true)
     setArticleNotFound(false)
@@ -295,7 +282,6 @@ export function useAppState() {
 
     // 函数
     loadDirectories,
-    loadFirstArticle,
     handleArticleSelect,
     getDirectoryOptions,
     invalidateCache

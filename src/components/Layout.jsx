@@ -1,9 +1,9 @@
 import { lazy, Suspense, useState, useEffect } from 'react'
-import { Outlet, useOutletContext } from 'react-router-dom'
-import ArticleNav from '../components/ArticleNav'
+import { Outlet } from 'react-router-dom'
+import DirectoryNav from './DirectoryNav'
 import Header from '../components/Header'
 import MobileSidebar from '../components/MobileSidebar'
-import HeadingNav from '../components/HeadingNav'
+import ArticleNav from '../components/ArticleNav'
 import { useAppState } from '../hooks/useAppState'
 import { useArticleOperations } from '../hooks/useArticleOperations'
 import { useDirectoryOperations } from '../hooks/useDirectoryOperations'
@@ -14,10 +14,6 @@ import '../App.css'
 const ArticleFormModal = lazy(() => import('../components/customUI/ArticleFormModal'))
 const DirectoryFormModal = lazy(() => import('../components/customUI/DirectoryFormModal'))
 const AuthModal = lazy(() => import('../components/customUI/AuthModal'))
-
-export function useLayoutContext() {
-  return useOutletContext()
-}
 
 export default function Layout() {
   const appState = useAppState()
@@ -44,6 +40,7 @@ export default function Layout() {
     invalidateCache: appState.invalidateCache
   })
 
+
   useEffect(() => {
     const handleArticleLoaded = (event) => {
       const { article } = event.detail
@@ -63,6 +60,7 @@ export default function Layout() {
       window.removeEventListener('articleLoaded', handleArticleLoaded)
       window.removeEventListener('clearSelectedArticle', handleClearSelectedArticle)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -80,7 +78,7 @@ export default function Layout() {
       <div className="flex relative">
         {!appState.isMobile && (
           <div style={{ width: appState.sidebarCollapsed ? '3rem' : '20rem', flexShrink: 0 }}>
-            <ArticleNav 
+            <DirectoryNav 
               collapsed={appState.sidebarCollapsed}
               onToggleCollapse={() => appState.setSidebarCollapsed(!appState.sidebarCollapsed)}
               onEditArticle={articleOps.handleEditArticle}
@@ -116,7 +114,7 @@ export default function Layout() {
 
         {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
           <div style={{ width: appState.tocCollapsed ? '3rem' : '20rem', flexShrink: 0 }}>
-            <HeadingNav
+            <ArticleNav
               content={appState.selectedArticle.content}
               collapsed={appState.tocCollapsed}
               onToggleCollapse={() => appState.setTocCollapsed(!appState.tocCollapsed)}

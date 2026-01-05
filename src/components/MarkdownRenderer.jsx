@@ -4,6 +4,7 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeRaw from 'rehype-raw'
 import { Copy, Check } from 'lucide-react'
 import { useState } from 'react'
+import { generateId, extractTextContent, generateHash } from '../utils'
 import '../styles/MarkdownRenderer.css'
 
 export default function MarkdownRenderer({ content, isDark = false }) {
@@ -19,54 +20,6 @@ export default function MarkdownRenderer({ content, isDark = false }) {
     }
   }
 
-  // 递归提取纯文本内容
-  const extractText = (children) => {
-    if (typeof children === 'string') {
-      return children
-    }
-    if (Array.isArray(children)) {
-      return children.map(extractText).join('')
-    }
-    if (children && typeof children === 'object') {
-      // 处理 React 元素
-      if (children.props && children.props.children) {
-        return extractText(children.props.children)
-      }
-    }
-    return ''
-  }
-
-  // 简单生成标题 ID：将标题文本转换为 ID
-  const generateId = (children) => {
-    const text = extractText(children)
-    
-    const id = text
-      .toLowerCase()
-      .replace(/[^\w\u4e00-\u9fff]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-    
-    return id || 'heading'
-  }
-
-  // 递归提取文本内容的函数
-  const extractTextContent = (node) => {
-    if (typeof node === 'string') {
-      return node
-    }
-    if (Array.isArray(node)) {
-      return node.map(extractTextContent).join('')
-    }
-    if (node && typeof node === 'object') {
-      if (node.props && node.props.children) {
-        return extractTextContent(node.props.children)
-      }
-      if (node.children) {
-        return extractTextContent(node.children)
-      }
-    }
-    return ''
-  }
-
   const components = {
     pre({ children }) {
       // 处理 pre 标签，这里包含完整的代码块
@@ -76,16 +29,6 @@ export default function MarkdownRenderer({ content, isDark = false }) {
       
       if (match) {
         const codeContent = extractTextContent(codeElement?.children)
-        // 使用简单的哈希函数生成稳定的标识符，避免 btoa 的中文字符问题
-        const generateHash = (str) => {
-          let hash = 0
-          for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i)
-            hash = ((hash << 5) - hash) + char
-            hash = hash & hash // 转换为32位整数
-          }
-          return Math.abs(hash).toString(36).substring(0, 10)
-        }
         const codeIndex = generateHash(codeContent.substring(0, 100))
         
         return (

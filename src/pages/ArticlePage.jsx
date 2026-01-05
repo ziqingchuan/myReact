@@ -15,6 +15,30 @@ export default function ArticlePage() {
   const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
+
+    const loadArticle = async () => {
+      try {
+        setLoading(true)
+        setNotFound(false)
+        console.log('正在加载文章，ID:', id)
+
+        const data = await db.getArticle(id)
+        console.log('加载到的文章数据:', data)
+
+        if (!data) {
+          console.log('文章未找到，ID:', id)
+          setNotFound(true)
+        } else {
+          console.log('文章加载成功:', data.title)
+          setArticle(data)
+        }
+      } catch (error) {
+        console.error('加载文章失败:', error)
+        setNotFound(true)
+      } finally {
+        setLoading(false)
+      }
+    }
     loadArticle()
   }, [id])
 
@@ -24,29 +48,6 @@ export default function ArticlePage() {
     }
   }, [article])
 
-  const loadArticle = async () => {
-    try {
-      setLoading(true)
-      setNotFound(false)
-      console.log('正在加载文章，ID:', id)
-
-      const data = await db.getArticle(id)
-      console.log('加载到的文章数据:', data)
-
-      if (!data) {
-        console.log('文章未找到，ID:', id)
-        setNotFound(true)
-      } else {
-        console.log('文章加载成功:', data.title)
-        setArticle(data)
-      }
-    } catch (error) {
-      console.error('加载文章失败:', error)
-      setNotFound(true)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleReturnHome = () => {
     navigate('/home')

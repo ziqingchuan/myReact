@@ -1,7 +1,7 @@
 import { AlertTriangle, X } from 'lucide-react'
 import '../../styles/Modal.css'
 
-export default function ConfirmDialog({ 
+export default function ConfirmModal({ 
   isOpen, 
   onClose, 
   onConfirm, 

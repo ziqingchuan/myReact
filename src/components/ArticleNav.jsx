@@ -1,324 +1,240 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose, PanelLeftOpen, Edit, Trash2, Plus, FolderPlus } from 'lucide-react'
-import { db } from '../lib/supabase'
-import ConfirmDialog from './customUI/ConfirmDialog'
-import DirectorySkeleton from './customUI/DirectorySkeleton'
+import { useState, useEffect, useRef } from 'react'
+import { PanelRightClose, PanelRightOpen } from 'lucide-react'
+import { generateId } from '../utils'
 import '../styles/ArticleNav.css'
 
-
-export default function ArticleNav({ 
-  onItemClick, 
-  collapsed, 
-  onToggleCollapse, 
-  onEditArticle, 
-  onCreateArticle, 
-  onEditDirectory, 
-  onCreateDirectory,
-  directories = [],
-  directoriesLoading = false,
-  onLoadDirectories,
-  selectedArticle = null,
-  isAuthenticated = false,
-  isDark = false
-}) {
-  const navigate = useNavigate()
-  const [expandedDirs, setExpandedDirs] = useState(new Set())
-  const [operationLoading, setOperationLoading] = useState(false)
-  const [confirmDialog, setConfirmDialog] = useState({
-    isOpen: false,
-    type: 'danger',
-    title: '',
-    message: '',
-    onConfirm: null
-  })
+export default function ArticleNav({ content, collapsed, onToggleCollapse, isDark }) {
+  const [headings, setHeadings] = useState([])
+  const [activeId, setActiveId] = useState('')
+  const observerRef = useRef(null)
+  const isScrollingRef = useRef(false)
+  const tocContainerRef = useRef(null)
+  const activeItemRef = useRef(null)
 
   useEffect(() => {
-    if (directories.length > 0) {
-      const allDirIds = new Set()
-      const collectDirIds = (dirs) => {
-        dirs.forEach(dir => {
-          allDirIds.add(dir.id)
-          if (dir.children && dir.children.length > 0) {
-            collectDirIds(dir.children)
+    if (!content) {
+      setHeadings([])
+      return
+    }
+
+    const headingRegex = /^(#{1,3})\s+(.+)$/gm
+    const matches = []
+    let match
+
+    while ((match = headingRegex.exec(content)) !== null) {
+      const level = match[1].length
+      const text = match[2].trim()
+      const id = generateId(text)
+      
+      matches.push({
+        id,
+        text,
+        level
+      })
+    }
+
+    setHeadings(matches)
+  }, [content])
+
+  useEffect(() => {
+    if (headings.length === 0 || collapsed) return
+
+    const initializeActiveHeading = () => {
+      const mainContent = document.querySelector('main')
+      if (!mainContent) return
+
+      const allHeadingElements = headings
+        .map(h => document.getElementById(h.id))
+        .filter(Boolean)
+
+      if (allHeadingElements.length === 0) return
+
+      let targetHeading = allHeadingElements[0]
+      for (const element of allHeadingElements) {
+        const rect = element.getBoundingClientRect()
+        if (rect.top <= 100) {
+          targetHeading = element
+        } else {
+          break
+        }
+      }
+
+      setActiveId(targetHeading.id)
+    }
+
+    const timer = setTimeout(() => {
+      const mainContent = document.querySelector('main')
+      if (!mainContent) return
+
+      initializeActiveHeading()
+      
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (isScrollingRef.current) return
+
+          const visibleEntries = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((a, b) => {
+              const aTop = a.boundingClientRect.top
+              const bTop = b.boundingClientRect.top
+              return aTop - bTop
+            })
+
+          if (visibleEntries.length > 0) {
+            const topEntry = visibleEntries[0]
+            setActiveId(topEntry.target.id)
           }
+        },
+        {
+          root: mainContent,
+          rootMargin: '-10% 0% -80% 0%',
+          threshold: [0, 0.25, 0.5, 0.75, 1]
+        }
+      )
+
+      observerRef.current = observer
+
+      headings.forEach(heading => {
+        const element = document.getElementById(heading.id)
+        if (element) {
+          observer.observe(element)
+        }
+      })
+    }, 500)
+
+    return () => {
+      clearTimeout(timer)
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [headings, collapsed])
+
+  useEffect(() => {
+    if (!activeId || collapsed || !tocContainerRef.current || !activeItemRef.current) return
+
+    requestAnimationFrame(() => {
+      if (!activeItemRef.current || !tocContainerRef.current) return
+
+      const container = tocContainerRef.current
+      const activeItem = activeItemRef.current
+
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = activeItem.getBoundingClientRect()
+
+      const itemTop = itemRect.top - containerRect.top + container.scrollTop
+      const itemBottom = itemTop + itemRect.height
+
+      const containerScrollTop = container.scrollTop
+      const containerHeight = container.clientHeight
+
+      if (itemTop < containerScrollTop) {
+        container.scrollTo({
+          top: itemTop - 20,
+          behavior: 'smooth'
+        })
+      } else if (itemBottom > containerScrollTop + containerHeight) {
+        container.scrollTo({
+          top: itemBottom - containerHeight + 20,
+          behavior: 'smooth'
         })
       }
-      collectDirIds(directories)
-      setExpandedDirs(allDirIds)
-      console.log('ArticleNav: 目录数据已加载', directories)
-    }
-  }, [directories])
-
-  const toggleDirectory = (dirId) => {
-    const newExpanded = new Set(expandedDirs)
-    if (newExpanded.has(dirId)) {
-      newExpanded.delete(dirId)
-    } else {
-      newExpanded.add(dirId)
-    }
-    setExpandedDirs(newExpanded)
-  }
-
-  const handleDeleteArticle = (articleId, articleTitle) => {
-    setConfirmDialog({
-      isOpen: true,
-      type: 'danger',
-      title: '删除文章',
-      message: `是否要删除文章"${articleTitle}"？`,
-      onConfirm: async () => {
-        setOperationLoading(true)
-        try {
-          await db.deleteArticle(articleId)
-          await onLoadDirectories(true)
-          window.dispatchEvent(new CustomEvent('articleDeleted', { detail: { articleId } }))
-        } catch (error) {
-          console.error('删除文章失败:', error)
-          alert('删除失败: ' + error.message)
-        } finally {
-          setOperationLoading(false)
-        }
-      }
     })
-  }
+  }, [activeId, collapsed])
 
-  const handleDeleteDirectory = (directory) => {
-    setConfirmDialog({
-      isOpen: true,
-      type: 'danger',
-      title: '删除目录',
-      message: `该操作会删除目录"${directory.name}"及其中全部文章，是否继续？`,
-      onConfirm: async () => {
-        setOperationLoading(true)
-        try {
-          await db.deleteDirectory(directory.id)
-          await onLoadDirectories(true)
-          window.dispatchEvent(new CustomEvent('directoryDeleted', { detail: { directoryId: directory.id } }))
-        } catch (error) {
-          console.error('删除目录失败:', error)
-          alert('删除失败: ' + error.message)
-        } finally {
-          setOperationLoading(false)
-        }
-      }
-    })
-  }
-
-  const handleEditArticle = async (article) => {
-    try {
-      const fullArticle = await db.getArticle(article.id)
-      onEditArticle && onEditArticle(fullArticle)
-    } catch (error) {
-      console.error('加载文章失败:', error)
-      alert('加载文章失败: ' + error.message)
-    }
-  }
-
-  const renderDirectory = (dir, level = 0) => {
-    const isExpanded = expandedDirs.has(dir.id)
-    const hasArticles = dir.articles && dir.articles.length > 0
-    const hasChildren = dir.children && dir.children.length > 0
-    const hasContent = hasArticles || hasChildren
-    
-    return (
-      <div key={dir.id} className="select-none">
-        <div
-          className="article-nav-directory-item"
-          style={{ paddingLeft: `${12 + level * 16}px` }}
-        >
-          <div 
-            className="article-nav-directory-content"
-            onClick={() => hasContent && toggleDirectory(dir.id)}
-          >
-            {hasContent ? (
-              <>
-                {isExpanded ? (
-                  <ChevronDown size={16} className="article-nav-directory-icon" />
-                ) : (
-                  <ChevronRight size={16} className="article-nav-directory-icon" />
-                )}
-                {isExpanded ? (
-                  <FolderOpen size={16} className="article-nav-directory-icon" />
-                ) : (
-                  <Folder size={16} className="article-nav-directory-icon" />
-                )}
-              </>
-            ) : (
-              <>
-                <div className="w-4 mr-1" />
-                <Folder size={16} className="article-nav-directory-icon" />
-              </>
-            )}
-            
-            <span className="article-nav-directory-name" title={dir.name}>
-              {dir.name}
-            </span>
-          </div>
-          
-          {isAuthenticated && (
-            <div className="article-nav-article-actions">
-              <button
-                onClick={() => onEditDirectory && onEditDirectory(dir)}
-                className="article-nav-action-icon-btn"
-                title="编辑目录"
-              >
-                <Edit size={12} />
-              </button>
-              <button
-                onClick={() => onCreateArticle && onCreateArticle(dir.id)}
-                className="article-nav-action-icon-btn"
-                title="在此目录下新建文章"
-              >
-                <Plus size={14} />
-              </button>
-              <button
-                onClick={() => handleDeleteDirectory(dir)}
-                className="article-nav-action-icon-btn delete"
-                title="删除目录"
-              >
-                <Trash2 size={12} />
-              </button>
-            </div>
-          )}
-        </div>
+  const scrollToHeading = (id) => {
+    const element = document.getElementById(id)
+    if (element) {
+      setActiveId(id)
+      isScrollingRef.current = true
+      
+      const mainContent = document.querySelector('main')
+      if (mainContent) {
+        const elementTop = element.offsetTop
+        const headerHeight = 80
+        mainContent.scrollTo({
+          top: elementTop - headerHeight,
+          behavior: 'smooth'
+        })
         
-        {isExpanded && (
-          <div>
-            {hasArticles && dir.articles.map((article) => {
-              const isActive = selectedArticle && selectedArticle.id === article.id
-              return (
-                <div
-                  key={article.id}
-                  className={`article-nav-article-item ${isActive ? 'active' : ''}`}
-                  style={{ paddingLeft: `${28 + level * 16}px` }}
-                >
-                  <button
-                    onClick={() => {
-                      console.log('点击文章按钮，文章ID:', article.id)
-                      console.log('即将导航到:', `/article/${article.id}`)
-                      navigate(`/article/${article.id}`)
-                      console.log('导航已调用')
-                      onItemClick && onItemClick()
-                    }}
-                    className={`article-nav-article-btn ${isActive ? 'active' : ''}`}
-                    title={article.title}
-                  >
-                    <FileText size={14} className="article-nav-article-icon" />
-                    <span className="article-nav-article-title">{article.title}</span>
-                  </button>
-                  
-                  {isAuthenticated && (
-                    <div className="article-nav-article-actions">
-                      <button
-                        onClick={() => handleEditArticle(article)}
-                        className="article-nav-action-icon-btn"
-                        title="编辑文章"
-                      >
-                        <Edit size={12} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteArticle(article.id, article.title)}
-                        className="article-nav-action-icon-btn delete"
-                        title="删除文章"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-            
-            {hasChildren && dir.children.map((child) => renderDirectory(child, level + 1))}
-          </div>
-        )}
-      </div>
+        setTimeout(() => {
+          isScrollingRef.current = false
+        }, 1000)
+      } else {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+        
+        setTimeout(() => {
+          isScrollingRef.current = false
+        }, 1000)
+      }
+    } else {
+      console.warn('找不到标题元素:', id)
+    }
+  }
+
+  const renderHeading = (heading) => {
+    const isActive = activeId === heading.id
+    const paddingLeft = (heading.level - 1) * 16 + 12
+
+    return (
+      <button
+        key={heading.id}
+        ref={isActive ? activeItemRef : null}
+        onClick={() => scrollToHeading(heading.id)}
+        className={`heading-nav-item ${isActive ? 'active' : ''}`}
+        style={{ paddingLeft: `${paddingLeft}px` }}
+        title={heading.text}
+      >
+        <span className="heading-nav-item-text">{heading.text}</span>
+      </button>
     )
   }
 
   if (collapsed) {
     return (
-      <nav className={`article-nav collapsed ${isDark ? 'dark' : ''}`}>
-        <div className="article-nav-header">
+      <div className={`heading-nav collapsed ${isDark ? 'dark' : ''}`}>
+        <div className="heading-nav-p-2">
           <button
             onClick={onToggleCollapse}
-            className="article-nav-collapsed-btn"
+            className="heading-nav-collapsed-btn"
             title="展开目录"
           >
-            <PanelLeftOpen size={16} />
+            <PanelRightOpen size={16} />
           </button>
         </div>
-      </nav>
+      </div>
     )
   }
 
   return (
-    <>
-      <nav className={`article-nav ${isDark ? 'dark' : ''}`}>
-        <div className="article-nav-header">
-          <div className="article-nav-header-content">
-            <h2 className="article-nav-title">文章目录</h2>
-            <div className="article-nav-header-actions">
-              {isAuthenticated && (
-                <button
-                  onClick={() => onCreateDirectory && onCreateDirectory()}
-                  className="article-nav-action-btn"
-                  title="新建目录"
-                >
-                  <FolderPlus size={16} />
-                </button>
-              )}
-              <button
-                onClick={onToggleCollapse}
-                className="article-nav-action-btn"
-                title="收起目录"
-              >
-                <PanelLeftClose size={16} />
-              </button>
-            </div>
-          </div>
+    <div className={`heading-nav ${isDark ? 'dark' : ''}`}>
+      <div className="heading-nav-header">
+        <div className="heading-nav-header-content">
+          <h3 className="heading-nav-title">标题目录</h3>
+          <button
+            onClick={onToggleCollapse}
+            className="heading-nav-toggle-btn"
+            title="收起目录"
+          >
+            <PanelRightClose size={16} />
+          </button>
         </div>
-        <div className="article-nav-content custom-scrollbar">
-          <div>
-            {directoriesLoading ? (
-              <DirectorySkeleton isDark={isDark} />
-            ) : directories.length === 0 ? (
-              <div className="article-nav-empty">
-                <p>暂无目录</p>
-                <button
-                  onClick={() => onCreateDirectory && onCreateDirectory()}
-                  className="article-nav-empty-btn"
-                >
-                  创建第一个目录
-                </button>
-              </div>
-            ) : (
-              directories.map((dir) => renderDirectory(dir))
-            )}
+      </div>
+      
+      <div ref={tocContainerRef} className="heading-nav-content custom-scrollbar">
+        {headings.length === 0 ? (
+          <div className="heading-nav-empty">
+            <p>当前文章无标题</p>
           </div>
-        </div>
-      </nav>
-
-      <ConfirmDialog
-        isOpen={confirmDialog.isOpen}
-        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
-        onConfirm={confirmDialog.onConfirm}
-        title={confirmDialog.title}
-        message={confirmDialog.message}
-        type={confirmDialog.type}
-        isDark={isDark}
-      />
-
-      {operationLoading && (
-        <div className="article-nav-loading-overlay">
-          <div className={`article-nav-loading-content ${isDark ? 'dark' : ''}`}>
-            <div className="article-nav-loading-inner">
-              <div className="article-nav-loading-spinner"></div>
-              <p className="article-nav-loading-text">处理中...</p>
-            </div>
+        ) : (
+          <div className="heading-nav-space-y-1">
+            {headings.map(renderHeading)}
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   )
 }

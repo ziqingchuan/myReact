@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import ArticleNav from './ArticleNav'
+import DirectoryNav from './DirectoryNav'
 import '../styles/MobileSidebar.css'
 
 export default function MobileSidebar({ 
@@ -31,7 +31,7 @@ export default function MobileSidebar({
             <X size={20} />
           </button>
         </div>
-        <ArticleNav 
+        <DirectoryNav 
           onArticleSelect={onArticleSelect}
           onItemClick={onClose}
           directories={directories}

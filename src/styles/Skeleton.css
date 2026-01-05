@@ -49,20 +49,23 @@
   background-color: #374151;
 }
 
-.directory-skeleton-text.w-32 {
-  width: 8rem;
-}
-
 .directory-skeleton-text.w-28 {
   width: 7rem;
 }
-
+.directory-skeleton-text.w-30 {
+  width: 7.5rem;
+}
+.directory-skeleton-text.w-32 {
+  width: 8rem;
+}
 .directory-skeleton-text.w-36 {
   width: 9rem;
 }
-
-.directory-skeleton-text.w-30 {
-  width: 7.5rem;
+.directory-skeleton-text.w-40 {
+  width: 10rem;
+}
+.directory-skeleton-text.w-44 {
+  width: 11rem;
 }
 
 .directory-skeleton-sub {

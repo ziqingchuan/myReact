@@ -5,44 +5,21 @@ export let mockDirectories = [
     name: 'React 基础',
     parent_id: null,
     created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z',
-    articles: [
-      {
-        id: '1',
-        title: 'React 简介',
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z'
-      },
-      {
-        id: '2',
-        title: '创建第一个组件',
-        created_at: '2024-01-02T00:00:00Z',
-        updated_at: '2024-01-02T00:00:00Z'
-      }
-    ]
+    updated_at: '2024-01-01T00:00:00Z'
   },
   {
     id: '2',
     name: 'React Hooks',
     parent_id: null,
     created_at: '2024-01-02T00:00:00Z',
-    updated_at: '2024-01-02T00:00:00Z',
-    articles: [
-      {
-        id: '3',
-        title: 'useState Hook',
-        created_at: '2024-01-03T00:00:00Z',
-        updated_at: '2024-01-03T00:00:00Z'
-      }
-    ]
+    updated_at: '2024-01-02T00:00:00Z'
   },
   {
     id: '3',
     name: '高级概念',
     parent_id: null,
     created_at: '2024-01-03T00:00:00Z',
-    updated_at: '2024-01-03T00:00:00Z',
-    articles: []
+    updated_at: '2024-01-03T00:00:00Z'
   }
 ]
 
@@ -87,11 +64,7 @@ React 拥有庞大的社区和丰富的第三方库。
     directory_id: '1',
     is_published: true,
     created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z',
-    directories: {
-      id: '1',
-      name: 'React 基础'
-    }
+    updated_at: '2024-01-01T00:00:00Z'
   },
   {
     id: '2',
@@ -164,11 +137,7 @@ function MyComponent() {
     directory_id: '1',
     is_published: true,
     created_at: '2024-01-02T00:00:00Z',
-    updated_at: '2024-01-02T00:00:00Z',
-    directories: {
-      id: '1',
-      name: 'React 基础'
-    }
+    updated_at: '2024-01-02T00:00:00Z'
   },
   {
     id: '3',
@@ -218,10 +187,6 @@ setCount(prevCount => prevCount + 1);
     directory_id: '2',
     is_published: true,
     created_at: '2024-01-03T00:00:00Z',
-    updated_at: '2024-01-03T00:00:00Z',
-    directories: {
-      id: '2',
-      name: 'React Hooks'
-    }
+    updated_at: '2024-01-03T00:00:00Z'
   }
 ]

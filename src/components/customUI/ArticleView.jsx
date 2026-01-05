@@ -1,22 +1,9 @@
 import { Calendar, Clock, User } from 'lucide-react'
 import MarkdownRenderer from '../MarkdownRenderer'
+import { formatDate, calculateReadTime } from '../../utils'
 import '../../styles/ArticleView.css'
 
 export default function ArticleView({ article, isDark = false }) {
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
-
-  const calculateReadTime = (content) => {
-    const wordsPerMinute = 200
-    const words = content.split(/\s+/).length
-    return Math.ceil(words / wordsPerMinute)
-  }
-
   if (!article) {
     return (
       <div className={`article-view-empty ${isDark ? 'dark' : ''}`}>
