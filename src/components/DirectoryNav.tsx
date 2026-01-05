@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose, PanelLeftOpen, Edit, Trash2, Plus, FolderPlus } from 'lucide-react'
 import { db, Article, DirectoryTree } from '../lib/supabase'
@@ -55,34 +55,56 @@ export default function DirectoryNav({
     message: '',
     onConfirm: null
   })
+  const initializedRef = useRef(false)
 
   useEffect(() => {
-    if (directories.length > 0) {
-      const allDirIds = new Set<string>()
-      const collectDirIds = (dirs: DirectoryTree[]) => {
-        dirs.forEach(dir => {
-          allDirIds.add(dir.id)
-          if (dir.children && dir.children.length > 0) {
-            collectDirIds(dir.children)
-          }
-        })
-      }
-      collectDirIds(directories)
-      // 控制初始是否全部展开目录
-      setExpandedDirs(allDirIds)
+    if (directories.length > 0 && !initializedRef.current) {
+      initializedRef.current = true
       console.log('ArticleNav: 目录数据已加载', directories)
     }
   }, [directories])
 
-  const toggleDirectory = (dirId: string) => {
-    const newExpanded = new Set(expandedDirs)
-    if (newExpanded.has(dirId)) {
-      newExpanded.delete(dirId)
-    } else {
-      newExpanded.add(dirId)
+  useEffect(() => {
+    if (selectedArticle && directories.length > 0) {
+      const articleDirId = selectedArticle.directory_id
+      if (!articleDirId) return
+
+      const findParentDirectories = (dirId: string, dirs: DirectoryTree[], path: string[] = []): string[] | null => {
+        for (const dir of dirs) {
+          if (dir.id === dirId) {
+            return [...path, dir.id]
+          }
+          if (dir.children && dir.children.length > 0) {
+            const result = findParentDirectories(dirId, dir.children, [...path, dir.id])
+            if (result) return result
+          }
+        }
+        return null
+      }
+
+      const parentPath = findParentDirectories(articleDirId, directories)
+      if (parentPath) {
+        setExpandedDirs(prev => {
+          const newExpanded = new Set(prev)
+          parentPath.forEach(id => newExpanded.add(id))
+          return newExpanded
+        })
+        console.log('ArticleNav: 已展开文章所在目录及其父目录', parentPath)
+      }
     }
-    setExpandedDirs(newExpanded)
-  }
+  }, [selectedArticle, directories])
+
+  const toggleDirectory = useCallback((dirId: string) => {
+    setExpandedDirs(prev => {
+      const newExpanded = new Set(prev)
+      if (newExpanded.has(dirId)) {
+        newExpanded.delete(dirId)
+      } else {
+        newExpanded.add(dirId)
+      }
+      return newExpanded
+    })
+  }, [])
 
   const handleDeleteArticle = (articleId: string, articleTitle: string) => {
     setConfirmModal({

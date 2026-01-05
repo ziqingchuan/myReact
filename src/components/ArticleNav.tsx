@@ -101,7 +101,7 @@ export default function ArticleNav({ content, collapsed, onToggleCollapse, isDar
         {
           root: mainContent,
           rootMargin: '-10% 0% -80% 0%',
-          threshold: [0, 0.25, 0.5, 0.75, 1]
+          threshold: [0.5]
         }
       )
 

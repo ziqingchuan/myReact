@@ -1,19 +1,19 @@
-import { lazy, Suspense, useState, useEffect } from 'react'
+import { lazy, Suspense, useState, useEffect, useMemo, useCallback } from 'react'
 import { Outlet } from 'react-router-dom'
 import DirectoryNav from './DirectoryNav'
 import Header from '../components/Header'
 import MobileSidebar from '../components/MobileSidebar'
-import ArticleNav from '../components/ArticleNav'
-import { useAppState } from '../hooks/useAppState'
+import ArticleNav from './ArticleNav'
+import { useAppState, getDirectoryOptions } from '../hooks/useAppState'
 import { useArticleOperations } from '../hooks/useArticleOperations'
 import { useDirectoryOperations } from '../hooks/useDirectoryOperations'
 import { useDarkMode } from '../hooks/useDarkMode'
 import { useAuth } from '../hooks/useAuth'
 import '../App.css'
 
-const ArticleFormModal = lazy(() => import('../components/customUI/ArticleFormModal'))
-const DirectoryFormModal = lazy(() => import('../components/customUI/DirectoryFormModal'))
-const AuthModal = lazy(() => import('../components/customUI/AuthModal'))
+const ArticleFormModal = lazy(() => import('./customUI/ArticleFormModal'))
+const DirectoryFormModal = lazy(() => import('./customUI/DirectoryFormModal'))
+const AuthModal = lazy(() => import('./customUI/AuthModal'))
 
 export default function Layout() {
   const appState = useAppState()
@@ -40,10 +40,10 @@ export default function Layout() {
     invalidateCache: appState.invalidateCache
   })
 
-
   useEffect(() => {
-    const handleArticleLoaded = (event: CustomEvent) => {
-      const { article } = event.detail
+    const handleArticleLoaded = (event: Event) => {
+      const customEvent = event as CustomEvent
+      const { article } = customEvent.detail
       appState.setSelectedArticle(article)
       appState.setArticleNotFound(false)
     }
@@ -53,60 +53,175 @@ export default function Layout() {
       appState.setSelectedArticle(null)
     }
 
-    window.addEventListener('articleLoaded', handleArticleLoaded as EventListener)
+    window.addEventListener('articleLoaded', handleArticleLoaded)
     window.addEventListener('clearSelectedArticle', handleClearSelectedArticle)
     
     return () => {
-      window.removeEventListener('articleLoaded', handleArticleLoaded as EventListener)
+      window.removeEventListener('articleLoaded', handleArticleLoaded)
       window.removeEventListener('clearSelectedArticle', handleClearSelectedArticle)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appState.setSelectedArticle, appState.setArticleNotFound])
+
+  const handleMenuClick = useCallback(() => {
+    appState.setSidebarOpen(true)
+  }, [appState])
+
+  const handleToggleSidebarCollapse = useCallback(() => {
+    appState.setSidebarCollapsed(!appState.sidebarCollapsed)
+  }, [appState.sidebarCollapsed, appState])
+
+  const handleCreateArticle = useCallback((directoryId: string) => {
+    appState.setFormData({ ...appState.formData, directory_id: directoryId })
+    appState.setShowCreateForm(true)
+  }, [appState])
+
+  const handleSidebarClose = useCallback(() => {
+    appState.setSidebarOpen(false)
+  }, [appState])
+
+  const handleToggleTocCollapse = useCallback(() => {
+    appState.setTocCollapsed(!appState.tocCollapsed)
+  }, [appState.tocCollapsed, appState])
+
+  const handleAuthClick = useCallback(() => {
+    setShowAuthModal(true)
   }, [])
+
+  const handleAuthModalClose = useCallback(() => {
+    setShowAuthModal(false)
+  }, [])
+
+  const directoryNavProps = useMemo(() => ({
+    collapsed: appState.sidebarCollapsed,
+    onToggleCollapse: handleToggleSidebarCollapse,
+    onEditArticle: articleOps.handleEditArticle,
+    onCreateArticle: handleCreateArticle,
+    onEditDirectory: directoryOps.handleEditDirectory,
+    onCreateDirectory: directoryOps.handleCreateDirectory,
+    directories: appState.directories,
+    directoriesLoading: appState.directoriesLoading,
+    onLoadDirectories: appState.loadDirectories,
+    selectedArticle: appState.selectedArticle,
+    isAuthenticated,
+    isDark
+  }), [
+    appState.sidebarCollapsed,
+    handleToggleSidebarCollapse,
+    articleOps.handleEditArticle,
+    handleCreateArticle,
+    directoryOps.handleEditDirectory,
+    directoryOps.handleCreateDirectory,
+    appState.directories,
+    appState.directoriesLoading,
+    appState.loadDirectories,
+    appState.selectedArticle,
+    isAuthenticated,
+    isDark
+  ])
+
+  const mobileSidebarProps = useMemo(() => ({
+    isOpen: appState.sidebarOpen,
+    onClose: handleSidebarClose,
+    directories: appState.directories,
+    directoriesLoading: appState.directoriesLoading,
+    onLoadDirectories: appState.loadDirectories,
+    selectedArticle: appState.selectedArticle,
+    isDark
+  }), [
+    appState.sidebarOpen,
+    handleSidebarClose,
+    appState.directories,
+    appState.directoriesLoading,
+    appState.loadDirectories,
+    appState.selectedArticle,
+    isDark
+  ])
+
+  const articleNavProps = useMemo(() => ({
+    content: appState.selectedArticle?.content || '',
+    collapsed: appState.tocCollapsed,
+    onToggleCollapse: handleToggleTocCollapse,
+    isDark
+  }), [
+    appState.selectedArticle?.content,
+    appState.tocCollapsed,
+    handleToggleTocCollapse,
+    isDark
+  ])
+
+  const articleFormModalProps = useMemo(() => ({
+    isOpen: appState.showCreateForm,
+    editingArticle: appState.editingArticle,
+    formData: appState.formData,
+    directories: appState.directories,
+    formLoading: appState.formLoading,
+    onClose: articleOps.resetForm,
+    onSubmit: (e: React.FormEvent) => articleOps.handleSubmitArticle(e, appState.formData, appState.editingArticle),
+    onFormDataChange: appState.setFormData,
+    getDirectoryOptions,
+    isDark
+  }), [
+    appState.showCreateForm,
+    appState.editingArticle,
+    appState.formData,
+    appState.directories,
+    appState.formLoading,
+    articleOps.resetForm,
+    articleOps.handleSubmitArticle,
+    appState.setFormData,
+    isDark
+  ])
+
+  const directoryFormModalProps = useMemo(() => ({
+    isOpen: appState.showCreateDirForm,
+    editingDirectory: appState.editingDirectory,
+    dirFormData: appState.dirFormData,
+    directories: appState.directories,
+    formLoading: appState.formLoading,
+    onClose: directoryOps.resetDirForm,
+    onSubmit: (e: React.FormEvent) => directoryOps.handleSubmitDirectory(e, appState.dirFormData, appState.editingDirectory),
+    onFormDataChange: appState.setDirFormData,
+    getDirectoryOptions,
+    isDark
+  }), [
+    appState.showCreateDirForm,
+    appState.editingDirectory,
+    appState.dirFormData,
+    appState.directories,
+    appState.formLoading,
+    directoryOps.resetDirForm,
+    directoryOps.handleSubmitDirectory,
+    appState.setDirFormData,
+    isDark
+  ])
+
+  const authModalProps = useMemo(() => ({
+    isOpen: showAuthModal,
+    onClose: handleAuthModalClose,
+    onSubmit: login,
+    isDark
+  }), [showAuthModal, handleAuthModalClose, login, isDark])
 
   return (
     <div className={`app ${isDark ? 'dark' : ''}`}>
       <Header 
         isMobile={appState.isMobile} 
-        onMenuClick={() => appState.setSidebarOpen(true)}
+        onMenuClick={handleMenuClick}
         isDark={isDark}
         onToggleDarkMode={toggleDarkMode}
         isAuthenticated={isAuthenticated}
-        onAuthClick={() => setShowAuthModal(true)}
+        onAuthClick={handleAuthClick}
         onLogout={logout}
       />
       
       <div className="flex relative">
         {!appState.isMobile && (
           <div style={{ width: appState.sidebarCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
-            <DirectoryNav 
-              collapsed={appState.sidebarCollapsed}
-              onToggleCollapse={() => appState.setSidebarCollapsed(!appState.sidebarCollapsed)}
-              onEditArticle={articleOps.handleEditArticle}
-              onCreateArticle={(directoryId) => {
-                appState.setFormData({ ...appState.formData, directory_id: directoryId })
-                appState.setShowCreateForm(true)
-              }}
-              onEditDirectory={directoryOps.handleEditDirectory}
-              onCreateDirectory={directoryOps.handleCreateDirectory}
-              directories={appState.directories}
-              directoriesLoading={appState.directoriesLoading}
-              onLoadDirectories={appState.loadDirectories}
-              selectedArticle={appState.selectedArticle}
-              isAuthenticated={isAuthenticated}
-              isDark={isDark}
-            />
+            <DirectoryNav {...directoryNavProps} />
           </div>
         )}
         
-        <MobileSidebar
-          isOpen={appState.sidebarOpen}
-          onClose={() => appState.setSidebarOpen(false)}
-          directories={appState.directories}
-          directoriesLoading={appState.directoriesLoading}
-          onLoadDirectories={appState.loadDirectories}
-          selectedArticle={appState.selectedArticle}
-          isDark={isDark}
-        />
+        <MobileSidebar {...mobileSidebarProps} />
         
         <main className="flex-1 overflow-auto custom-scrollbar main-content">
           <Outlet context={{ isDark }} />
@@ -114,52 +229,20 @@ export default function Layout() {
 
         {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
           <div style={{ width: appState.tocCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
-            <ArticleNav
-              content={appState.selectedArticle.content}
-              collapsed={appState.tocCollapsed}
-              onToggleCollapse={() => appState.setTocCollapsed(!appState.tocCollapsed)}
-              isDark={isDark}
-            />
+            <ArticleNav {...articleNavProps} />
           </div>
         )}
 
         <Suspense fallback={null}>
-          <ArticleFormModal
-            isOpen={appState.showCreateForm}
-            editingArticle={appState.editingArticle}
-            formData={appState.formData}
-            directories={appState.directories}
-            formLoading={appState.formLoading}
-            onClose={articleOps.resetForm}
-            onSubmit={(e) => articleOps.handleSubmitArticle(e, appState.formData, appState.editingArticle)}
-            onFormDataChange={appState.setFormData}
-            getDirectoryOptions={appState.getDirectoryOptions}
-            isDark={isDark}
-          />
+          <ArticleFormModal {...articleFormModalProps} />
         </Suspense>
 
         <Suspense fallback={null}>
-          <DirectoryFormModal
-            isOpen={appState.showCreateDirForm}
-            editingDirectory={appState.editingDirectory}
-            dirFormData={appState.dirFormData}
-            directories={appState.directories}
-            formLoading={appState.formLoading}
-            onClose={directoryOps.resetDirForm}
-            onSubmit={(e) => directoryOps.handleSubmitDirectory(e, appState.dirFormData, appState.editingDirectory)}
-            onFormDataChange={appState.setDirFormData}
-            getDirectoryOptions={appState.getDirectoryOptions}
-            isDark={isDark}
-          />
+          <DirectoryFormModal {...directoryFormModalProps} />
         </Suspense>
 
         <Suspense fallback={null}>
-          <AuthModal
-            isOpen={showAuthModal}
-            onClose={() => setShowAuthModal(false)}
-            onSubmit={login}
-            isDark={isDark}
-          />
+          <AuthModal {...authModalProps} />
         </Suspense>
       </div>
     </div>

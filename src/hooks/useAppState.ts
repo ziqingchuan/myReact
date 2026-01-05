@@ -23,6 +23,21 @@ interface DirectoryOption {
   label: string
 }
 
+export function getDirectoryOptions(dirs: DirectoryTree[], level: number = 0): DirectoryOption[] {
+  let options: DirectoryOption[] = []
+  dirs.forEach(dir => {
+    const prefix = '　'.repeat(level)
+    options.push({
+      value: dir.id,
+      label: prefix + dir.name
+    })
+    if (dir.children && dir.children.length > 0) {
+      options = options.concat(getDirectoryOptions(dir.children, level + 1))
+    }
+  })
+  return options
+}
+
 export function useAppState() {
   const navigate = useNavigate()
   
@@ -147,7 +162,7 @@ export function useAppState() {
   }, [navigate])
 
   // 从 localStorage 读取缓存
-  const getCachedDirectories = (): DirectoryTree[] | null => {
+  const getCachedDirectories = useCallback((): DirectoryTree[] | null => {
     try {
       const cached = localStorage.getItem(CACHE_KEY)
       const cacheTime = localStorage.getItem(CACHE_TIME_KEY)
@@ -164,17 +179,17 @@ export function useAppState() {
       console.error('读取缓存失败:', error)
     }
     return null
-  }
+  }, [])
 
   // 保存到 localStorage
-  const saveCachedDirectories = (data: DirectoryTree[]): void => {
+  const saveCachedDirectories = useCallback((data: DirectoryTree[]): void => {
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(data))
       localStorage.setItem(CACHE_TIME_KEY, Date.now().toString())
     } catch (error) {
       console.error('保存缓存失败:', error)
     }
-  }
+  }, [])
 
   // 清除缓存
   const invalidateCache = useCallback((): void => {
@@ -225,7 +240,7 @@ export function useAppState() {
       setDirectoriesLoading(false)
       loadingRef.current = false
     }
-  }, [])
+  }, [getCachedDirectories, saveCachedDirectories])
 
   const handleArticleSelect = async (articleId: string): Promise<void> => {
     setArticleLoading(true)
@@ -234,7 +249,6 @@ export function useAppState() {
       const article = await db.getArticle(articleId)
       setSelectedArticle(article)
       
-      // 保存到 localStorage
       localStorage.setItem('lastArticleId', articleId)
       
       if (isMobile) {
@@ -244,28 +258,11 @@ export function useAppState() {
       console.error('加载文章失败:', error)
       setArticleNotFound(true)
       
-      // 如果加载失败，清除 localStorage 中的记录
       localStorage.removeItem('lastArticleId')
     } finally {
       setArticleLoading(false)
       setLoading(false)
     }
-  }
-
-  // 工具函数
-  const getDirectoryOptions = (dirs: DirectoryTree[], level: number = 0): DirectoryOption[] => {
-    let options: DirectoryOption[] = []
-    dirs.forEach(dir => {
-      const prefix = '　'.repeat(level)
-      options.push({
-        value: dir.id,
-        label: prefix + dir.name
-      })
-      if (dir.children && dir.children.length > 0) {
-        options = options.concat(getDirectoryOptions(dir.children, level + 1))
-      }
-    })
-    return options
   }
 
   return {
@@ -303,7 +300,6 @@ export function useAppState() {
     // 函数
     loadDirectories,
     handleArticleSelect,
-    getDirectoryOptions,
     invalidateCache
   }
 }
