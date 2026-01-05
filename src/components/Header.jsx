@@ -1,8 +1,17 @@
 import { Menu, Sun, Moon, Key, LogOut, Github } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import reactSvg from '../assets/react.svg'
 import '../styles/Header.css'
 
-export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout, onLogoClick }) {
+export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout }) {
+  const navigate = useNavigate()
+
+  const handleLogoClick = () => {
+    console.log('Header: 点击logo，即将导航到 /home')
+    navigate('/home')
+    console.log('Header: navigate 已调用')
+  }
+
   return (
     <header className={`header ${isDark ? 'dark' : ''}`}>
       <div className="header-content">
@@ -18,7 +27,7 @@ export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode
             )}
             
             <button 
-              onClick={onLogoClick}
+              onClick={handleLogoClick}
               className="header-logo-btn"
             >
               <div className="header-logo-img">

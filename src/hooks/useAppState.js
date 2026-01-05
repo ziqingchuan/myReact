@@ -57,8 +57,10 @@ export function useAppState() {
   // 初始化数据
   useEffect(() => {
     const initializeApp = async () => {
-      // 加载目录
-      loadDirectories(true)
+      console.log('useAppState: 初始化应用')
+      
+      // 加载目录（强制刷新，不使用缓存）
+      loadDirectories(true, true)
       
       // 尝试从 localStorage 恢复上次阅读的文章
       const lastArticleId = localStorage.getItem('lastArticleId')
@@ -164,8 +166,11 @@ export function useAppState() {
 
   // 数据加载函数 - 带 localStorage 缓存
   const loadDirectories = useCallback(async (showLoading = false, forceRefresh = false) => {
+    console.log('useAppState: loadDirectories 被调用', { showLoading, forceRefresh, loadingRef: loadingRef.current })
+    
     // 防止重复加载（除非强制刷新）
     if (!forceRefresh && loadingRef.current) {
+      console.log('useAppState: 已在加载中，跳过')
       return
     }
 
@@ -173,6 +178,7 @@ export function useAppState() {
     if (!forceRefresh) {
       const cached = getCachedDirectories()
       if (cached) {
+        console.log('useAppState: 使用缓存数据', cached)
         setDirectories(cached)
         setDirectoriesLoading(false)
         return
@@ -185,7 +191,9 @@ export function useAppState() {
     }
 
     try {
+      console.log('useAppState: 开始从数据库加载目录')
       const data = await db.getDirectoryTree()
+      console.log('useAppState: 目录数据加载成功', data)
       setDirectories(data)
       // 保存到 localStorage
       saveCachedDirectories(data)

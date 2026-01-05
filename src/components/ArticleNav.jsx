@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose, PanelLeftOpen, Edit, Trash2, Plus, FolderPlus } from 'lucide-react'
 import { db } from '../lib/supabase'
 import ConfirmDialog from './customUI/ConfirmDialog'
@@ -8,7 +9,6 @@ import '../styles/ArticleNav.css'
 
 export default function ArticleNav({ 
   onItemClick, 
-  onArticleSelect, 
   collapsed, 
   onToggleCollapse, 
   onEditArticle, 
@@ -22,6 +22,7 @@ export default function ArticleNav({
   isAuthenticated = false,
   isDark = false
 }) {
+  const navigate = useNavigate()
   const [expandedDirs, setExpandedDirs] = useState(new Set())
   const [operationLoading, setOperationLoading] = useState(false)
   const [confirmDialog, setConfirmDialog] = useState({
@@ -45,6 +46,7 @@ export default function ArticleNav({
       }
       collectDirIds(directories)
       setExpandedDirs(allDirIds)
+      console.log('ArticleNav: 目录数据已加载', directories)
     }
   }, [directories])
 
@@ -192,7 +194,10 @@ export default function ArticleNav({
                 >
                   <button
                     onClick={() => {
-                      onArticleSelect && onArticleSelect(article.id)
+                      console.log('点击文章按钮，文章ID:', article.id)
+                      console.log('即将导航到:', `/article/${article.id}`)
+                      navigate(`/article/${article.id}`)
+                      console.log('导航已调用')
                       onItemClick && onItemClick()
                     }}
                     className={`article-nav-article-btn ${isActive ? 'active' : ''}`}
