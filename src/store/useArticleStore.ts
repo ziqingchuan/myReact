@@ -1,36 +1,9 @@
 import { create } from 'zustand'
-import { db, Article } from '../lib/supabase'
+import { db } from '../lib/supabase'
 import { useUIStore } from './useUIStore'
 import { CACHE, TIMING } from '../constants'
-import type { ArticleFormData } from '../types'
+import type { ArticleStore } from '../types'
 
-interface ArticleStore {
-  // 状态
-  selectedArticle: Article | null
-  articleLoading: boolean
-  articleNotFound: boolean
-  
-  // 表单状态
-  editingArticle: Article | null
-  showCreateForm: boolean
-  formData: ArticleFormData
-  formLoading: boolean
-
-  // 操作
-  loadArticle: (articleId: string) => Promise<void>
-  clearSelectedArticle: () => void
-  
-  // 文章 CRUD
-  createArticle: (data: ArticleFormData) => Promise<string>
-  updateArticle: (id: string, data: ArticleFormData) => Promise<void>
-  deleteArticle: (id: string) => Promise<void>
-  
-  // 表单操作
-  setEditingArticle: (article: Article | null) => void
-  setShowCreateForm: (show: boolean) => void
-  setFormData: (data: ArticleFormData) => void
-  resetArticleForm: () => void
-}
 
 export const useArticleStore = create<ArticleStore>((set, get) => ({
   // 初始状态

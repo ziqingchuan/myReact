@@ -1,23 +1,6 @@
 import { create } from 'zustand'
 import { CACHE } from '../constants'
-
-interface UIStore {
-  // 状态
-  sidebarOpen: boolean
-  isMobile: boolean
-  sidebarCollapsed: boolean
-  tocCollapsed: boolean
-  isDark: boolean
-
-  // 操作
-  setSidebarOpen: (open: boolean) => void
-  setIsMobile: (mobile: boolean) => void
-  setSidebarCollapsed: (collapsed: boolean) => void
-  setTocCollapsed: (collapsed: boolean) => void
-  toggleSidebarCollapse: () => void
-  toggleTocCollapse: () => void
-  toggleDarkMode: () => void
-}
+import { UIStore } from '../types'
 
 // 初始化暗色模式
 const getInitialDarkMode = (): boolean => {

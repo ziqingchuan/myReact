@@ -2,19 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { PanelRightClose, PanelRightOpen } from 'lucide-react'
 import { generateId } from '../utils/publicTools'
 import '../styles/ArticleNav.css'
-
-interface Heading {
-  id: string
-  text: string
-  level: number
-}
-
-interface ArticleNavProps {
-  content: string
-  collapsed: boolean
-  onToggleCollapse: () => void
-  isDark: boolean
-}
+import { ArticleNavProps, Heading } from '../types'
 
 export default function ArticleNav({ content, collapsed, onToggleCollapse, isDark }: ArticleNavProps) {
   const [headings, setHeadings] = useState<Heading[]>([])

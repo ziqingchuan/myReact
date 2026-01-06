@@ -26,6 +26,19 @@ export interface ArticleViewProps {
   isDark?: boolean
 }
 
+export interface Heading {
+  id: string
+  text: string
+  level: number
+}
+
+export interface ArticleNavProps {
+  content: string
+  collapsed: boolean
+  onToggleCollapse: () => void
+  isDark: boolean
+}
+
 export interface DirectoryFormData {
   name: string
   parent_id: string
@@ -208,6 +221,12 @@ export interface LoadingSpinnerProps {
   isDark?: boolean
 }
 
+export interface LoadingOverlayProps {
+  message?: string
+  className?: string
+  isDark?: boolean
+}
+
 export interface SkeletonProps {
   isDark?: boolean
 }
@@ -234,4 +253,89 @@ export interface AuthModalProps {
 export interface ArticleNotFoundProps {
   onReturnHome: () => void
   isDark?: boolean
+}
+
+
+// Store的类型
+
+export interface ArticleStore {
+  // 状态
+  selectedArticle: Article | null
+  articleLoading: boolean
+  articleNotFound: boolean
+  
+  // 表单状态
+  editingArticle: Article | null
+  showCreateForm: boolean
+  formData: ArticleFormData
+  formLoading: boolean
+
+  // 操作
+  loadArticle: (articleId: string) => Promise<void>
+  clearSelectedArticle: () => void
+  
+  // 文章 CRUD
+  createArticle: (data: ArticleFormData) => Promise<string>
+  updateArticle: (id: string, data: ArticleFormData) => Promise<void>
+  deleteArticle: (id: string) => Promise<void>
+  
+  // 表单操作
+  setEditingArticle: (article: Article | null) => void
+  setShowCreateForm: (show: boolean) => void
+  setFormData: (data: ArticleFormData) => void
+  resetArticleForm: () => void
+}
+
+export interface AuthStore {
+  // 状态
+  isAuthenticated: boolean
+
+  // 操作
+  login: (password: string) => Promise<void>
+  logout: () => void
+}
+
+export interface DirectoryStore {
+  // 状态
+  directories: DirectoryTree[]
+  directoriesLoading: boolean
+  
+  // 表单状态
+  editingDirectory: DirectoryTree | null
+  showCreateDirForm: boolean
+  dirFormData: DirectoryFormData
+  formLoading: boolean
+
+  // 操作
+  loadDirectories: (showLoading?: boolean, forceRefresh?: boolean) => Promise<void>
+  invalidateCache: () => void
+  
+  // 目录 CRUD
+  createDirectory: (data: DirectoryFormData) => Promise<void>
+  updateDirectory: (id: string, data: DirectoryFormData) => Promise<void>
+  deleteDirectory: (id: string) => Promise<void>
+  
+  // 表单操作
+  setEditingDirectory: (directory: DirectoryTree | null) => void
+  setShowCreateDirForm: (show: boolean) => void
+  setDirFormData: (data: DirectoryFormData) => void
+  resetDirectoryForm: () => void
+}
+
+export interface UIStore {
+  // 状态
+  sidebarOpen: boolean
+  isMobile: boolean
+  sidebarCollapsed: boolean
+  tocCollapsed: boolean
+  isDark: boolean
+
+  // 操作
+  setSidebarOpen: (open: boolean) => void
+  setIsMobile: (mobile: boolean) => void
+  setSidebarCollapsed: (collapsed: boolean) => void
+  setTocCollapsed: (collapsed: boolean) => void
+  toggleSidebarCollapse: () => void
+  toggleTocCollapse: () => void
+  toggleDarkMode: () => void
 }

@@ -1,15 +1,6 @@
 import { create } from 'zustand'
 import { CACHE, DEFAULTS } from '../constants'
-
-interface AuthStore {
-  // 状态
-  isAuthenticated: boolean
-
-  // 操作
-  login: (password: string) => Promise<void>
-  logout: () => void
-}
-
+import { AuthStore } from '../types'
 // 初始化认证状态
 const getInitialAuth = (): boolean => {
   return localStorage.getItem(CACHE.KEYS.AUTH) === 'true'

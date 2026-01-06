@@ -6,6 +6,9 @@ import { handleError } from '../../utils/errorHandler'
 
 /**
  * 文章操作 Handlers Hook
+ * 
+ * 提供文章创建、编辑和提交的处理函数
+ * 使用 Zustand 状态管理来处理文章数据和表单状态
  */
 export function useArticleHandlers() {
   const navigate = useNavigate()
@@ -22,11 +25,21 @@ export function useArticleHandlers() {
   const invalidateDirectoryCache = useDirectoryStore(state => state.invalidateCache)
   const loadDirectories = useDirectoryStore(state => state.loadDirectories)
 
+  /**
+   * 处理创建文章操作
+   * 
+   * @param directoryId - 目录ID，文章将被创建到该目录下
+   */
   const handleCreateArticle = useCallback((directoryId: string) => {
     setFormData({ ...formData, directory_id: directoryId })
     setShowCreateForm(true)
   }, [formData, setFormData, setShowCreateForm])
 
+  /**
+   * 处理编辑文章操作
+   * 
+   * @param article - 要编辑的文章对象
+   */
   const handleEditArticle = useCallback((article: Article) => {
     setEditingArticle(article)
     setFormData({
@@ -38,6 +51,12 @@ export function useArticleHandlers() {
     setShowCreateForm(true)
   }, [setEditingArticle, setFormData, setShowCreateForm])
 
+  /**
+   * 处理文章提交操作
+   * 
+   * @param e - 表单提交事件对象
+   * @returns Promise<void>
+   */
   const handleSubmitArticle = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     

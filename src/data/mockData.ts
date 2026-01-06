@@ -1,20 +1,4 @@
-export interface Directory {
-  id: string
-  name: string
-  parent_id: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface Article {
-  id: string
-  title: string
-  content: string
-  directory_id: string | null
-  is_published: boolean
-  created_at: string
-  updated_at: string
-}
+import { Directory, Article } from '../types'
 
 export let mockDirectories: Directory[] = [
   {

@@ -1,34 +1,7 @@
 import { create } from 'zustand'
-import { db, DirectoryTree } from '../lib/supabase'
+import { db } from '../lib/supabase'
 import { CACHE } from '../constants'
-import type { DirectoryFormData } from '../types'
-
-interface DirectoryStore {
-  // 状态
-  directories: DirectoryTree[]
-  directoriesLoading: boolean
-  
-  // 表单状态
-  editingDirectory: DirectoryTree | null
-  showCreateDirForm: boolean
-  dirFormData: DirectoryFormData
-  formLoading: boolean
-
-  // 操作
-  loadDirectories: (showLoading?: boolean, forceRefresh?: boolean) => Promise<void>
-  invalidateCache: () => void
-  
-  // 目录 CRUD
-  createDirectory: (data: DirectoryFormData) => Promise<void>
-  updateDirectory: (id: string, data: DirectoryFormData) => Promise<void>
-  deleteDirectory: (id: string) => Promise<void>
-  
-  // 表单操作
-  setEditingDirectory: (directory: DirectoryTree | null) => void
-  setShowCreateDirForm: (show: boolean) => void
-  setDirFormData: (data: DirectoryFormData) => void
-  resetDirectoryForm: () => void
-}
+import type { DirectoryTree, DirectoryStore } from '../types'
 
 // 缓存辅助函数
 const getCachedDirectories = (): DirectoryTree[] | null => {

@@ -15,6 +15,11 @@ export function useDirectoryHandlers() {
   const updateDirectory = useDirectoryStore(state => state.updateDirectory)
   const resetDirectoryForm = useDirectoryStore(state => state.resetDirectoryForm)
 
+  /**
+   * 处理目录编辑操作
+   * 
+   * @param directory - 要编辑的目录对象，包含名称和父级ID等信息
+   */
   const handleEditDirectory = useCallback((directory: any) => {
     setEditingDirectory(directory)
     setDirFormData({
@@ -24,11 +29,26 @@ export function useDirectoryHandlers() {
     setShowCreateDirForm(true)
   }, [setEditingDirectory, setDirFormData, setShowCreateDirForm])
 
+  /**
+   * 处理目录创建操作
+   * 
+   * @param parentId - 父级目录ID，默认为空字符串表示顶级目录
+   */
   const handleCreateDirectory = useCallback((parentId: string = '') => {
     setDirFormData({ name: '', parent_id: parentId })
     setShowCreateDirForm(true)
   }, [setDirFormData, setShowCreateDirForm])
 
+  /**
+   * 处理目录表单提交操作
+   * 
+   * @param e - 表单提交事件对象
+   * @returns Promise<void>
+   * 
+   * @description
+   * 根据当前是否有编辑中的目录，决定执行更新或创建操作。
+   * 成功后重置表单并显示成功提示，失败时处理错误。
+   */
   const handleSubmitDirectory = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     

@@ -8,6 +8,18 @@ import { generateId, extractTextContent, generateHash } from '../utils/publicToo
 import '../styles/MarkdownRenderer.css'
 import { MarkdownRendererProps } from '../types'
 
+/**
+ * Markdown 渲染器组件，用于将 Markdown 内容转换为格式化的 HTML
+ * 
+ * 该组件使用 ReactMarkdown 库解析 Markdown 内容，并提供了自定义的渲染组件
+ * 来增强代码块、标题、链接等元素的显示效果。支持深色/浅色主题切换，
+ * 并提供代码复制功能。
+ * 
+ * @param {string} content - 要渲染的 Markdown 内容
+ * @param {boolean} [isDark=false] - 是否使用深色主题，默认为 false
+ * 
+ * @returns {JSX.Element} 渲染后的 Markdown 内容容器
+ */
 export default function MarkdownRenderer({ content, isDark = false }: MarkdownRendererProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
