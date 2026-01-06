@@ -3,11 +3,11 @@ import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import ArticlePage from './pages/ArticlePage'
 import ArticleNotFound from './components/customUI/ArticleNotFound'
-import { useAppStore } from './store/useAppStore'
+import { useUIStore } from './store'
 
 function NotFoundWrapper() {
   const navigate = useNavigate()
-  const isDark = useAppStore(state => state.isDark)
+  const isDark = useUIStore(state => state.isDark)
   
   const handleReturnHome = () => {
     navigate('/home')

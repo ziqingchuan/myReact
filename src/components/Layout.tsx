@@ -4,7 +4,7 @@ import DirectoryNav from './DirectoryNav'
 import Header from '../components/Header'
 import MobileSidebar from '../components/MobileSidebar'
 import ArticleNav from './ArticleNav'
-import { useAppStore } from '../store/useAppStore'
+import { useUIStore, useAuthStore, useDirectoryStore, useArticleStore } from '../store'
 import { getDirectoryOptions } from '../utils'
 import { Article } from '../lib/supabase'
 import '../App.css'
@@ -14,53 +14,53 @@ const DirectoryFormModal = lazy(() => import('./customUI/DirectoryFormModal'))
 const AuthModal = lazy(() => import('./customUI/AuthModal'))
 
 export default function Layout() {
-  // UI 状态
-  const isMobile = useAppStore(state => state.isMobile)
-  const sidebarOpen = useAppStore(state => state.sidebarOpen)
-  const sidebarCollapsed = useAppStore(state => state.sidebarCollapsed)
-  const tocCollapsed = useAppStore(state => state.tocCollapsed)
-  const isDark = useAppStore(state => state.isDark)
-  const articleNotFound = useAppStore(state => state.articleNotFound)
+  // UI Store
+  const isMobile = useUIStore(state => state.isMobile)
+  const sidebarOpen = useUIStore(state => state.sidebarOpen)
+  const sidebarCollapsed = useUIStore(state => state.sidebarCollapsed)
+  const tocCollapsed = useUIStore(state => state.tocCollapsed)
+  const isDark = useUIStore(state => state.isDark)
+  const setIsMobile = useUIStore(state => state.setIsMobile)
+  const setSidebarOpen = useUIStore(state => state.setSidebarOpen)
+  const toggleSidebarCollapse = useUIStore(state => state.toggleSidebarCollapse)
+  const toggleTocCollapse = useUIStore(state => state.toggleTocCollapse)
+  const toggleDarkMode = useUIStore(state => state.toggleDarkMode)
   
-  // 数据状态
-  const selectedArticle = useAppStore(state => state.selectedArticle)
-  const directories = useAppStore(state => state.directories)
-  const directoriesLoading = useAppStore(state => state.directoriesLoading)
+  // Auth Store
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated)
+  const login = useAuthStore(state => state.login)
+  const logout = useAuthStore(state => state.logout)
   
-  // 表单状态
-  const showCreateForm = useAppStore(state => state.showCreateForm)
-  const showCreateDirForm = useAppStore(state => state.showCreateDirForm)
-  const editingArticle = useAppStore(state => state.editingArticle)
-  const editingDirectory = useAppStore(state => state.editingDirectory)
-  const formData = useAppStore(state => state.formData)
-  const dirFormData = useAppStore(state => state.dirFormData)
-  const formLoading = useAppStore(state => state.formLoading)
+  // Directory Store
+  const directories = useDirectoryStore(state => state.directories)
+  const directoriesLoading = useDirectoryStore(state => state.directoriesLoading)
+  const loadDirectories = useDirectoryStore(state => state.loadDirectories)
+  const editingDirectory = useDirectoryStore(state => state.editingDirectory)
+  const showCreateDirForm = useDirectoryStore(state => state.showCreateDirForm)
+  const dirFormData = useDirectoryStore(state => state.dirFormData)
+  const dirFormLoading = useDirectoryStore(state => state.formLoading)
+  const setEditingDirectory = useDirectoryStore(state => state.setEditingDirectory)
+  const setShowCreateDirForm = useDirectoryStore(state => state.setShowCreateDirForm)
+  const setDirFormData = useDirectoryStore(state => state.setDirFormData)
+  const createDirectory = useDirectoryStore(state => state.createDirectory)
+  const updateDirectory = useDirectoryStore(state => state.updateDirectory)
+  const resetDirectoryForm = useDirectoryStore(state => state.resetDirectoryForm)
+  const invalidateDirectoryCache = useDirectoryStore(state => state.invalidateCache)
   
-  // 认证状态
-  const isAuthenticated = useAppStore(state => state.isAuthenticated)
-  
-  // 操作方法
-  const setIsMobile = useAppStore(state => state.setIsMobile)
-  const setSidebarOpen = useAppStore(state => state.setSidebarOpen)
-  const toggleSidebarCollapse = useAppStore(state => state.toggleSidebarCollapse)
-  const toggleTocCollapse = useAppStore(state => state.toggleTocCollapse)
-  const toggleDarkMode = useAppStore(state => state.toggleDarkMode)
-  const loadDirectories = useAppStore(state => state.loadDirectories)
-  const setFormData = useAppStore(state => state.setFormData)
-  const setEditingArticle = useAppStore(state => state.setEditingArticle)
-  const setShowCreateForm = useAppStore(state => state.setShowCreateForm)
-  const setEditingDirectory = useAppStore(state => state.setEditingDirectory)
-  const setShowCreateDirForm = useAppStore(state => state.setShowCreateDirForm)
-  const setDirFormData = useAppStore(state => state.setDirFormData)
-  const createArticle = useAppStore(state => state.createArticle)
-  const updateArticle = useAppStore(state => state.updateArticle)
-  const resetArticleForm = useAppStore(state => state.resetArticleForm)
-  const createDirectory = useAppStore(state => state.createDirectory)
-  const updateDirectory = useAppStore(state => state.updateDirectory)
-  const resetDirectoryForm = useAppStore(state => state.resetDirectoryForm)
-  const login = useAppStore(state => state.login)
-  const logout = useAppStore(state => state.logout)
-  const loadArticle = useAppStore(state => state.loadArticle)
+  // Article Store
+  const selectedArticle = useArticleStore(state => state.selectedArticle)
+  const articleNotFound = useArticleStore(state => state.articleNotFound)
+  const editingArticle = useArticleStore(state => state.editingArticle)
+  const showCreateForm = useArticleStore(state => state.showCreateForm)
+  const formData = useArticleStore(state => state.formData)
+  const formLoading = useArticleStore(state => state.formLoading)
+  const setEditingArticle = useArticleStore(state => state.setEditingArticle)
+  const setShowCreateForm = useArticleStore(state => state.setShowCreateForm)
+  const setFormData = useArticleStore(state => state.setFormData)
+  const createArticle = useArticleStore(state => state.createArticle)
+  const updateArticle = useArticleStore(state => state.updateArticle)
+  const resetArticleForm = useArticleStore(state => state.resetArticleForm)
+  const loadArticle = useArticleStore(state => state.loadArticle)
 
   const [showAuthModal, setShowAuthModal] = React.useState(false)
 
@@ -139,6 +139,10 @@ export default function Layout() {
         // 导航到新文章
         window.location.href = `#/article/${newArticleId}`
       }
+      
+      // 刷新目录（因为文章数量可能变化）
+      invalidateDirectoryCache()
+      await loadDirectories(true, true)
       
       resetArticleForm()
       window.toast?.success(editingArticle ? '文章更新成功' : '文章创建成功')
@@ -258,7 +262,7 @@ export default function Layout() {
             editingDirectory={editingDirectory}
             dirFormData={dirFormData}
             directories={directories}
-            formLoading={formLoading}
+            formLoading={dirFormLoading}
             onClose={resetDirectoryForm}
             onSubmit={handleSubmitDirectory}
             onFormDataChange={setDirFormData}

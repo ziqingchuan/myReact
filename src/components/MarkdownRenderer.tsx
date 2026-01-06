@@ -3,7 +3,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeRaw from 'rehype-raw'
 import { Copy, Check } from 'lucide-react'
-import { useState, useMemo, useCallback, useRef } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { generateId, extractTextContent, generateHash } from '../utils'
 import '../styles/MarkdownRenderer.css'
 
@@ -15,17 +15,11 @@ interface MarkdownRendererProps {
 export default function MarkdownRenderer({ content, isDark = false }: MarkdownRendererProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
-  const copiedCodeRef = useRef<string | null>(null)
-
-  const copyToClipboard = useCallback(async (text: string, index: string) => {
+  const copyToClipboard = useCallback(async (text: string, codeHash: string) => {
     try {
       await navigator.clipboard.writeText(text)
-      copiedCodeRef.current = index
-      setCopiedCode(index)
-      setTimeout(() => {
-        copiedCodeRef.current = null
-        setCopiedCode(null)
-      }, 2000)
+      setCopiedCode(codeHash)
+      setTimeout(() => setCopiedCode(null), 2000)
     } catch (err) {
       console.error('复制失败:', err)
     }
@@ -39,15 +33,15 @@ export default function MarkdownRenderer({ content, isDark = false }: MarkdownRe
       
       if (match) {
         const codeContent = extractTextContent(codeElement?.props?.children)
-        const codeIndex = generateHash(codeContent.substring(0, 100))
-        const isCopied = copiedCodeRef.current === codeIndex
+        const codeHash = generateHash(codeContent.substring(0, 100))
+        const isCopied = copiedCode === codeHash
         
         return (
           <div className={`markdown-code-block ${isDark ? 'dark' : ''}`}>
             <div className="markdown-code-header">
               <span className="markdown-code-language">{match[1]}</span>
               <button
-                onClick={() => copyToClipboard(codeContent, codeIndex)}
+                onClick={() => copyToClipboard(codeContent, codeHash)}
                 className="markdown-code-copy-btn"
               >
                 {isCopied ? (
@@ -93,38 +87,17 @@ export default function MarkdownRenderer({ content, isDark = false }: MarkdownRe
     
     h1({ children }: { children?: React.ReactNode }) {
       const id = generateId(children)
-      return (
-        <h1 
-          id={id}
-          className="markdown-h1"
-        >
-          {children}
-        </h1>
-      )
+      return <h1 id={id} className="markdown-h1">{children}</h1>
     },
     
     h2({ children }: { children?: React.ReactNode }) {
       const id = generateId(children)
-      return (
-        <h2 
-          id={id}
-          className="markdown-h2"
-        >
-          {children}
-        </h2>
-      )
+      return <h2 id={id} className="markdown-h2">{children}</h2>
     },
     
     h3({ children }: { children?: React.ReactNode }) {
       const id = generateId(children)
-      return (
-        <h3 
-          id={id}
-          className="markdown-h3"
-        >
-          {children}
-        </h3>
-      )
+      return <h3 id={id} className="markdown-h3">{children}</h3>
     },
     
     p({ children }: { children?: React.ReactNode }) {
@@ -183,7 +156,7 @@ export default function MarkdownRenderer({ content, isDark = false }: MarkdownRe
         </a>
       )
     }
-  }), [isDark, copyToClipboard])
+  }), [isDark, copiedCode, copyToClipboard])
 
   return (
     <div className={`markdown-renderer ${isDark ? 'dark' : ''}`}>

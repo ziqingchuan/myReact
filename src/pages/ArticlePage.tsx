@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { useAppStore } from '../store/useAppStore'
+import { useArticleStore, useUIStore } from '../store'
 import ArticleView from '../components/customUI/ArticleView'
 import ArticleNotFound from '../components/customUI/ArticleNotFound'
 import ArticleSkeleton from '../components/customUI/ArticleSkeleton'
@@ -9,11 +9,11 @@ export default function ArticlePage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   
-  const isDark = useAppStore(state => state.isDark)
-  const article = useAppStore(state => state.selectedArticle)
-  const loading = useAppStore(state => state.articleLoading)
-  const notFound = useAppStore(state => state.articleNotFound)
-  const loadArticle = useAppStore(state => state.loadArticle)
+  const isDark = useUIStore(state => state.isDark)
+  const article = useArticleStore(state => state.selectedArticle)
+  const loading = useArticleStore(state => state.articleLoading)
+  const notFound = useArticleStore(state => state.articleNotFound)
+  const loadArticle = useArticleStore(state => state.loadArticle)
 
   // 当 id 变化时加载文章
   useEffect(() => {

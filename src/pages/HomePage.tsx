@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { useAppStore } from '../store/useAppStore'
+import { useArticleStore, useUIStore } from '../store'
 import WelcomePage from '../components/customUI/WelcomePage'
 
 export default function HomePage() {
   console.log('HomePage: 组件开始渲染')
   const navigate = useNavigate()
-  const isDark = useAppStore(state => state.isDark)
-  const clearSelectedArticle = useAppStore(state => state.clearSelectedArticle)
+  const isDark = useUIStore(state => state.isDark)
+  const clearSelectedArticle = useArticleStore(state => state.clearSelectedArticle)
 
   useEffect(() => {
     console.log('HomePage: 清除选中文章')
