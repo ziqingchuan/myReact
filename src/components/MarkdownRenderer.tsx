@@ -16,11 +16,11 @@ import { MarkdownRendererProps } from '../types'
  * 并提供代码复制功能。
  * 
  * @param {string} content - 要渲染的 Markdown 内容
- * @param {boolean} [isDark=false] - 是否使用深色主题，默认为 false
+ * @param {boolean} [isDark=false] - 是否使用深色主题，默认为 true
  * 
  * @returns {JSX.Element} 渲染后的 Markdown 内容容器
  */
-export default function MarkdownRenderer({ content, isDark = false }: MarkdownRendererProps) {
+export default function MarkdownRenderer({ content, isDark = true }: MarkdownRendererProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
   const copyToClipboard = useCallback(async (text: string, codeHash: string) => {

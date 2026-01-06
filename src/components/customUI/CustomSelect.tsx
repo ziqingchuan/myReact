@@ -10,7 +10,7 @@ export default function CustomSelect({
   placeholder = "请选择...", 
   className = "",
   disabled = false,
-  isDark = false
+  isDark = true
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)

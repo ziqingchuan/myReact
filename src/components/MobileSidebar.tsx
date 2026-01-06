@@ -40,6 +40,7 @@ export default function MobileSidebar({
           onLoadDirectories={onLoadDirectories}
           selectedArticle={selectedArticle}
           isDark={isDark}
+          isMobile={true}
         />
       </div>
     </>

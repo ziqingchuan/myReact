@@ -20,7 +20,8 @@ export default function DirectoryNav({
   onLoadDirectories,
   selectedArticle = null,
   isAuthenticated = false,
-  isDark = false
+  isDark = true,
+  isMobile = false
 }: DirectoryNavProps) {
   const navigate = useNavigate()
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
@@ -94,7 +95,6 @@ export default function DirectoryNav({
         try {
           await db.deleteArticle(articleId)
           await onLoadDirectories(true, true)
-          window.dispatchEvent(new CustomEvent('articleDeleted', { detail: { articleId } }))
           window.toast?.success('删除文章成功')
         } catch (error) {
           console.error('删除文章失败:', error)
@@ -117,7 +117,6 @@ export default function DirectoryNav({
         try {
           await db.deleteDirectory(directory.id)
           await onLoadDirectories(true, true)
-          window.dispatchEvent(new CustomEvent('directoryDeleted', { detail: { directoryId: directory.id } }))
           window.toast?.success('删除目录成功')
         } catch (error) {
           console.error('删除目录失败:', error)
@@ -149,7 +148,7 @@ export default function DirectoryNav({
       <div key={dir.id} className="select-none">
         <div
           className="article-nav-directory-item"
-          style={{ paddingLeft: `${12 + level * 16}px` }}
+          style={{ paddingLeft: `${8 + level * 12}px` }}
         >
           <div 
             className="article-nav-directory-content"
@@ -215,14 +214,12 @@ export default function DirectoryNav({
                 <div
                   key={article.id}
                   className={`article-nav-article-item ${isActive ? 'active' : ''}`}
-                  style={{ paddingLeft: `${28 + level * 16}px` }}
+                  style={{ paddingLeft: `${22 + level * 12}px` }}
                 >
                   <button
                     onClick={() => {
-                      console.log('点击文章按钮，文章ID:', article.id)
-                      console.log('即将导航到:', `/article/${article.id}`)
+                      console.log('点击文章按钮，文章ID:', article.id,'即将导航到:', `/article/${article.id}`)
                       navigate(`/article/${article.id}`)
-                      console.log('导航已调用')
                       onItemClick && onItemClick()
                     }}
                     className={`article-nav-article-btn ${isActive ? 'active' : ''}`}
@@ -280,29 +277,33 @@ export default function DirectoryNav({
   return (
     <>
       <nav className={`article-nav ${isDark ? 'dark' : ''}`}>
-        <div className="article-nav-header">
-          <div className="article-nav-header-content">
-            <h2 className="article-nav-title">文章目录</h2>
-            <div className="article-nav-header-actions">
-              {isAuthenticated && (
+        {
+          !isMobile && (
+          <div className="article-nav-header">
+            <div className="article-nav-header-content">
+              <h2 className="article-nav-title">文章目录</h2>
+              <div className="article-nav-header-actions">
+                {isAuthenticated && (
+                  <button
+                    onClick={() => onCreateDirectory && onCreateDirectory()}
+                    className="article-nav-action-btn"
+                    title="新建目录"
+                  >
+                    <FolderPlus size={16} />
+                  </button>
+                )}
                 <button
-                  onClick={() => onCreateDirectory && onCreateDirectory()}
+                  onClick={onToggleCollapse}
                   className="article-nav-action-btn"
-                  title="新建目录"
+                  title="收起目录"
                 >
-                  <FolderPlus size={16} />
+                  <PanelLeftClose size={16} />
                 </button>
-              )}
-              <button
-                onClick={onToggleCollapse}
-                className="article-nav-action-btn"
-                title="收起目录"
-              >
-                <PanelLeftClose size={16} />
-              </button>
+              </div>
             </div>
-          </div>
-        </div>
+          </div>            
+          )}
+        
         <div className="article-nav-content custom-scrollbar">
           <div>
             {directoriesLoading ? (

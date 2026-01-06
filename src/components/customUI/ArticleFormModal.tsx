@@ -17,7 +17,7 @@ export default function ArticleFormModal({
   onSubmit,
   onFormDataChange,
   getDirectoryOptions,
-  isDark = false
+  isDark = true
 }: ArticleFormModalProps) {
   if (!isOpen) return null
 

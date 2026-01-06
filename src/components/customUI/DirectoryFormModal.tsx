@@ -14,7 +14,7 @@ export default function DirectoryFormModal({
   onSubmit,
   onFormDataChange,
   getDirectoryOptions,
-  isDark = false
+  isDark = true
 }: DirectoryFormModalProps) {
   if (!isOpen) return null
 

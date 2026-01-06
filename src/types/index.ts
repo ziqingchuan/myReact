@@ -282,6 +282,7 @@ export interface DirectoryNavProps {
   selectedArticle?: Article | null
   isAuthenticated?: boolean
   isDark?: boolean
+  isMobile?: boolean
 }
 
 /**

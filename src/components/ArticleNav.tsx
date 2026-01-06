@@ -178,7 +178,7 @@ export default function ArticleNav({ content, collapsed, onToggleCollapse, isDar
 
   const renderHeading = (heading: Heading) => {
     const isActive = activeId === heading.id
-    const paddingLeft = (heading.level - 1) * 16 + 12
+    const paddingLeft = (heading.level - 1) * 12 + 8
 
     return (
       <button

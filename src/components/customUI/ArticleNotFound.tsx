@@ -2,7 +2,7 @@ import notFoundSvg from '../../assets/notfound.svg'
 import '../../styles/ArticleNotFound.css'
 import { ArticleNotFoundProps } from '../../types'
 
-export default function ArticleNotFound({ onReturnHome, isDark = false }: ArticleNotFoundProps) {
+export default function ArticleNotFound({ onReturnHome, isDark = true }: ArticleNotFoundProps) {
   return (
     <div className={`article-not-found ${isDark ? 'dark' : ''}`}>
       <div className="article-not-found-image">

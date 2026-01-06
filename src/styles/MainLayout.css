@@ -11,32 +11,17 @@
   animation: spin-slow 20s linear infinite;
 }
 
-/* 布局样式 */
-body, html, #root {
-  height: 100%;
-  overflow: hidden;
-}
-
-/* Flex布局容器 */
-.flex {
+.main-container {
   display: flex;
   width: 100%;
   height: calc(100vh - 4rem);
   position: relative;
 }
 
-/* Flex布局工具类 */
-.flex-1 {
+.main-content {
   flex: 1;
   min-width: 0;
-}
-
-.overflow-auto {
+  padding: 0 1rem;
   overflow: auto;
   height: 100%;
 }
-
-.main-content {
-  padding: 0 1rem;
-}
-

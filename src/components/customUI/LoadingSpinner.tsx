@@ -1,7 +1,7 @@
 import '../../styles/LoadingSpinner.css'
 import { LoadingSpinnerProps, LoadingOverlayProps } from '../../types'
 
-export default function LoadingSpinner({ size = 'md', className = '', isDark = false }: LoadingSpinnerProps) {
+export default function LoadingSpinner({ size = 'md', className = '', isDark = true }: LoadingSpinnerProps) {
   return (
     <div className={`loading-spinner size-${size} ${isDark ? 'dark' : ''} ${className}`}>
       <div className="loading-spinner-spinner" />
@@ -9,7 +9,7 @@ export default function LoadingSpinner({ size = 'md', className = '', isDark = f
   )
 }
 
-export function LoadingOverlay({ message = '加载中...', className = '', isDark = false }: LoadingOverlayProps) {
+export function LoadingOverlay({ message = '加载中...', className = '', isDark = true }: LoadingOverlayProps) {
   return (
     <div className={`loading-overlay ${isDark ? 'dark' : ''} ${className}`}>
       <LoadingSpinner size="lg" isDark={isDark} />

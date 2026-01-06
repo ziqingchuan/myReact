@@ -6,11 +6,8 @@ import { HeaderProps } from '../types'
 
 export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout }: HeaderProps) {
   const navigate = useNavigate()
-
   const handleLogoClick = () => {
-    console.log('Header: 点击logo，即将导航到 /home')
     navigate('/home')
-    console.log('Header: navigate 已调用')
   }
 
   return (
@@ -52,16 +49,18 @@ export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode
             >
               <Github size={20} />
             </a>
-
             {isAuthenticated ? (
+              !isMobile && (
               <button
                 onClick={onLogout}
                 className={`header-icon-btn auth-btn authenticated ${isDark ? 'dark' : ''}`}
                 title="退出编辑模式"
               >
                 <LogOut size={20} />
-              </button>
+              </button>                
+              )
             ) : (
+              !isMobile && (
               <button
                 onClick={onAuthClick}
                 className={`header-icon-btn auth-btn ${isDark ? 'dark' : ''}`}
@@ -69,6 +68,7 @@ export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode
               >
                 <Key size={20} />
               </button>
+              )
             )}
 
             <button

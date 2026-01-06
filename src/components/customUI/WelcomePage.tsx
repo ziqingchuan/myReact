@@ -5,7 +5,7 @@ import '../../styles/WelcomePage.css'
 import { useUIStore } from '../../store'
 import { Feature, WelcomePageProps } from '../../types'
 
-export default function WelcomePage({ onArticleSelect, isDark = false }: WelcomePageProps) {
+export default function WelcomePage({ onArticleSelect, isDark = true }: WelcomePageProps) {
   const [isVisible, setIsVisible] = useState(false)
   const isMobile = useUIStore(state => state.isMobile)
   useEffect(() => {

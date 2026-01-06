@@ -6,7 +6,7 @@ import '../../styles/ArticleView.css'
 
 
 
-export default function ArticleView({ article, isDark = false }: ArticleViewProps) {
+export default function ArticleView({ article, isDark = true }: ArticleViewProps) {
   if (!article) {
     return (
       <div className={`article-view-empty ${isDark ? 'dark' : ''}`}>

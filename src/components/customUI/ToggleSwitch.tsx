@@ -1,7 +1,7 @@
 import '../../styles/ToggleSwitch.css'
 import { ToggleSwitchProps } from '../../types'
 
-export default function ToggleSwitch({ checked, onChange, label, description, isDark = false }: ToggleSwitchProps) {
+export default function ToggleSwitch({ checked, onChange, label, description, isDark = true }: ToggleSwitchProps) {
   return (
     <div className={`toggle-switch ${isDark ? 'dark' : ''}`}>
       <div className="toggle-switch-label">

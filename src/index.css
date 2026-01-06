@@ -237,12 +237,16 @@ blockquote {
 /* Base styles */
 html {
   font-family: 'Inter', system-ui, sans-serif;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
   background-color: #ffffff;
   color: #111827;
   margin: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .dark body {

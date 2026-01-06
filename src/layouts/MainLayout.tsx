@@ -7,7 +7,7 @@ import { LayoutModals } from './components/LayoutModals'
 import { useLayoutInit } from './hooks/useLayoutInit'
 import { useArticleHandlers } from './hooks/useArticleHandlers'
 import { useDirectoryHandlers } from './hooks/useDirectoryHandlers'
-import '../App.css'
+import '../styles/MainLayout.css'
 
 /**
  * 主布局组件
@@ -42,7 +42,7 @@ export default function MainLayout() {
     <div className={`app ${isDark ? 'dark' : ''}`}>
       <LayoutHeader />
       
-      <div className="flex relative">
+      <div className="main-container">
         <LayoutSidebar 
           onEditArticle={handleEditArticle}
           onCreateArticle={handleCreateArticle}
@@ -50,7 +50,7 @@ export default function MainLayout() {
           onCreateDirectory={handleCreateDirectory}
         />
         
-        <main className="flex-1 overflow-auto custom-scrollbar main-content">
+        <main className="main-content custom-scrollbar">
           <Outlet />
         </main>
 

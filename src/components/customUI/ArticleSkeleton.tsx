@@ -2,7 +2,7 @@ import '../../styles/Skeleton.css'
 import { SkeletonProps } from '../../types'
 
 
-export default function ArticleSkeleton({ isDark = false }: SkeletonProps) {
+export default function ArticleSkeleton({ isDark = true }: SkeletonProps) {
   return (
     <div className={`article-skeleton ${isDark ? 'dark' : ''}`}>
       <div className="article-skeleton-header">

@@ -4,7 +4,7 @@ import '../../styles/Modal.css'
 import { AuthModalProps } from '../../types'
 
 
-export default function AuthModal({ isOpen, onClose, onSubmit, isDark = false }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onSubmit, isDark = true }: AuthModalProps) {
   const [secret, setSecret] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)

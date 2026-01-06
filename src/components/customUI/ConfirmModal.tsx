@@ -11,7 +11,7 @@ export default function ConfirmModal({
   confirmText = '确认', 
   cancelText = '取消',
   type = 'danger',
-  isDark = false
+  isDark = true
 }: ConfirmModalProps) {
   if (!isOpen) return null
 
