@@ -22,6 +22,7 @@ export default function HomePage() {
   }
 
   console.log('HomePage: 即将渲染 WelcomePage')
+  localStorage.removeItem('lastArticleId')
   return (
     <WelcomePage onArticleSelect={handleArticleSelect} isDark={isDark} />
   )

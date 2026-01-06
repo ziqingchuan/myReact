@@ -63,7 +63,18 @@ export function useArticleOperations({
       await loadDirectories(true, true)
       
       if (articleId) {
+        // 确保数据库更新完成后再加载文章
+        // 添加短暂延迟以确保数据一致性
+        await new Promise(resolve => setTimeout(resolve, 100))
         await handleArticleSelect(articleId)
+        
+        // 如果是编辑现有文章，触发强制刷新事件
+        if (editingArticle) {
+          window.dispatchEvent(new CustomEvent('articleUpdated', { 
+            detail: { articleId } 
+          }))
+        }
+        
         navigate(`/article/${articleId}`)
       }
     } catch (error) {

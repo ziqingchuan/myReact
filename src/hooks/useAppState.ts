@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { db, DirectoryTree, Article } from '../lib/supabase'
 
@@ -161,53 +161,45 @@ export function useAppState() {
     }
   }, [navigate])
 
-  // 从 localStorage 读取缓存
-  const getCachedDirectories = useCallback((): DirectoryTree[] | null => {
+  // 从 localStorage 读取缓存（简化逻辑）
+  const getCachedDirectories = (): DirectoryTree[] | null => {
     try {
       const cached = localStorage.getItem(CACHE_KEY)
       const cacheTime = localStorage.getItem(CACHE_TIME_KEY)
       
-      if (cached && cacheTime) {
-        const now = Date.now()
-        const age = now - parseInt(cacheTime, 10)
-        
-        if (age < CACHE_DURATION) {
-          return JSON.parse(cached)
-        }
+      if (cached && cacheTime && (Date.now() - parseInt(cacheTime, 10)) < CACHE_DURATION) {
+        return JSON.parse(cached)
       }
     } catch (error) {
       console.error('读取缓存失败:', error)
     }
     return null
-  }, [])
+  }
 
-  // 保存到 localStorage
-  const saveCachedDirectories = useCallback((data: DirectoryTree[]): void => {
+  // 保存到 localStorage（简化逻辑）
+  const saveCachedDirectories = (data: DirectoryTree[]): void => {
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(data))
       localStorage.setItem(CACHE_TIME_KEY, Date.now().toString())
     } catch (error) {
       console.error('保存缓存失败:', error)
     }
-  }, [])
+  }
 
-  // 清除缓存
-  const invalidateCache = useCallback((): void => {
+  // 清除缓存（简化逻辑）
+  const invalidateCache = (): void => {
     try {
       localStorage.removeItem(CACHE_KEY)
       localStorage.removeItem(CACHE_TIME_KEY)
     } catch (error) {
       console.error('清除缓存失败:', error)
     }
-  }, [])
+  }
 
-  // 数据加载函数 - 带 localStorage 缓存
-  const loadDirectories = useCallback(async (showLoading: boolean = false, forceRefresh: boolean = false): Promise<void> => {
-    console.log('useAppState: loadDirectories 被调用', { showLoading, forceRefresh, loadingRef: loadingRef.current })
-    
+  // 数据加载函数 - 带 localStorage 缓存（简化逻辑，移除不必要的依赖）
+  const loadDirectories = async (showLoading: boolean = false, forceRefresh: boolean = false): Promise<void> => {
     // 防止重复加载（除非强制刷新）
     if (!forceRefresh && loadingRef.current) {
-      console.log('useAppState: 已在加载中，跳过')
       return
     }
 
@@ -215,7 +207,6 @@ export function useAppState() {
     if (!forceRefresh) {
       const cached = getCachedDirectories()
       if (cached) {
-        console.log('useAppState: 使用缓存数据', cached)
         setDirectories(cached)
         setDirectoriesLoading(false)
         return
@@ -228,11 +219,8 @@ export function useAppState() {
     }
 
     try {
-      console.log('useAppState: 开始从数据库加载目录')
       const data = await db.getDirectoryTree()
-      console.log('useAppState: 目录数据加载成功', data)
       setDirectories(data)
-      // 保存到 localStorage
       saveCachedDirectories(data)
     } catch (error) {
       console.error('加载目录失败:', error)
@@ -240,7 +228,7 @@ export function useAppState() {
       setDirectoriesLoading(false)
       loadingRef.current = false
     }
-  }, [getCachedDirectories, saveCachedDirectories])
+  }
 
   const handleArticleSelect = async (articleId: string): Promise<void> => {
     setArticleLoading(true)

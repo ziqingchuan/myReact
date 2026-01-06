@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect, useMemo, useCallback } from 'react'
+import { lazy, Suspense, useState, useEffect, useMemo } from 'react'
 import { Outlet } from 'react-router-dom'
 import DirectoryNav from './DirectoryNav'
 import Header from '../components/Header'
@@ -48,6 +48,11 @@ export default function Layout() {
       appState.setArticleNotFound(false)
     }
 
+    /**
+     * 清除当前选中的文章
+     * 
+     * 将应用状态中的选中文章设置为 null，用于取消文章选择状态
+     */
     const handleClearSelectedArticle = () => {
       console.log('Layout: 收到清除选中文章事件')
       appState.setSelectedArticle(null)
@@ -62,34 +67,34 @@ export default function Layout() {
     }
   }, [appState.setSelectedArticle, appState.setArticleNotFound])
 
-  const handleMenuClick = useCallback(() => {
+  const handleMenuClick = () => {
     appState.setSidebarOpen(true)
-  }, [appState])
+  }
 
-  const handleToggleSidebarCollapse = useCallback(() => {
+  const handleToggleSidebarCollapse = () => {
     appState.setSidebarCollapsed(!appState.sidebarCollapsed)
-  }, [appState.sidebarCollapsed, appState])
+  }
 
-  const handleCreateArticle = useCallback((directoryId: string) => {
+  const handleCreateArticle = (directoryId: string) => {
     appState.setFormData({ ...appState.formData, directory_id: directoryId })
     appState.setShowCreateForm(true)
-  }, [appState])
+  }
 
-  const handleSidebarClose = useCallback(() => {
+  const handleSidebarClose = () => {
     appState.setSidebarOpen(false)
-  }, [appState])
+  }
 
-  const handleToggleTocCollapse = useCallback(() => {
+  const handleToggleTocCollapse = () => {
     appState.setTocCollapsed(!appState.tocCollapsed)
-  }, [appState.tocCollapsed, appState])
+  }
 
-  const handleAuthClick = useCallback(() => {
+  const handleAuthClick = () => {
     setShowAuthModal(true)
-  }, [])
+  }
 
-  const handleAuthModalClose = useCallback(() => {
+  const handleAuthModalClose = () => {
     setShowAuthModal(false)
-  }, [])
+  }
 
   const directoryNavProps = useMemo(() => ({
     collapsed: appState.sidebarCollapsed,
@@ -119,7 +124,7 @@ export default function Layout() {
     isDark
   ])
 
-  const mobileSidebarProps = useMemo(() => ({
+  const mobileSidebarProps = {
     isOpen: appState.sidebarOpen,
     onClose: handleSidebarClose,
     directories: appState.directories,
@@ -127,27 +132,14 @@ export default function Layout() {
     onLoadDirectories: appState.loadDirectories,
     selectedArticle: appState.selectedArticle,
     isDark
-  }), [
-    appState.sidebarOpen,
-    handleSidebarClose,
-    appState.directories,
-    appState.directoriesLoading,
-    appState.loadDirectories,
-    appState.selectedArticle,
-    isDark
-  ])
+  }
 
-  const articleNavProps = useMemo(() => ({
+  const articleNavProps = {
     content: appState.selectedArticle?.content || '',
     collapsed: appState.tocCollapsed,
     onToggleCollapse: handleToggleTocCollapse,
     isDark
-  }), [
-    appState.selectedArticle?.content,
-    appState.tocCollapsed,
-    handleToggleTocCollapse,
-    isDark
-  ])
+  }
 
   const articleFormModalProps = useMemo(() => ({
     isOpen: appState.showCreateForm,
@@ -195,12 +187,12 @@ export default function Layout() {
     isDark
   ])
 
-  const authModalProps = useMemo(() => ({
+  const authModalProps = {
     isOpen: showAuthModal,
     onClose: handleAuthModalClose,
     onSubmit: login,
     isDark
-  }), [showAuthModal, handleAuthModalClose, login, isDark])
+  }
 
   return (
     <div className={`app ${isDark ? 'dark' : ''}`}>
