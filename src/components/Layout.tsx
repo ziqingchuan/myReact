@@ -1,14 +1,12 @@
-import { lazy, Suspense, useState, useEffect, useMemo } from 'react'
+import React, { lazy, Suspense, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import DirectoryNav from './DirectoryNav'
 import Header from '../components/Header'
 import MobileSidebar from '../components/MobileSidebar'
 import ArticleNav from './ArticleNav'
-import { useAppState, getDirectoryOptions } from '../hooks/useAppState'
-import { useArticleOperations } from '../hooks/useArticleOperations'
-import { useDirectoryOperations } from '../hooks/useDirectoryOperations'
-import { useDarkMode } from '../hooks/useDarkMode'
-import { useAuth } from '../hooks/useAuth'
+import { useAppStore } from '../store/useAppStore'
+import { getDirectoryOptions } from '../utils'
+import { Article } from '../lib/supabase'
 import '../App.css'
 
 const ArticleFormModal = lazy(() => import('./customUI/ArticleFormModal'))
@@ -16,76 +14,110 @@ const DirectoryFormModal = lazy(() => import('./customUI/DirectoryFormModal'))
 const AuthModal = lazy(() => import('./customUI/AuthModal'))
 
 export default function Layout() {
-  const appState = useAppState()
-  const { isDark, toggleDarkMode } = useDarkMode()
-  const { isAuthenticated, login, logout } = useAuth()
-  const [showAuthModal, setShowAuthModal] = useState(false)
+  // UI 状态
+  const isMobile = useAppStore(state => state.isMobile)
+  const sidebarOpen = useAppStore(state => state.sidebarOpen)
+  const sidebarCollapsed = useAppStore(state => state.sidebarCollapsed)
+  const tocCollapsed = useAppStore(state => state.tocCollapsed)
+  const isDark = useAppStore(state => state.isDark)
+  const articleNotFound = useAppStore(state => state.articleNotFound)
   
-  const articleOps = useArticleOperations({
-    setFormLoading: appState.setFormLoading,
-    loadDirectories: appState.loadDirectories,
-    setFormData: appState.setFormData,
-    setEditingArticle: appState.setEditingArticle,
-    setShowCreateForm: appState.setShowCreateForm,
-    invalidateCache: appState.invalidateCache,
-    handleArticleSelect: appState.handleArticleSelect
-  })
+  // 数据状态
+  const selectedArticle = useAppStore(state => state.selectedArticle)
+  const directories = useAppStore(state => state.directories)
+  const directoriesLoading = useAppStore(state => state.directoriesLoading)
+  
+  // 表单状态
+  const showCreateForm = useAppStore(state => state.showCreateForm)
+  const showCreateDirForm = useAppStore(state => state.showCreateDirForm)
+  const editingArticle = useAppStore(state => state.editingArticle)
+  const editingDirectory = useAppStore(state => state.editingDirectory)
+  const formData = useAppStore(state => state.formData)
+  const dirFormData = useAppStore(state => state.dirFormData)
+  const formLoading = useAppStore(state => state.formLoading)
+  
+  // 认证状态
+  const isAuthenticated = useAppStore(state => state.isAuthenticated)
+  
+  // 操作方法
+  const setIsMobile = useAppStore(state => state.setIsMobile)
+  const setSidebarOpen = useAppStore(state => state.setSidebarOpen)
+  const toggleSidebarCollapse = useAppStore(state => state.toggleSidebarCollapse)
+  const toggleTocCollapse = useAppStore(state => state.toggleTocCollapse)
+  const toggleDarkMode = useAppStore(state => state.toggleDarkMode)
+  const loadDirectories = useAppStore(state => state.loadDirectories)
+  const setFormData = useAppStore(state => state.setFormData)
+  const setEditingArticle = useAppStore(state => state.setEditingArticle)
+  const setShowCreateForm = useAppStore(state => state.setShowCreateForm)
+  const setEditingDirectory = useAppStore(state => state.setEditingDirectory)
+  const setShowCreateDirForm = useAppStore(state => state.setShowCreateDirForm)
+  const setDirFormData = useAppStore(state => state.setDirFormData)
+  const createArticle = useAppStore(state => state.createArticle)
+  const updateArticle = useAppStore(state => state.updateArticle)
+  const resetArticleForm = useAppStore(state => state.resetArticleForm)
+  const createDirectory = useAppStore(state => state.createDirectory)
+  const updateDirectory = useAppStore(state => state.updateDirectory)
+  const resetDirectoryForm = useAppStore(state => state.resetDirectoryForm)
+  const login = useAppStore(state => state.login)
+  const logout = useAppStore(state => state.logout)
+  const loadArticle = useAppStore(state => state.loadArticle)
 
-  const directoryOps = useDirectoryOperations({
-    setFormLoading: appState.setFormLoading,
-    loadDirectories: appState.loadDirectories,
-    setDirFormData: appState.setDirFormData,
-    setEditingDirectory: appState.setEditingDirectory,
-    setShowCreateDirForm: appState.setShowCreateDirForm,
-    invalidateCache: appState.invalidateCache
-  })
+  const [showAuthModal, setShowAuthModal] = React.useState(false)
 
+  // 检测移动端
   useEffect(() => {
-    const handleArticleLoaded = (event: Event) => {
-      const customEvent = event as CustomEvent
-      const { article } = customEvent.detail
-      appState.setSelectedArticle(article)
-      appState.setArticleNotFound(false)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(false)
+      }
     }
 
-    /**
-     * 清除当前选中的文章
-     * 
-     * 将应用状态中的选中文章设置为 null，用于取消文章选择状态
-     */
-    const handleClearSelectedArticle = () => {
-      console.log('Layout: 收到清除选中文章事件')
-      appState.setSelectedArticle(null)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [setIsMobile, setSidebarOpen])
+
+  // 初始化数据
+  useEffect(() => {
+    const initializeApp = async () => {
+      console.log('Layout: 初始化应用')
+      
+      // 加载目录
+      loadDirectories(true, true)
+      
+      // 尝试从 localStorage 恢复上次阅读的文章
+      const lastArticleId = localStorage.getItem('lastArticleId')
+      if (lastArticleId) {
+        loadArticle(lastArticleId)
+      }
     }
 
-    window.addEventListener('articleLoaded', handleArticleLoaded)
-    window.addEventListener('clearSelectedArticle', handleClearSelectedArticle)
-    
-    return () => {
-      window.removeEventListener('articleLoaded', handleArticleLoaded)
-      window.removeEventListener('clearSelectedArticle', handleClearSelectedArticle)
-    }
-  }, [appState.setSelectedArticle, appState.setArticleNotFound])
+    initializeApp()
+  }, [loadDirectories, loadArticle])
 
   const handleMenuClick = () => {
-    appState.setSidebarOpen(true)
-  }
-
-  const handleToggleSidebarCollapse = () => {
-    appState.setSidebarCollapsed(!appState.sidebarCollapsed)
+    setSidebarOpen(true)
   }
 
   const handleCreateArticle = (directoryId: string) => {
-    appState.setFormData({ ...appState.formData, directory_id: directoryId })
-    appState.setShowCreateForm(true)
+    setFormData({ ...formData, directory_id: directoryId })
+    setShowCreateForm(true)
+  }
+
+  const handleEditArticle = (article: Article) => {
+    setEditingArticle(article)
+    setFormData({
+      title: article.title,
+      content: article.content,
+      directory_id: article.directory_id || '',
+      is_published: article.is_published
+    })
+    setShowCreateForm(true)
   }
 
   const handleSidebarClose = () => {
-    appState.setSidebarOpen(false)
-  }
-
-  const handleToggleTocCollapse = () => {
-    appState.setTocCollapsed(!appState.tocCollapsed)
+    setSidebarOpen(false)
   }
 
   const handleAuthClick = () => {
@@ -96,108 +128,62 @@ export default function Layout() {
     setShowAuthModal(false)
   }
 
-  const directoryNavProps = useMemo(() => ({
-    collapsed: appState.sidebarCollapsed,
-    onToggleCollapse: handleToggleSidebarCollapse,
-    onEditArticle: articleOps.handleEditArticle,
-    onCreateArticle: handleCreateArticle,
-    onEditDirectory: directoryOps.handleEditDirectory,
-    onCreateDirectory: directoryOps.handleCreateDirectory,
-    directories: appState.directories,
-    directoriesLoading: appState.directoriesLoading,
-    onLoadDirectories: appState.loadDirectories,
-    selectedArticle: appState.selectedArticle,
-    isAuthenticated,
-    isDark
-  }), [
-    appState.sidebarCollapsed,
-    handleToggleSidebarCollapse,
-    articleOps.handleEditArticle,
-    handleCreateArticle,
-    directoryOps.handleEditDirectory,
-    directoryOps.handleCreateDirectory,
-    appState.directories,
-    appState.directoriesLoading,
-    appState.loadDirectories,
-    appState.selectedArticle,
-    isAuthenticated,
-    isDark
-  ])
-
-  const mobileSidebarProps = {
-    isOpen: appState.sidebarOpen,
-    onClose: handleSidebarClose,
-    directories: appState.directories,
-    directoriesLoading: appState.directoriesLoading,
-    onLoadDirectories: appState.loadDirectories,
-    selectedArticle: appState.selectedArticle,
-    isDark
+  const handleSubmitArticle = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      if (editingArticle) {
+        await updateArticle(editingArticle.id, formData)
+      } else {
+        const newArticleId = await createArticle(formData)
+        // 导航到新文章
+        window.location.href = `#/article/${newArticleId}`
+      }
+      
+      resetArticleForm()
+      window.toast?.success(editingArticle ? '文章更新成功' : '文章创建成功')
+    } catch (error) {
+      console.error('保存失败:', error)
+      window.toast?.error('保存失败: ' + (error as Error).message)
+    }
   }
 
-  const articleNavProps = {
-    content: appState.selectedArticle?.content || '',
-    collapsed: appState.tocCollapsed,
-    onToggleCollapse: handleToggleTocCollapse,
-    isDark
+  const handleEditDirectory = (directory: any) => {
+    setEditingDirectory(directory)
+    setDirFormData({
+      name: directory.name,
+      parent_id: directory.parent_id || ''
+    })
+    setShowCreateDirForm(true)
   }
 
-  const articleFormModalProps = useMemo(() => ({
-    isOpen: appState.showCreateForm,
-    editingArticle: appState.editingArticle,
-    formData: appState.formData,
-    directories: appState.directories,
-    formLoading: appState.formLoading,
-    onClose: articleOps.resetForm,
-    onSubmit: (e: React.FormEvent) => articleOps.handleSubmitArticle(e, appState.formData, appState.editingArticle),
-    onFormDataChange: appState.setFormData,
-    getDirectoryOptions,
-    isDark
-  }), [
-    appState.showCreateForm,
-    appState.editingArticle,
-    appState.formData,
-    appState.directories,
-    appState.formLoading,
-    articleOps.resetForm,
-    articleOps.handleSubmitArticle,
-    appState.setFormData,
-    isDark
-  ])
+  const handleCreateDirectory = (parentId: string = '') => {
+    setDirFormData({ name: '', parent_id: parentId })
+    setShowCreateDirForm(true)
+  }
 
-  const directoryFormModalProps = useMemo(() => ({
-    isOpen: appState.showCreateDirForm,
-    editingDirectory: appState.editingDirectory,
-    dirFormData: appState.dirFormData,
-    directories: appState.directories,
-    formLoading: appState.formLoading,
-    onClose: directoryOps.resetDirForm,
-    onSubmit: (e: React.FormEvent) => directoryOps.handleSubmitDirectory(e, appState.dirFormData, appState.editingDirectory),
-    onFormDataChange: appState.setDirFormData,
-    getDirectoryOptions,
-    isDark
-  }), [
-    appState.showCreateDirForm,
-    appState.editingDirectory,
-    appState.dirFormData,
-    appState.directories,
-    appState.formLoading,
-    directoryOps.resetDirForm,
-    directoryOps.handleSubmitDirectory,
-    appState.setDirFormData,
-    isDark
-  ])
-
-  const authModalProps = {
-    isOpen: showAuthModal,
-    onClose: handleAuthModalClose,
-    onSubmit: login,
-    isDark
+  const handleSubmitDirectory = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      if (editingDirectory) {
+        await updateDirectory(editingDirectory.id, dirFormData)
+      } else {
+        await createDirectory(dirFormData)
+      }
+      
+      resetDirectoryForm()
+      window.toast?.success(editingDirectory ? '目录更新成功' : '目录创建成功')
+    } catch (error) {
+      console.error('保存失败:', error)
+      window.toast?.error('保存失败: ' + (error as Error).message)
+    }
   }
 
   return (
     <div className={`app ${isDark ? 'dark' : ''}`}>
       <Header 
-        isMobile={appState.isMobile} 
+        isMobile={isMobile} 
         onMenuClick={handleMenuClick}
         isDark={isDark}
         onToggleDarkMode={toggleDarkMode}
@@ -207,34 +193,87 @@ export default function Layout() {
       />
       
       <div className="flex relative">
-        {!appState.isMobile && (
-          <div style={{ width: appState.sidebarCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
-            <DirectoryNav {...directoryNavProps} />
+        {!isMobile && (
+          <div style={{ width: sidebarCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
+            <DirectoryNav 
+              collapsed={sidebarCollapsed}
+              onToggleCollapse={toggleSidebarCollapse}
+              onEditArticle={handleEditArticle}
+              onCreateArticle={handleCreateArticle}
+              onEditDirectory={handleEditDirectory}
+              onCreateDirectory={handleCreateDirectory}
+              directories={directories}
+              directoriesLoading={directoriesLoading}
+              onLoadDirectories={loadDirectories}
+              selectedArticle={selectedArticle}
+              isAuthenticated={isAuthenticated}
+              isDark={isDark}
+            />
           </div>
         )}
         
-        <MobileSidebar {...mobileSidebarProps} />
+        <MobileSidebar 
+          isOpen={sidebarOpen}
+          onClose={handleSidebarClose}
+          directories={directories}
+          directoriesLoading={directoriesLoading}
+          onLoadDirectories={loadDirectories}
+          selectedArticle={selectedArticle}
+          isDark={isDark}
+        />
         
         <main className="flex-1 overflow-auto custom-scrollbar main-content">
-          <Outlet context={{ isDark }} />
+          <Outlet />
         </main>
 
-        {!appState.isMobile && appState.selectedArticle && !appState.articleNotFound && (
-          <div style={{ width: appState.tocCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
-            <ArticleNav {...articleNavProps} />
+        {!isMobile && selectedArticle && !articleNotFound && (
+          <div style={{ width: tocCollapsed ? '3rem' : '18rem', flexShrink: 0 }}>
+            <ArticleNav 
+              content={selectedArticle.content}
+              collapsed={tocCollapsed}
+              onToggleCollapse={toggleTocCollapse}
+              isDark={isDark}
+            />
           </div>
         )}
 
         <Suspense fallback={null}>
-          <ArticleFormModal {...articleFormModalProps} />
+          <ArticleFormModal 
+            isOpen={showCreateForm}
+            editingArticle={editingArticle}
+            formData={formData}
+            directories={directories}
+            formLoading={formLoading}
+            onClose={resetArticleForm}
+            onSubmit={handleSubmitArticle}
+            onFormDataChange={setFormData}
+            getDirectoryOptions={getDirectoryOptions}
+            isDark={isDark}
+          />
         </Suspense>
 
         <Suspense fallback={null}>
-          <DirectoryFormModal {...directoryFormModalProps} />
+          <DirectoryFormModal 
+            isOpen={showCreateDirForm}
+            editingDirectory={editingDirectory}
+            dirFormData={dirFormData}
+            directories={directories}
+            formLoading={formLoading}
+            onClose={resetDirectoryForm}
+            onSubmit={handleSubmitDirectory}
+            onFormDataChange={setDirFormData}
+            getDirectoryOptions={getDirectoryOptions}
+            isDark={isDark}
+          />
         </Suspense>
 
         <Suspense fallback={null}>
-          <AuthModal {...authModalProps} />
+          <AuthModal 
+            isOpen={showAuthModal}
+            onClose={handleAuthModalClose}
+            onSubmit={login}
+            isDark={isDark}
+          />
         </Suspense>
       </div>
     </div>

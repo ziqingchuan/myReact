@@ -32,21 +32,17 @@
 .custom-select-btn:focus {
   outline: none;
   border-color: #6b7280;
-  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.5);
+
 }
 
 .custom-select.dark .custom-select-btn:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+
 }
 
 .custom-select-btn.open {
   border-color: transparent;
-  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.5);
-}
 
-.custom-select.dark .custom-select-btn.open {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
 .custom-select-btn:disabled {
@@ -93,7 +89,6 @@
   background-color: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  box-shadow: 0 10px 15px -3px, 0 4px 6px -2px;
   max-height: 15rem;
   overflow: auto;
 }

@@ -1,4 +1,25 @@
 import { ReactNode } from 'react'
+import { DirectoryTree } from './lib/supabase'
+
+interface DirectoryOption {
+  value: string
+  label: string
+}
+
+export function getDirectoryOptions(dirs: DirectoryTree[], level: number = 0): DirectoryOption[] {
+  let options: DirectoryOption[] = []
+  dirs.forEach(dir => {
+    const prefix = '　'.repeat(level)
+    options.push({
+      value: dir.id,
+      label: prefix + dir.name
+    })
+    if (dir.children && dir.children.length > 0) {
+      options = options.concat(getDirectoryOptions(dir.children, level + 1))
+    }
+  })
+  return options
+}
 
 export function generateId(children: ReactNode): string {
   const id = extractTextContent(children)

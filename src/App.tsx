@@ -1,16 +1,13 @@
-import { Routes, Route, Navigate, useLocation, useNavigate, useOutletContext } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import ArticlePage from './pages/ArticlePage'
 import ArticleNotFound from './components/customUI/ArticleNotFound'
-
-interface OutletContext {
-  isDark: boolean
-}
+import { useAppStore } from './store/useAppStore'
 
 function NotFoundWrapper() {
   const navigate = useNavigate()
-  const { isDark } = useOutletContext<OutletContext>()
+  const isDark = useAppStore(state => state.isDark)
   
   const handleReturnHome = () => {
     navigate('/home')

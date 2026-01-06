@@ -65,7 +65,7 @@ export default function CustomSelect({
       </button>
 
       {isOpen && (
-        <div className={`custom-select-dropdown ${isDark ? 'dark' : ''}`}>
+        <div className={`custom-select-dropdown custom-scrollbar ${isDark ? 'dark' : ''}`}>
           {options.length === 0 ? (
             <div className={`custom-select-empty ${isDark ? 'dark' : ''}`}>暂无选项</div>
           ) : (

@@ -5,15 +5,16 @@ import '../../styles/Modal.css'
 interface AuthModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (secret: string) => boolean
+  onSubmit: (secret: string) => Promise<void>
   isDark?: boolean
 }
 
 export default function AuthModal({ isOpen, onClose, onSubmit, isDark = false }: AuthModalProps) {
   const [secret, setSecret] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!secret.trim()) {
@@ -21,14 +22,17 @@ export default function AuthModal({ isOpen, onClose, onSubmit, isDark = false }:
       return
     }
 
-    const success = onSubmit(secret)
-    if (success) {
+    setLoading(true)
+    try {
+      await onSubmit(secret)
       setSecret('')
       setError('')
       onClose()
-    } else {
-      setError('密钥错误，请重试')
+    } catch (err) {
+      setError((err as Error).message || '密钥错误，请重试')
       setSecret('')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -84,14 +88,16 @@ export default function AuthModal({ isOpen, onClose, onSubmit, isDark = false }:
               type="button"
               onClick={handleClose}
               className={`modal-btn modal-btn-secondary ${isDark ? 'dark' : ''}`}
+              disabled={loading}
             >
               取消
             </button>
             <button
               type="submit"
               className={`modal-btn modal-btn-info ${isDark ? 'dark' : ''}`}
+              disabled={loading}
             >
-              验证
+              {loading ? '验证中...' : '验证'}
             </button>
           </div>
         </form>
