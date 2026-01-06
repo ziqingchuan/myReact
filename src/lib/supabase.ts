@@ -1,31 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { mockDirectories, mockArticles } from '../data/mockData'
+import { Directory, Article, DirectoryTree } from '../types'
 
-interface Directory {
-  id: string
-  name: string
-  parent_id: string | null
-  created_at: string
-  updated_at: string
-  articles?: Article[]
-  children?: Directory[]
-}
-
-interface Article {
-  id: string
-  title: string
-  content: string
-  directory_id: string | null
-  is_published: boolean
-  created_at: string
-  updated_at: string
-  directories?: Directory | null
-}
-
-interface DirectoryTree extends Directory {
-  articles: Article[]
-  children?: DirectoryTree[]
-}
 
 let mutableMockDirectories: Directory[] = [...mockDirectories]
 let mutableMockArticles: Article[] = [...mockArticles]

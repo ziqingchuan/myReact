@@ -1,12 +1,5 @@
 import '../../styles/LoadingSpinner.css'
-
-type SpinnerSize = 'sm' | 'md' | 'lg'
-
-interface LoadingSpinnerProps {
-  size?: SpinnerSize
-  className?: string
-  isDark?: boolean
-}
+import { LoadingSpinnerProps } from '../../types'
 
 export default function LoadingSpinner({ size = 'md', className = '', isDark = false }: LoadingSpinnerProps) {
   return (

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import Layout from './components/Layout'
+import MainLayout from './layouts/MainLayout'
 import HomePage from './pages/HomePage'
 import ArticlePage from './pages/ArticlePage'
 import ArticleNotFound from './components/customUI/ArticleNotFound'
@@ -27,7 +27,7 @@ function App() {
   
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="/home" replace />} />
         <Route path="home" element={<HomePage />} />
         <Route path="article/:id" element={<ArticlePage />} />

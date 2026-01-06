@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { CACHE } from '../constants'
 
 interface UIStore {
   // 状态
@@ -20,7 +21,7 @@ interface UIStore {
 
 // 初始化暗色模式
 const getInitialDarkMode = (): boolean => {
-  const saved = localStorage.getItem('darkMode')
+  const saved = localStorage.getItem(CACHE.KEYS.DARK_MODE)
   if (saved !== null) {
     return saved === 'true'
   }
@@ -52,7 +53,7 @@ export const useUIStore = create<UIStore>((set, get) => ({
   toggleDarkMode: () => {
     const newDarkMode = !get().isDark
     set({ isDark: newDarkMode })
-    localStorage.setItem('darkMode', String(newDarkMode))
+    localStorage.setItem(CACHE.KEYS.DARK_MODE, String(newDarkMode))
     document.documentElement.classList.toggle('dark', newDarkMode)
   }
 }))

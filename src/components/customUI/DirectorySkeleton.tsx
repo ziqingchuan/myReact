@@ -1,10 +1,7 @@
 import '../../styles/Skeleton.css'
+import { SkeletonProps } from '../../types'
 
-interface DirectorySkeletonProps {
-  isDark?: boolean
-}
-
-export default function DirectorySkeleton({ isDark = false }: DirectorySkeletonProps) {
+export default function DirectorySkeleton({ isDark = false }: SkeletonProps) {
   return (
     <div className={`directory-skeleton ${isDark ? 'dark' : ''}`}>
       <div className="directory-skeleton-group">

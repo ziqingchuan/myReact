@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { CACHE, DEFAULTS } from '../constants'
 
 interface AuthStore {
   // 状态
@@ -11,7 +12,7 @@ interface AuthStore {
 
 // 初始化认证状态
 const getInitialAuth = (): boolean => {
-  return localStorage.getItem('isAuthenticated') === 'true'
+  return localStorage.getItem(CACHE.KEYS.AUTH) === 'true'
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -20,11 +21,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   // 操作
   login: async (password) => {
-    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD
+    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || DEFAULTS.ADMIN_PASSWORD
     
     if (password === correctPassword) {
       set({ isAuthenticated: true })
-      localStorage.setItem('isAuthenticated', 'true')
+      localStorage.setItem(CACHE.KEYS.AUTH, 'true')
     } else {
       throw new Error('密码错误')
     }
@@ -32,6 +33,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   logout: () => {
     set({ isAuthenticated: false })
-    localStorage.removeItem('isAuthenticated')
+    localStorage.removeItem(CACHE.KEYS.AUTH)
   }
 }))

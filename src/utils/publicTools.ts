@@ -1,13 +1,10 @@
 import { ReactNode } from 'react'
-import { DirectoryTree } from './lib/supabase'
+import { DirectoryTree } from '../lib/supabase'
+import { DEFAULTS } from '../constants'
+import type { SelectOption } from '../types'
 
-interface DirectoryOption {
-  value: string
-  label: string
-}
-
-export function getDirectoryOptions(dirs: DirectoryTree[], level: number = 0): DirectoryOption[] {
-  let options: DirectoryOption[] = []
+export function getDirectoryOptions(dirs: DirectoryTree[], level: number = 0): SelectOption[] {
+  let options: SelectOption[] = []
   dirs.forEach(dir => {
     const prefix = '　'.repeat(level)
     options.push({
@@ -57,9 +54,8 @@ export function formatDate(dateString: string): string {
 }
 
 export function calculateReadTime(content: string): number {
-  const wordsPerMinute = 200
   const words = content.split(/\s+/).length
-  return Math.ceil(words / wordsPerMinute)
+  return Math.ceil(words / DEFAULTS.WORDS_PER_MINUTE)
 }
 
 export function generateHash(str: string): string {

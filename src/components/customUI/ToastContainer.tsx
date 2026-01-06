@@ -1,13 +1,8 @@
 import { createRoot } from 'react-dom/client'
 import { useState, useCallback } from 'react'
-import Toast, { ToastType } from './Toast'
+import Toast from './Toast'
+import { ToastItem, ToastType } from '../../types'
 
-interface ToastItem {
-  id: string
-  type: ToastType
-  message: string
-  duration?: number
-}
 
 let toastRoot: any = null
 let toastContainer: HTMLDivElement | null = null

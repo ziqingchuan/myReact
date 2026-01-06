@@ -1,21 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDown, Check } from 'lucide-react'
 import '../../styles/CustomSelect.css'
-
-interface SelectOption {
-  value: string
-  label: string
-}
-
-interface CustomSelectProps {
-  value: string
-  onChange: (value: string) => void
-  options?: SelectOption[]
-  placeholder?: string
-  className?: string
-  disabled?: boolean
-  isDark?: boolean
-}
+import { CustomSelectProps } from '../../types'
 
 export default function CustomSelect({ 
   value, 

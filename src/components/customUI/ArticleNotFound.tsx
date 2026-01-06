@@ -1,10 +1,6 @@
 import notFoundSvg from '../../assets/notfound.svg'
 import '../../styles/ArticleNotFound.css'
-
-interface ArticleNotFoundProps {
-  onReturnHome: () => void
-  isDark?: boolean
-}
+import { ArticleNotFoundProps } from '../../types'
 
 export default function ArticleNotFound({ onReturnHome, isDark = false }: ArticleNotFoundProps) {
   return (

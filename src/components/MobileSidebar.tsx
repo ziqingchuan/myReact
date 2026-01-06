@@ -1,17 +1,7 @@
 import { X } from 'lucide-react'
 import DirectoryNav from './DirectoryNav'
-import { Article, DirectoryTree } from '../lib/supabase'
 import '../styles/MobileSidebar.css'
-
-interface MobileSidebarProps {
-  isOpen: boolean
-  onClose: () => void
-  directories?: DirectoryTree[]
-  directoriesLoading?: boolean
-  onLoadDirectories: (force?: boolean) => Promise<void>
-  selectedArticle?: Article | null
-  isDark: boolean
-}
+import { MobileSidebarProps } from '../types'
 
 export default function MobileSidebar({ 
   isOpen, 

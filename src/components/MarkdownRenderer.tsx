@@ -4,13 +4,9 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeRaw from 'rehype-raw'
 import { Copy, Check } from 'lucide-react'
 import { useState, useMemo, useCallback } from 'react'
-import { generateId, extractTextContent, generateHash } from '../utils'
+import { generateId, extractTextContent, generateHash } from '../utils/publicTools'
 import '../styles/MarkdownRenderer.css'
-
-interface MarkdownRendererProps {
-  content: string
-  isDark?: boolean
-}
+import { MarkdownRendererProps } from '../types'
 
 export default function MarkdownRenderer({ content, isDark = false }: MarkdownRendererProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)

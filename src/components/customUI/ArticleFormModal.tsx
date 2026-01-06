@@ -2,28 +2,10 @@ import { X } from 'lucide-react'
 import CustomSelect from './CustomSelect'
 import LoadingSpinner from './LoadingSpinner'
 import ToggleSwitch from './ToggleSwitch'
-import { DirectoryTree, Article } from '../../lib/supabase'
+import { ArticleFormModalProps } from '../../types'
 import '../../styles/Modal.css'
 
-interface FormData {
-  title: string
-  content: string
-  directory_id: string
-  is_published: boolean
-}
 
-interface ArticleFormModalProps {
-  isOpen: boolean
-  editingArticle: Article | null
-  formData: FormData
-  directories: DirectoryTree[]
-  formLoading: boolean
-  onClose: () => void
-  onSubmit: (e: React.FormEvent) => void
-  onFormDataChange: (data: FormData) => void
-  getDirectoryOptions: (dirs: DirectoryTree[]) => { value: string; label: string }[]
-  isDark?: boolean
-}
 
 export default function ArticleFormModal({
   isOpen,

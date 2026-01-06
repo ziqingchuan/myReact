@@ -1,12 +1,5 @@
 import '../../styles/ToggleSwitch.css'
-
-interface ToggleSwitchProps {
-  checked: boolean
-  onChange: (checked: boolean) => void
-  label: string
-  description?: string
-  isDark?: boolean
-}
+import { ToggleSwitchProps } from '../../types'
 
 export default function ToggleSwitch({ checked, onChange, label, description, isDark = false }: ToggleSwitchProps) {
   return (

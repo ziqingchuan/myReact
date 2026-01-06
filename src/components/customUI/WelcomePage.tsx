@@ -3,16 +3,7 @@ import { BookOpen, ExternalLink } from 'lucide-react'
 import reactSvg from '../../assets/welcome-logo.svg'
 import '../../styles/WelcomePage.css'
 import { useUIStore } from '../../store'
-interface Feature {
-  title: string
-  description: string
-  color: string
-}
-
-interface WelcomePageProps {
-  onArticleSelect: (articleId: string) => void
-  isDark?: boolean
-}
+import { Feature, WelcomePageProps } from '../../types'
 
 export default function WelcomePage({ onArticleSelect, isDark = false }: WelcomePageProps) {
   const [isVisible, setIsVisible] = useState(false)

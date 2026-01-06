@@ -1,13 +1,8 @@
 import { create } from 'zustand'
 import { db, Article } from '../lib/supabase'
 import { useUIStore } from './useUIStore'
-
-interface FormData {
-  title: string
-  content: string
-  directory_id: string
-  is_published: boolean
-}
+import { CACHE, TIMING } from '../constants'
+import type { ArticleFormData } from '../types'
 
 interface ArticleStore {
   // 状态
@@ -18,7 +13,7 @@ interface ArticleStore {
   // 表单状态
   editingArticle: Article | null
   showCreateForm: boolean
-  formData: FormData
+  formData: ArticleFormData
   formLoading: boolean
 
   // 操作
@@ -26,14 +21,14 @@ interface ArticleStore {
   clearSelectedArticle: () => void
   
   // 文章 CRUD
-  createArticle: (data: FormData) => Promise<string>
-  updateArticle: (id: string, data: FormData) => Promise<void>
+  createArticle: (data: ArticleFormData) => Promise<string>
+  updateArticle: (id: string, data: ArticleFormData) => Promise<void>
   deleteArticle: (id: string) => Promise<void>
   
   // 表单操作
   setEditingArticle: (article: Article | null) => void
   setShowCreateForm: (show: boolean) => void
-  setFormData: (data: FormData) => void
+  setFormData: (data: ArticleFormData) => void
   resetArticleForm: () => void
 }
 
@@ -62,7 +57,7 @@ export const useArticleStore = create<ArticleStore>((set, get) => ({
         articleLoading: false,
         articleNotFound: false
       })
-      localStorage.setItem('lastArticleId', articleId)
+      localStorage.setItem(CACHE.KEYS.LAST_ARTICLE, articleId)
       
       // 移动端关闭侧边栏
       const isMobile = useUIStore.getState().isMobile
@@ -76,13 +71,13 @@ export const useArticleStore = create<ArticleStore>((set, get) => ({
         articleLoading: false,
         selectedArticle: null
       })
-      localStorage.removeItem('lastArticleId')
+      localStorage.removeItem(CACHE.KEYS.LAST_ARTICLE)
     }
   },
 
   clearSelectedArticle: () => {
     set({ selectedArticle: null, articleNotFound: false })
-    localStorage.removeItem('lastArticleId')
+    localStorage.removeItem(CACHE.KEYS.LAST_ARTICLE)
   },
 
   // 文章 CRUD
@@ -114,7 +109,7 @@ export const useArticleStore = create<ArticleStore>((set, get) => ({
       await db.updateArticle(id, articleData)
       
       // 等待数据库更新完成
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, TIMING.DB_UPDATE_DELAY))
       await get().loadArticle(id)
       
       set({ formLoading: false })

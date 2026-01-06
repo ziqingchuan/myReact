@@ -1,13 +1,10 @@
 import { Calendar, Clock, User } from 'lucide-react'
 import MarkdownRenderer from '../MarkdownRenderer'
-import { formatDate, calculateReadTime } from '../../utils'
-import { Article } from '../../lib/supabase'
+import { formatDate, calculateReadTime } from '../../utils/publicTools'
+import { ArticleViewProps } from '../../types'
 import '../../styles/ArticleView.css'
 
-interface ArticleViewProps {
-  article: Article | null
-  isDark?: boolean
-}
+
 
 export default function ArticleView({ article, isDark = false }: ArticleViewProps) {
   if (!article) {

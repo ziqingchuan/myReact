@@ -1,16 +1,7 @@
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react'
 import { useEffect } from 'react'
 import '../../styles/Toast.css'
-
-export type ToastType = 'success' | 'error' | 'warning' | 'info'
-
-interface ToastProps {
-  id: string
-  type: ToastType
-  message: string
-  duration?: number
-  onClose: (id: string) => void
-}
+import { ToastProps } from '../../types'
 
 const icons = {
   success: CheckCircle,

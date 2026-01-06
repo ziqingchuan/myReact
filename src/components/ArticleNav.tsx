@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { PanelRightClose, PanelRightOpen } from 'lucide-react'
-import { generateId } from '../utils'
+import { generateId } from '../utils/publicTools'
 import '../styles/ArticleNav.css'
 
 interface Heading {

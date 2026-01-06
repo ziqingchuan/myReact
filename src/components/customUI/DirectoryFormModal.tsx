@@ -1,26 +1,8 @@
 import { X } from 'lucide-react'
 import CustomSelect from './CustomSelect'
 import LoadingSpinner from './LoadingSpinner'
-import { DirectoryTree } from '../../lib/supabase'
 import '../../styles/Modal.css'
-
-interface DirFormData {
-  name: string
-  parent_id: string
-}
-
-interface DirectoryFormModalProps {
-  isOpen: boolean
-  editingDirectory: DirectoryTree | null
-  dirFormData: DirFormData
-  directories: DirectoryTree[]
-  formLoading: boolean
-  onClose: () => void
-  onSubmit: (e: React.FormEvent) => void
-  onFormDataChange: (data: DirFormData) => void
-  getDirectoryOptions: (dirs: DirectoryTree[]) => { value: string; label: string }[]
-  isDark?: boolean
-}
+import { DirectoryFormModalProps } from '../../types'
 
 export default function DirectoryFormModal({
   isOpen,

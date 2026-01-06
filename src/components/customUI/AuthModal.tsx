@@ -1,13 +1,8 @@
 import { useState } from 'react'
 import { X, Key } from 'lucide-react'
 import '../../styles/Modal.css'
+import { AuthModalProps } from '../../types'
 
-interface AuthModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (secret: string) => Promise<void>
-  isDark?: boolean
-}
 
 export default function AuthModal({ isOpen, onClose, onSubmit, isDark = false }: AuthModalProps) {
   const [secret, setSecret] = useState('')

@@ -2,16 +2,7 @@ import { Menu, Sun, Moon, Key, LogOut, Github } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import reactSvg from '../assets/react.svg'
 import '../styles/Header.css'
-
-interface HeaderProps {
-  isMobile: boolean
-  onMenuClick: () => void
-  isDark: boolean
-  onToggleDarkMode: () => void
-  isAuthenticated: boolean
-  onAuthClick: () => void
-  onLogout: () => void
-}
+import { HeaderProps } from '../types'
 
 export default function Header({ isMobile, onMenuClick, isDark, onToggleDarkMode, isAuthenticated, onAuthClick, onLogout }: HeaderProps) {
   const navigate = useNavigate()

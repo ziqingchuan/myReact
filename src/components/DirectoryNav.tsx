@@ -5,30 +5,7 @@ import { db, Article, DirectoryTree } from '../lib/supabase'
 import ConfirmModal from './customUI/ConfirmModal'
 import DirectorySkeleton from './customUI/DirectorySkeleton'
 import '../styles/DirectoryNav.css'
-
-interface ConfirmModalState {
-  isOpen: boolean
-  type: 'danger' | 'warning' | 'info'
-  title: string
-  message: string
-  onConfirm: (() => Promise<void>) | null
-}
-
-interface DirectoryNavProps {
-  onItemClick?: () => void
-  collapsed: boolean
-  onToggleCollapse: () => void
-  onEditArticle?: (article: Article) => void
-  onCreateArticle?: (directoryId: string) => void
-  onEditDirectory?: (directory: DirectoryTree) => void
-  onCreateDirectory?: () => void
-  directories?: DirectoryTree[]
-  directoriesLoading?: boolean
-  onLoadDirectories: (showLoading?: boolean, force?: boolean) => Promise<void>
-  selectedArticle?: Article | null
-  isAuthenticated?: boolean
-  isDark?: boolean
-}
+import { DirectoryNavProps, ConfirmModalState } from '../types'
 
 export default function DirectoryNav({ 
   onItemClick, 
