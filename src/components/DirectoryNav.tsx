@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, PanelLeftClose, PanelLeftOpen, Edit, Trash2, Plus, FolderPlus } from 'lucide-react'
-import { db, Article, DirectoryTree } from '../lib/supabase'
+import { db } from '../lib/supabase'
 import ConfirmModal from './customUI/ConfirmModal'
 import DirectorySkeleton from './customUI/DirectorySkeleton'
 import '../styles/DirectoryNav.css'
-import { DirectoryNavProps, ConfirmModalState } from '../types'
+import { DirectoryNavProps, ConfirmModalState, Article, DirectoryTree } from '../types'
 
 export default function DirectoryNav({ 
   onItemClick, 

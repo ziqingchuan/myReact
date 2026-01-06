@@ -21,6 +21,18 @@ if (!useMockData) {
   }
 }
 
+/**
+ * 创建一个带有回退机制的操作函数
+ * 
+ * 该函数返回一个异步函数，会根据条件优先执行 Supabase 操作，
+ * 如果失败或使用模拟数据模式，则回退到模拟操作
+ * 
+ * @template T - 操作函数的参数类型数组
+ * @template R - 操作函数的返回值类型
+ * @param mockOperation - 模拟数据操作函数，用于回退场景
+ * @param supabaseOperation - Supabase 实际操作函数
+ * @returns 返回一个异步函数，带有回退机制的包装器
+ */
 function withFallback<T extends any[], R>(
   mockOperation: (...args: T) => Promise<R>,
   supabaseOperation: (...args: T) => Promise<R>
@@ -384,5 +396,3 @@ export const db = {
   deleteArticle: withFallback(mockDeleteArticle, supabaseDeleteArticle),
   searchArticles: withFallback(mockSearchArticles, supabaseSearchArticles)
 }
-
-export type { Directory, Article, DirectoryTree }

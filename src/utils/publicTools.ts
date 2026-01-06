@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
-import { DirectoryTree } from '../lib/supabase'
 import { DEFAULTS } from '../constants'
-import type { SelectOption } from '../types'
+import type { SelectOption, DirectoryTree } from '../types'
 
 export function getDirectoryOptions(dirs: DirectoryTree[], level: number = 0): SelectOption[] {
   let options: SelectOption[] = []

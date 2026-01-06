@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useArticleStore, useDirectoryStore } from '../../store'
-import { Article } from '../../lib/supabase'
+import { Article } from '../../types'
 import { handleError } from '../../utils/errorHandler'
 
 /**

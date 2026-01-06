@@ -1,6 +1,10 @@
 import React, { ReactNode } from 'react'
-// 表单数据类型
 
+/**
+ * 文章表单数据类型
+ * 
+ * 用于创建或编辑文章时的表单数据结构
+ */
 export interface ArticleFormData {
   title: string
   content: string
@@ -8,6 +12,11 @@ export interface ArticleFormData {
   is_published: boolean
 }
 
+/**
+ * 文章表单模态框组件属性
+ * 
+ * 定义文章创建/编辑表单模态框所需的属性
+ */
 export interface ArticleFormModalProps {
   isOpen: boolean
   editingArticle: Article | null
@@ -21,17 +30,32 @@ export interface ArticleFormModalProps {
   isDark?: boolean
 }
 
+/**
+ * 文章视图组件属性
+ * 
+ * 定义文章展示视图组件所需的属性
+ */
 export interface ArticleViewProps {
   article: Article | null
   isDark?: boolean
 }
 
+/**
+ * 标题类型
+ * 
+ * 表示文章中的标题元素，用于生成目录导航
+ */
 export interface Heading {
   id: string
   text: string
   level: number
 }
 
+/**
+ * 文章目录导航组件属性
+ * 
+ * 定义文章目录侧边栏所需的属性
+ */
 export interface ArticleNavProps {
   content: string
   collapsed: boolean
@@ -39,11 +63,21 @@ export interface ArticleNavProps {
   isDark: boolean
 }
 
+/**
+ * 目录表单数据类型
+ * 
+ * 用于创建或编辑目录时的表单数据结构
+ */
 export interface DirectoryFormData {
   name: string
   parent_id: string
 }
 
+/**
+ * 目录表单模态框组件属性
+ * 
+ * 定义目录创建/编辑表单模态框所需的属性
+ */
 export interface DirectoryFormModalProps {
   isOpen: boolean
   editingDirectory: DirectoryTree | null
@@ -57,12 +91,21 @@ export interface DirectoryFormModalProps {
   isDark?: boolean
 }
 
-// 选项类型
+/**
+ * 下拉选择选项类型
+ * 
+ * 定义下拉选择框的选项结构
+ */
 export interface SelectOption {
   value: string
   label: string
 }
 
+/**
+ * 自定义下拉选择器组件属性
+ * 
+ * 定义自定义下拉选择框组件所需的属性
+ */
 export interface CustomSelectProps {
   value: string
   onChange: (value: string) => void
@@ -73,7 +116,11 @@ export interface CustomSelectProps {
   isDark?: boolean
 }
 
-// 错误类型
+/**
+ * 应用错误类型
+ * 
+ * 定义应用中统一使用的错误信息结构
+ */
 export interface AppError {
   message: string
   code?: string
@@ -81,6 +128,11 @@ export interface AppError {
 }
 
 
+/**
+ * 目录类型
+ * 
+ * 表示文章目录的基本数据结构
+ */
 export interface Directory {
   id: string
   name: string
@@ -91,6 +143,11 @@ export interface Directory {
   children?: Directory[]
 }
 
+/**
+ * 文章类型
+ * 
+ * 表示文章的基本数据结构
+ */
 export interface Article {
   id: string
   title: string
@@ -102,22 +159,42 @@ export interface Article {
   directories?: Directory | null
 }
 
+/**
+ * 目录树类型
+ * 
+ * 扩展自Directory，表示带有层级结构的目录树
+ */
 export interface DirectoryTree extends Directory {
   articles: Article[]
   children?: DirectoryTree[]
 }
 
+/**
+ * 布局侧边栏组件属性
+ * 
+ * 定义主布局侧边栏所需的属性和回调函数
+ */
 export interface LayoutSidebarProps {
   onEditArticle: (article: Article) => void
   onCreateArticle: (directoryId: string) => void
   onEditDirectory: (directory: any) => void
   onCreateDirectory: (parentId?: string) => void
 }
+/**
+ * 布局模态框组件属性
+ * 
+ * 定义主布局中模态框所需的属性和回调函数
+ */
 export interface LayoutModalsProps {
   onSubmitArticle: (e: React.FormEvent) => void
   onSubmitDirectory: (e: React.FormEvent) => void
 }
 
+/**
+ * 移动端侧边栏组件属性
+ * 
+ * 定义移动端侧边栏所需的属性
+ */
 export interface MobileSidebarProps {
   isOpen: boolean
   onClose: () => void
@@ -128,11 +205,21 @@ export interface MobileSidebarProps {
   isDark: boolean
 }
 
+/**
+ * Markdown渲染器组件属性
+ * 
+ * 定义Markdown内容渲染组件所需的属性
+ */
 export interface MarkdownRendererProps {
   content: string
   isDark?: boolean
 }
 
+/**
+ * 头部组件属性
+ * 
+ * 定义应用头部导航栏所需的属性和回调函数
+ */
 export interface HeaderProps {
   isMobile: boolean
   onMenuClick: () => void
@@ -143,16 +230,31 @@ export interface HeaderProps {
   onLogout: () => void
 }
 
+/**
+ * 错误边界组件属性
+ * 
+ * 定义错误边界组件所需的属性
+ */
 export interface ErrorProps {
   children: ReactNode
   fallback?: ReactNode
 }
 
+/**
+ * 错误状态类型
+ * 
+ * 定义错误边界组件的内部状态结构
+ */
 export interface ErrorState {
   hasError: boolean
   error?: Error
 }
 
+/**
+ * 确认模态框状态类型
+ * 
+ * 定义确认对话框的状态结构
+ */
 export interface ConfirmModalState {
   isOpen: boolean
   type: 'danger' | 'warning' | 'info'
@@ -161,6 +263,11 @@ export interface ConfirmModalState {
   onConfirm: (() => Promise<void>) | null
 }
 
+/**
+ * 目录导航组件属性
+ * 
+ * 定义目录导航侧边栏所需的属性和回调函数
+ */
 export interface DirectoryNavProps {
   onItemClick?: () => void
   collapsed: boolean
@@ -177,17 +284,32 @@ export interface DirectoryNavProps {
   isDark?: boolean
 }
 
+/**
+ * 功能特性类型
+ * 
+ * 定义欢迎页面展示的功能特性结构
+ */
 export interface Feature {
   title: string
   description: string
   color: string
 }
 
+/**
+ * 欢迎页面组件属性
+ * 
+ * 定义欢迎页面所需的属性
+ */
 export interface WelcomePageProps {
   onArticleSelect: (articleId: string) => void
   isDark?: boolean
 }
 
+/**
+ * 切换开关组件属性
+ * 
+ * 定义切换开关组件所需的属性
+ */
 export interface ToggleSwitchProps {
   checked: boolean
   onChange: (checked: boolean) => void
@@ -196,8 +318,18 @@ export interface ToggleSwitchProps {
   isDark?: boolean
 }
 
+/**
+ * 消息提示类型
+ * 
+ * 定义消息提示的类型枚举
+ */
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
+/**
+ * 消息提示组件属性
+ * 
+ * 定义消息提示组件所需的属性
+ */
 export interface ToastProps {
   id: string
   type: ToastType
@@ -206,6 +338,11 @@ export interface ToastProps {
   onClose: (id: string) => void
 }
 
+/**
+ * 消息项类型
+ * 
+ * 定义消息队列中单条消息的数据结构
+ */
 export interface ToastItem {
   id: string
   type: ToastType
@@ -213,24 +350,49 @@ export interface ToastItem {
   duration?: number
 }
 
+/**
+ * 加载器尺寸类型
+ * 
+ * 定义加载旋转器的尺寸选项
+ */
 type SpinnerSize = 'sm' | 'md' | 'lg'
 
+/**
+ * 加载旋转器组件属性
+ * 
+ * 定义加载旋转器组件所需的属性
+ */
 export interface LoadingSpinnerProps {
   size?: SpinnerSize
   className?: string
   isDark?: boolean
 }
 
+/**
+ * 加载遮罩组件属性
+ * 
+ * 定义加载遮罩层组件所需的属性
+ */
 export interface LoadingOverlayProps {
   message?: string
   className?: string
   isDark?: boolean
 }
 
+/**
+ * 骨架屏组件属性
+ * 
+ * 定义骨架屏加载占位组件所需的属性
+ */
 export interface SkeletonProps {
   isDark?: boolean
 }
 
+/**
+ * 确认模态框组件属性
+ * 
+ * 定义确认对话框组件所需的属性
+ */
 export interface ConfirmModalProps {
   isOpen: boolean
   onClose: () => void
@@ -243,6 +405,11 @@ export interface ConfirmModalProps {
   isDark?: boolean
 }
 
+/**
+ * 认证模态框组件属性
+ * 
+ * 定义用户认证登录对话框所需的属性
+ */
 export interface AuthModalProps {
   isOpen: boolean
   onClose: () => void
@@ -250,14 +417,22 @@ export interface AuthModalProps {
   isDark?: boolean
 }
 
+/**
+ * 文章未找到页面组件属性
+ * 
+ * 定义文章不存在时的404页面所需的属性
+ */
 export interface ArticleNotFoundProps {
   onReturnHome: () => void
   isDark?: boolean
 }
 
 
-// Store的类型
-
+/**
+ * 文章状态管理Store类型
+ * 
+ * 定义文章相关的全局状态和操作方法，包括文章数据、表单状态和CRUD操作
+ */
 export interface ArticleStore {
   // 状态
   selectedArticle: Article | null
@@ -286,6 +461,11 @@ export interface ArticleStore {
   resetArticleForm: () => void
 }
 
+/**
+ * 认证状态管理Store类型
+ * 
+ * 定义用户认证相关的全局状态和操作方法
+ */
 export interface AuthStore {
   // 状态
   isAuthenticated: boolean
@@ -295,6 +475,11 @@ export interface AuthStore {
   logout: () => void
 }
 
+/**
+ * 目录状态管理Store类型
+ * 
+ * 定义目录相关的全局状态和操作方法，包括目录树数据、表单状态和CRUD操作
+ */
 export interface DirectoryStore {
   // 状态
   directories: DirectoryTree[]
@@ -322,6 +507,11 @@ export interface DirectoryStore {
   resetDirectoryForm: () => void
 }
 
+/**
+ * UI状态管理Store类型
+ * 
+ * 定义界面UI相关的全局状态和操作方法，包括侧边栏、主题、移动端适配等
+ */
 export interface UIStore {
   // 状态
   sidebarOpen: boolean
