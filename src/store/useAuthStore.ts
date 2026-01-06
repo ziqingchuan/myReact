@@ -20,7 +20,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   // 操作
   login: async (password) => {
-    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
+    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD
     
     if (password === correctPassword) {
       set({ isAuthenticated: true })

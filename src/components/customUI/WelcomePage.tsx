@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { BookOpen, ExternalLink } from 'lucide-react'
 import reactSvg from '../../assets/welcome-logo.svg'
 import '../../styles/WelcomePage.css'
-
+import { useUIStore } from '../../store'
 interface Feature {
   title: string
   description: string
@@ -16,7 +16,7 @@ interface WelcomePageProps {
 
 export default function WelcomePage({ onArticleSelect, isDark = false }: WelcomePageProps) {
   const [isVisible, setIsVisible] = useState(false)
-
+  const isMobile = useUIStore(state => state.isMobile)
   useEffect(() => {
     setIsVisible(true)
   }, [])
@@ -96,40 +96,48 @@ export default function WelcomePage({ onArticleSelect, isDark = false }: Welcome
               </a>
             </div>
           </div>
-
-          <div className="welcome-logo">
-            <div className="welcome-logo-container">
-              <img 
-                src={reactSvg} 
-                alt="React Logo" 
-                className="welcome-logo-img"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="welcome-features">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className={`welcome-feature ${isVisible ? 'visible' : 'hidden'}`}
-              style={{
-                transitionDelay: `${(index + 1) * 60}ms`
-              }}
-            >
-              <div className="welcome-feature-header">
-                <div className={`welcome-feature-dot ${feature.color}`}></div>
-                <h3 className="welcome-feature-title">
-                  {feature.title}
-                </h3>
+          {
+            !isMobile && (
+            <div className="welcome-logo">
+              <div className="welcome-logo-container">
+                <img 
+                  src={reactSvg} 
+                  alt="React Logo" 
+                  className="welcome-logo-img"
+                />
               </div>
-
-              <p className="welcome-feature-description">
-                {feature.description}
-              </p>
             </div>
-          ))}
+            )
+          }
+
         </div>
+        {
+          !isMobile && (
+          <div className="welcome-features">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className={`welcome-feature ${isVisible ? 'visible' : 'hidden'}`}
+                style={{
+                  transitionDelay: `${(index + 1) * 60}ms`
+                }}
+              >
+                <div className="welcome-feature-header">
+                  <div className={`welcome-feature-dot ${feature.color}`}></div>
+                  <h3 className="welcome-feature-title">
+                    {feature.title}
+                  </h3>
+                </div>
+
+                <p className="welcome-feature-description">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>            
+          )
+        }
+
       </div>
     </div>
   )
