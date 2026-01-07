@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useUIStore, useDirectoryStore, useArticleStore } from '../../store'
 import { CACHE } from '../../constants'
 
@@ -14,7 +15,7 @@ import { CACHE } from '../../constants'
  * 1. 监听窗口大小变化，自动切换移动端/桌面端布局
  * 2. 桌面端默认关闭侧边栏，移动端保持响应式布局
  * 3. 初始化时加载目录数据
- * 4. 尝试从localStorage恢复上次阅读的文章
+ * 4. 尝试从localStorage恢复上次阅读的文章并跳转
  * 
  * @remarks
  * - 使用useEffect进行副作用处理
@@ -22,6 +23,7 @@ import { CACHE } from '../../constants'
  * - 使用localStorage持久化文章阅读记录
  */
 export function useLayoutInit() {
+  const navigate = useNavigate()
   const setIsMobile = useUIStore(state => state.setIsMobile)
   const setSidebarOpen = useUIStore(state => state.setSidebarOpen)
   const loadDirectories = useDirectoryStore(state => state.loadDirectories)
@@ -53,10 +55,11 @@ export function useLayoutInit() {
       // 尝试从 localStorage 恢复上次阅读的文章
       const lastArticleId = localStorage.getItem(CACHE.KEYS.LAST_ARTICLE)
       if (lastArticleId) {
-        loadArticle(lastArticleId)
+        await loadArticle(lastArticleId)
+        navigate(`/article/${lastArticleId}`)
       }
     }
 
     initializeApp()
-  }, [loadDirectories, loadArticle])
+  }, [loadDirectories, loadArticle, navigate])
 }
