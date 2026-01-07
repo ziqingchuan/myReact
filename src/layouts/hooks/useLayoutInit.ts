@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useUIStore, useDirectoryStore, useArticleStore } from '../../store'
 import { CACHE } from '../../constants'
 
@@ -24,10 +24,12 @@ import { CACHE } from '../../constants'
  */
 export function useLayoutInit() {
   const navigate = useNavigate()
+  const location = useLocation()
   const setIsMobile = useUIStore(state => state.setIsMobile)
   const setSidebarOpen = useUIStore(state => state.setSidebarOpen)
   const loadDirectories = useDirectoryStore(state => state.loadDirectories)
   const loadArticle = useArticleStore(state => state.loadArticle)
+  const selectedArticle = useArticleStore(state => state.selectedArticle)
 
   // 检测移动端
   useEffect(() => {
@@ -53,13 +55,19 @@ export function useLayoutInit() {
       loadDirectories(true, true)
       
       // 尝试从 localStorage 恢复上次阅读的文章
+      // 只在首页或没有选中文章时才恢复，避免覆盖用户的导航
       const lastArticleId = localStorage.getItem(CACHE.KEYS.LAST_ARTICLE)
-      if (lastArticleId) {
+      const currentPath = location.pathname
+      
+      if (lastArticleId && 
+          !selectedArticle && 
+          (currentPath === '/' || currentPath === '/home')) {
+        console.log('Layout: 恢复上次阅读的文章，ID:', lastArticleId)
         await loadArticle(lastArticleId)
         navigate(`/article/${lastArticleId}`)
       }
     }
 
     initializeApp()
-  }, [loadDirectories, loadArticle, navigate])
+  }, [loadDirectories, loadArticle, navigate, location.pathname, selectedArticle])
 }

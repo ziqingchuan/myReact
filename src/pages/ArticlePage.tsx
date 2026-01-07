@@ -2,7 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useArticleStore, useUIStore } from '../store'
 import ArticleView from '../components/customUI/ArticleView'
-import ArticleNotFound from '../components/customUI/ArticleNotFound'
 import ArticleSkeleton from '../components/customUI/ArticleSkeleton'
 
 /**
@@ -11,7 +10,7 @@ import ArticleSkeleton from '../components/customUI/ArticleSkeleton'
  * 根据URL参数中的文章ID加载并显示对应的文章内容。
  * 处理文章加载状态、404状态和正常显示三种场景：
  * - 加载中：显示骨架屏
- * - 文章不存在：显示404页面
+ * - 文章不存在：自动跳转回首页
  * - 正常情况：显示文章内容
  * 
  * @returns {JSX.Element} 文章页面组件
@@ -34,21 +33,15 @@ export default function ArticlePage() {
     }
   }, [id, loadArticle])
 
-  const handleReturnHome = () => {
-    navigate('/home')
-  }
+  // 文章不存在时自动跳转回首页
+  useEffect(() => {
+    if (notFound) {
+      navigate('/home')
+    }
+  }, [notFound, navigate])
 
   if (loading) {
     return <ArticleSkeleton isDark={isDark} />
-  }
-
-  if (notFound) {
-    return (
-      <ArticleNotFound 
-        onReturnHome={handleReturnHome}
-        isDark={isDark}
-      />
-    )
   }
 
   return (

@@ -418,15 +418,6 @@ export interface AuthModalProps {
   isDark?: boolean
 }
 
-/**
- * 文章未找到页面组件属性
- * 
- * 定义文章不存在时的404页面所需的属性
- */
-export interface ArticleNotFoundProps {
-  onReturnHome: () => void
-  isDark?: boolean
-}
 
 
 /**
