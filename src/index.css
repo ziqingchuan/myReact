@@ -70,7 +70,7 @@ blockquote {
 .hljs-name,
 .hljs-strong {
   font-weight: 600;
-  color: #cf222e;
+  color: #224dcf;
 }
 
 .hljs-string,
@@ -108,7 +108,7 @@ blockquote {
 .hljs-title.function_,
 .hljs-class .hljs-title,
 .hljs-params {
-  color: #8250df;
+  color: #ff0000;
 }
 
 .hljs-attribute,
@@ -124,12 +124,12 @@ blockquote {
 }
 
 .hljs-tag {
-  color: #22863a;
+  color: #df5602;
 }
 
 .hljs-title.class_,
 .hljs-class .hljs-title {
-  color: #116329;
+  color: #11bd45;
 }
 
 .hljs-subst {
@@ -157,7 +157,7 @@ blockquote {
 .dark .hljs-doctag,
 .dark .hljs-name,
 .dark .hljs-strong {
-  color: #ff7b72 !important;
+  color: #6db1ff !important;
   font-weight: 600;
 }
 
@@ -175,7 +175,7 @@ blockquote {
 .dark .hljs-template-tag,
 .dark .hljs-template-variable,
 .dark .hljs-link {
-  color: #a5d6ff !important;
+  color: #acffcc !important;
 }
 
 .dark .hljs-comment,
@@ -190,7 +190,7 @@ blockquote {
 .dark .hljs-regexp,
 .dark .hljs-literal,
 .dark .hljs-built_in {
-  color: #79c0ff !important;
+  color: #79f4ff !important;
 }
 
 .dark .hljs-function,
@@ -198,7 +198,7 @@ blockquote {
 .dark .hljs-title.function_,
 .dark .hljs-class .hljs-title,
 .dark .hljs-params {
-  color: #d2a8ff !important;
+  color: #fcda72 !important;
 }
 
 .dark .hljs-attribute,
@@ -214,7 +214,7 @@ blockquote {
 }
 
 .dark .hljs-tag {
-  color: #7ee787 !important;
+  color: #a5d6ff !important;
 }
 
 .dark .hljs-title.class_,
