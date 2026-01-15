@@ -52,7 +52,7 @@ export function useLayoutInit() {
       console.log('Layout: 初始化应用')
       
       // 加载目录
-      loadDirectories(true, true)
+      loadDirectories(true, true)  
       
       // 尝试从 localStorage 恢复上次阅读的文章
       // 只在首页或没有选中文章时才恢复，避免覆盖用户的导航
@@ -69,5 +69,7 @@ export function useLayoutInit() {
     }
 
     initializeApp()
-  }, [loadDirectories, loadArticle, navigate, location.pathname, selectedArticle])
+    // 只在组件挂载时执行一次，避免每次路由变化都刷新目录
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 }
