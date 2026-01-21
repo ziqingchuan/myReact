@@ -1,6 +1,263 @@
-@import 'highlight.js/styles/github.css';
+/* ============================================
+   代码高亮配色方案
+   使用 GitHub 风格配色，支持亮色和暗色模式
+   ============================================ */
 
-/* 统一的滚动条样式 */
+/* 代码块基础样式 */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+  background: #ffffff;
+  color: #24292f;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+}
+
+/* ============================================
+   亮色模式配色方案 (GitHub Light)
+   ============================================ */
+
+/* 关键字 */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-doctag,
+.hljs-name {
+  color: #cf222e;
+  font-weight: 600;
+}
+
+/* 字符串 */
+.hljs-string,
+.hljs-title,
+.hljs-built_in,
+.hljs-type,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #0a3069;
+}
+
+/* 注释 */
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: #6e7781;
+  font-style: italic;
+}
+
+/* 数字 */
+.hljs-number,
+.hljs-regexp {
+  color: #0550ae;
+}
+
+/* 函数名 */
+.hljs-function,
+.hljs-title.function_,
+.hljs-class .hljs-title {
+  color: #8250df;
+}
+
+/* 属性和属性值 */
+.hljs-attribute,
+.hljs-property {
+  color: #0550ae;
+}
+
+/* 选择器 */
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #953800;
+}
+
+/* HTML 标签 */
+.hljs-tag {
+  color: #22863a;
+}
+
+/* 类名 */
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #116329;
+}
+
+/* 链接 */
+.hljs-link {
+  color: #0969da;
+  text-decoration: underline;
+}
+
+/* 强调 */
+.hljs-strong {
+  font-weight: bold;
+  color: #24292f;
+}
+
+/* 斜体 */
+.hljs-emphasis {
+  font-style: italic;
+}
+
+/* 公式 */
+.hljs-formula {
+  background-color: #f6f8fa;
+}
+
+/* 常量 */
+.hljs-constant {
+  color: #0550ae;
+}
+
+/* 命名空间 */
+.hljs-namespace {
+  color: #953800;
+}
+
+/* ============================================
+   暗色模式配色方案 (GitHub Dark)
+   ============================================ */
+
+.dark .hljs {
+  background: #0d1117;
+  color: #c9d1d9;
+  border-color: #30363d;
+}
+
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-literal,
+.dark .hljs-section,
+.dark .hljs-doctag,
+.dark .hljs-name {
+  color: #ff7b72;
+  font-weight: 600;
+}
+
+.dark .hljs-string,
+.dark .hljs-title,
+.dark .hljs-built_in,
+.dark .hljs-type,
+.dark .hljs-symbol,
+.dark .hljs-bullet,
+.dark .hljs-addition,
+.dark .hljs-variable,
+.dark .hljs-template-tag,
+.dark .hljs-template-variable {
+  color: #a5d6ff;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote,
+.dark .hljs-deletion,
+.dark .hljs-meta {
+  color: #8b949e;
+  font-style: italic;
+}
+
+.dark .hljs-number,
+.dark .hljs-regexp {
+  color: #79c0ff;
+}
+
+.dark .hljs-function,
+.dark .hljs-title.function_,
+.dark .hljs-class .hljs-title {
+  color: #d2a8ff;
+}
+
+.dark .hljs-attribute,
+.dark .hljs-property {
+  color: #79c0ff;
+}
+
+.dark .hljs-selector-attr,
+.dark .hljs-selector-pseudo,
+.dark .hljs-selector-id,
+.dark .hljs-selector-class {
+  color: #ffa657;
+}
+
+.dark .hljs-tag {
+  color: #7ee787;
+}
+
+.dark .hljs-title.class_,
+.dark .hljs-class .hljs-title {
+  color: #7ee787;
+}
+
+.dark .hljs-link {
+  color: #58a6ff;
+  text-decoration: underline;
+}
+
+.dark .hljs-strong {
+  font-weight: bold;
+  color: #c9d1d9;
+}
+
+.dark .hljs-emphasis {
+  font-style: italic;
+}
+
+.dark .hljs-formula {
+  background-color: #161b22;
+}
+
+.dark .hljs-constant {
+  color: #79c0ff;
+}
+
+.dark .hljs-namespace {
+  color: #ffa657;
+}
+
+/* ============================================
+   代码块容器样式
+   ============================================ */
+
+/* 内联代码样式 */
+code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(175, 184, 193, 0.2);
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+}
+
+.dark code {
+  background-color: rgba(110, 118, 129, 0.4);
+}
+
+/* 代码块样式增强 */
+pre {
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 6px;
+}
+
+pre code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+/* ============================================
+   统一的滚动条样式
+   ============================================ */
+
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
@@ -38,203 +295,55 @@
   background-color: rgba(75, 85, 99, 0.7);
 }
 
+/* 代码块滚动条样式 */
+.hljs {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) rgba(246, 248, 250, 0.5);
+}
+
+.hljs::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.hljs::-webkit-scrollbar-track {
+  background: rgba(246, 248, 250, 0.5);
+}
+
+.hljs::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+}
+
+.hljs::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.7);
+}
+
+.dark .hljs {
+  scrollbar-color: rgba(75, 85, 99, 0.5) rgba(13, 17, 23, 0.5);
+}
+
+.dark .hljs::-webkit-scrollbar-track {
+  background: rgba(13, 17, 23, 0.5);
+}
+
+.dark .hljs::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.5);
+}
+
+.dark .hljs::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(75, 85, 99, 0.7);
+}
+
+/* ============================================
+   Base styles
+   ============================================ */
+
 blockquote {
   padding: 0;
   margin: 0;
 }
 
-/* 代码块暗黑模式样式 */
-.dark pre {
-  background-color: #0d1117 !important;
-  border-color: #30363d !important;
-}
-
-.dark pre code {
-  color: #e6edf3 !important;
-}
-
-/* 亮色模式代码高亮样式 */
-.hljs {
-  background: #f6f8fa;
-  color: #24292f;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-literal,
-.hljs-section,
-.hljs-doctag,
-.hljs-name,
-.hljs-strong {
-  font-weight: 600;
-  color: #224dcf;
-}
-
-.hljs-string,
-.hljs-title,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-type,
-.hljs-attr,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition,
-.hljs-variable,
-.hljs-template-tag,
-.hljs-template-variable,
-.hljs-link {
-  color: #0a3069;
-}
-
-.hljs-comment,
-.hljs-quote,
-.hljs-deletion,
-.hljs-meta {
-  color: #6e7781;
-  font-style: italic;
-}
-
-.hljs-number,
-.hljs-regexp,
-.hljs-literal,
-.hljs-built_in {
-  color: #0550ae;
-}
-
-.hljs-function,
-.hljs-title.function_,
-.hljs-class .hljs-title,
-.hljs-params {
-  color: #ff0000;
-}
-
-.hljs-attribute,
-.hljs-property {
-  color: #0550ae;
-}
-
-.hljs-selector-attr,
-.hljs-selector-pseudo,
-.hljs-selector-id,
-.hljs-selector-class {
-  color: #953800;
-}
-
-.hljs-tag {
-  color: #df5602;
-}
-
-.hljs-title.class_,
-.hljs-class .hljs-title {
-  color: #11bd45;
-}
-
-.hljs-subst {
-  color: #24292f;
-}
-
-.hljs-formula {
-  background-color: #f6f8fa;
-}
-
-.hljs-emphasis {
-  font-style: italic;
-}
-
-/* 暗黑模式下的代码高亮颜色覆盖 */
-.dark .hljs {
-  background: #0d1117 !important;
-  color: #e6edf3 !important;
-}
-
-.dark .hljs-keyword,
-.dark .hljs-selector-tag,
-.dark .hljs-literal,
-.dark .hljs-section,
-.dark .hljs-doctag,
-.dark .hljs-name,
-.dark .hljs-strong {
-  color: #6db1ff !important;
-  font-weight: 600;
-}
-
-.dark .hljs-string,
-.dark .hljs-subst,
-.dark .hljs-title,
-.dark .hljs-built_in,
-.dark .hljs-builtin-name,
-.dark .hljs-type,
-.dark .hljs-attr,
-.dark .hljs-symbol,
-.dark .hljs-bullet,
-.dark .hljs-addition,
-.dark .hljs-variable,
-.dark .hljs-template-tag,
-.dark .hljs-template-variable,
-.dark .hljs-link {
-  color: #acffcc !important;
-}
-
-.dark .hljs-comment,
-.dark .hljs-quote,
-.dark .hljs-deletion,
-.dark .hljs-meta {
-  color: #8b949e !important;
-  font-style: italic;
-}
-
-.dark .hljs-number,
-.dark .hljs-regexp,
-.dark .hljs-literal,
-.dark .hljs-built_in {
-  color: #79f4ff !important;
-}
-
-.dark .hljs-function,
-.dark .hljs-built_in,
-.dark .hljs-title.function_,
-.dark .hljs-class .hljs-title,
-.dark .hljs-params {
-  color: #fcda72 !important;
-}
-
-.dark .hljs-attribute,
-.dark .hljs-property {
-  color: #79c0ff !important;
-}
-
-.dark .hljs-selector-attr,
-.dark .hljs-selector-pseudo,
-.dark .hljs-selector-id,
-.dark .hljs-selector-class {
-  color: #ffa657 !important;
-}
-
-.dark .hljs-tag {
-  color: #a5d6ff !important;
-}
-
-.dark .hljs-title.class_,
-.dark .hljs-class .hljs-title {
-  color: #ffa657 !important;
-}
-
-.dark .hljs-subst {
-  color: #e6edf3 !important;
-}
-
-.dark .hljs-formula {
-  background-color: #0d1117 !important;
-}
-
-.dark .hljs-emphasis {
-  font-style: italic;
-}
-
-/* Base styles */
 html {
   font-family: 'Inter', system-ui, sans-serif;
   height: 100%;
